@@ -5,6 +5,10 @@ import android.os.Environment
 import com.parkingwang.okhttp3.LogInterceptor.LogInterceptor
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
@@ -18,7 +22,7 @@ class RetrofitManager {
         lateinit var retrofit: Retrofit
 
         fun init(context: Context) {
-            var okhttpClient = OkHttpClient.Builder()
+            val okhttpClient = OkHttpClient.Builder()
                 .cache(Cache(File(getCacheDir(context) + "/beautiful"), 1024 * 1024 * 5))
                 .addInterceptor(LogInterceptor())
                 .build()
@@ -33,11 +37,40 @@ class RetrofitManager {
             return if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()
                 || !Environment.isExternalStorageRemovable()
             ) {
-                context.externalCacheDir.path;
+                context.externalCacheDir.path
             } else {
-                context.cacheDir.path;
+                context.cacheDir.path
             }
         }
+
+        fun getWebsiteHtml(url: String, listener: OnWebResultListener) {
+            retrofit.create(WebService::class.java)
+                .fetchHtmlFromWebsite(url)
+                .enqueue(object : Callback<ResponseBody> {
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        listener.onError(-1, t.localizedMessage)
+
+                    }
+
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                        when {
+                            response.code() == 404 -> {
+                                listener.onError(404, "No data")
+                            }
+                            response.isSuccessful -> {
+                                listener.onSuccess(response.body()?.string())
+                            }
+                            else -> {
+                                listener.onError(response.code(), "Network Error")
+                            }
+
+                        }
+                        response.body()?.close()
+                    }
+
+                })
+        }
+
     }
 
 

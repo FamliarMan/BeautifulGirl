@@ -17,11 +17,19 @@ object WebsiteCenter {
     var allVpnWebSites: ArrayList<WebsiteVo> = ArrayList()
 
     init {
-        val websiteVo = WebsiteVo(
+        var websiteVo = WebsiteVo(
             "饭粒邪恶网",
             "https://www.retuwo.com/",
             R.mipmap.favicon,
             DataSourceCenter.SOURCE_FANLI_PICTURE
+        )
+        allNormalWebSites.add(websiteVo)
+
+        websiteVo = WebsiteVo(
+            "妆秀性感美女图片",
+            "http://www.zhuangxiule.cn/",
+            R.mipmap.ic_zhuangxiu,
+            DataSourceCenter.SOURCE_ZHUANGXIU_PICTURE
         )
         allNormalWebSites.add(websiteVo)
     }

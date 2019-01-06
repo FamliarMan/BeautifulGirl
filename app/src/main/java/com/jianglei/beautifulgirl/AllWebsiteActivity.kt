@@ -9,6 +9,7 @@ import android.support.v7.widget.CardView
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +50,9 @@ class AllWebsiteActivity : BaseActivity() {
         showProgress(true)
         dataSource?.fetAllTypes(vo.homePageUrl, object : OnDataResultListener<MutableList<PictureTypeVo>> {
             override fun onSuccess(data: MutableList<PictureTypeVo>) {
+                data.forEach{
+                    Log.d("jianglei","获取分类:"+it.title+" "+it.url)
+                }
                 showProgress(false)
                 val intent = Intent(this@AllWebsiteActivity, ContentActivity::class.java)
                 intent.putParcelableArrayListExtra("types", data as java.util.ArrayList<out Parcelable>)
