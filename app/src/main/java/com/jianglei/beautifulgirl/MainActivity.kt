@@ -22,5 +22,12 @@ class MainActivity : AppCompatActivity() {
             intent.putParcelableArrayListExtra("websites", WebsiteCenter.getAllNormalWebsites())
             startActivity(intent)
         }
+
+        vpn.setOnClickListener {
+            val intent = Intent(this@MainActivity,AllWebsiteActivity::class.java)
+            intent.putParcelableArrayListExtra("websites", WebsiteCenter.getAllVpnWebsites())
+            startActivity(intent)
+        }
+
     }
 }

@@ -43,7 +43,7 @@ class ZhuangxiuSpider : DataSource {
                     listener.onError(msg)
                 }
             }
-        })
+        },"gb2312")
     }
 
     override fun fetDetailPictures(url: String, page: Int, listener: OnDataResultListener<MutableList<String>>) {
@@ -80,7 +80,7 @@ class ZhuangxiuSpider : DataSource {
                     listener.onError(msg)
                 }
             }
-        })
+        },"gb2312")
     }
 
     override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<PictureTypeVo>>) {
@@ -117,6 +117,6 @@ class ZhuangxiuSpider : DataSource {
                 }
             }
 
-        })
+        },"gb2312")
     }
 }

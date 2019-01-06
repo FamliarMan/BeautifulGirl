@@ -1,7 +1,9 @@
 <resources>
-    <string name="app_name">BeautifulGirl</string>
+    <string name="app_name">美女集中营</string>
     <string name="net_error">网络错误</string>
     <string name="road">一片坦途</string>
     <string name="wall">墙外世界</string>
     <string name="no_more_data">没有更多数据了</string>
+    <string name="no_picture">这个贴子中没有图片哦</string>
+    <string name="need_vpn">这个页面比较邪恶，需要vpn才能访问</string>
 </resources>

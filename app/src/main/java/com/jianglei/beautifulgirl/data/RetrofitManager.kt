@@ -2,6 +2,7 @@ package com.jianglei.beautifulgirl.data
 
 import android.content.Context
 import android.os.Environment
+import android.util.Log
 import com.parkingwang.okhttp3.LogInterceptor.LogInterceptor
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -12,6 +13,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
+import java.nio.charset.Charset
 
 /**
  * @author jianglei on 1/4/19.
@@ -20,7 +22,7 @@ import java.io.File
 class RetrofitManager {
     companion object {
         lateinit var retrofit: Retrofit
-
+        private var currentCall: Call<ResponseBody>? = null
         fun init(context: Context) {
             val okhttpClient = OkHttpClient.Builder()
                 .cache(Cache(File(getCacheDir(context) + "/beautiful"), 1024 * 1024 * 5))
@@ -43,34 +45,47 @@ class RetrofitManager {
             }
         }
 
-        fun getWebsiteHtml(url: String, listener: OnWebResultListener) {
-            retrofit.create(WebService::class.java)
+        fun getWebsiteHtml(url: String, listener: OnWebResultListener, charset: String = "utf-8") {
+            currentCall = retrofit.create(WebService::class.java)
                 .fetchHtmlFromWebsite(url)
-                .enqueue(object : Callback<ResponseBody> {
-                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        listener.onError(-1, t.localizedMessage)
+            currentCall!!.enqueue(object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    listener.onError(-1, t.localizedMessage)
+                    currentCall = null
 
-                    }
+                }
 
-                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                        when {
-                            response.code() == 404 -> {
-                                listener.onError(404, "No data")
-                            }
-                            response.isSuccessful -> {
-                                listener.onSuccess(response.body()?.string())
-                            }
-                            else -> {
-                                listener.onError(response.code(), "Network Error")
-                            }
-
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    when {
+                        response.code() == 404 -> {
+                            listener.onError(404, "No data")
                         }
-                        response.body()?.close()
-                    }
+                        response.isSuccessful -> {
+                            if (response.body() == null) {
+                                listener.onError(-1, "Network Error")
+                            }
+                            val bytes = response.body()!!.bytes()
+                            val res = String(bytes, Charset.forName(charset))
+                            listener.onSuccess(res)
+                        }
+                        else -> {
+                            listener.onError(response.code(), "Network Error")
+                        }
 
-                })
+                    }
+                    response.body()?.close()
+                    currentCall = null
+                }
+
+            })
         }
 
+        fun cancelNet() {
+            if (currentCall != null) {
+                currentCall!!.cancel()
+                Log.d("jianglei","cancel net:"+ currentCall!!.request().url().toString())
+            }
+        }
     }
 
 

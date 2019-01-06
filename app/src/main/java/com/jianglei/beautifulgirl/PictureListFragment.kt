@@ -119,6 +119,9 @@ class PictureListFragment : Fragment() {
 
             override fun onError(msg: String) {
                 rvContent.setPullLoadMoreCompleted()
+                if (context == null) {
+                    return
+                }
                 Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
             }
 
@@ -139,6 +142,13 @@ class PictureListFragment : Fragment() {
         if (userVisibleHint) {
             visible = true
             lazyLoad()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (isRemoving) {
+            dataSource?.cancelAllNet()
         }
     }
 }

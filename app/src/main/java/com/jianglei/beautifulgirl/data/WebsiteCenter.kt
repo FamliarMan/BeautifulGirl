@@ -32,9 +32,23 @@ object WebsiteCenter {
             DataSourceCenter.SOURCE_ZHUANGXIU_PICTURE
         )
         allNormalWebSites.add(websiteVo)
+
+
+        //下面开始注册需要vpn的网站
+        websiteVo = WebsiteVo(
+            "草榴",
+            "https://www.t66y.com/index.php",
+            R.mipmap.caoliu,
+            DataSourceCenter.SOURCE_CAOLIU_PICTURE
+        )
+        allVpnWebSites.add(websiteVo)
     }
 
     fun getAllNormalWebsites(): ArrayList<WebsiteVo> {
         return allNormalWebSites
+    }
+
+    fun getAllVpnWebsites():ArrayList<WebsiteVo>{
+        return allVpnWebSites
     }
 }

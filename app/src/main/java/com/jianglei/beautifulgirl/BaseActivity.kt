@@ -3,6 +3,7 @@ package com.jianglei.beautifulgirl
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
@@ -19,15 +20,14 @@ open class BaseActivity : AppCompatActivity() {
         val params = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         val view = LayoutInflater.from(this).inflate(layoutResID, null, false)
         main_layout.addView(view,params)
+        progress.setOnTouchListener { _, _ -> true }
     }
 
     fun showProgress(isShow: Boolean) {
         if (isShow) {
             progress.visibility = View.VISIBLE
-            main_layout.visibility = View.GONE
         } else {
             progress.visibility = View.GONE
-            main_layout.visibility = View.VISIBLE
         }
     }
 }

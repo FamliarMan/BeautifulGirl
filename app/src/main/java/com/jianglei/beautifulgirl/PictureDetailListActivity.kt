@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +56,7 @@ class PictureDetailListActivity : BaseActivity() {
             override fun onRefresh() {
                 page = 1
                 urls.clear()
-                rvContent.pullRefreshEnable=true
+                rvContent.pullRefreshEnable = true
                 getData()
             }
 
@@ -74,23 +75,31 @@ class PictureDetailListActivity : BaseActivity() {
             }
 
             override fun onSuccess(data: MutableList<String>) {
-                rvContent.setPullLoadMoreCompleted()
-                if (data.size == 0) {
+                rvContent.post {
+                    rvContent.setPullLoadMoreCompleted()
+                }
+                if (page == 1 && data.size == 0) {
+                    ToastUtils.showMsg(this@PictureDetailListActivity, getString(R.string.no_picture))
+                    return
+                } else if (data.size == 0) {
                     rvContent.pushRefreshEnable = false
                     Toast.makeText(this@PictureDetailListActivity, R.string.no_more_data, Toast.LENGTH_LONG).show()
                     return
                 }
+                data.forEach {
+                    Log.d("jianglei", it)
+                }
                 urls.addAll(data)
-                if(page == 1){
+                if (page == 1) {
                     adapter.notifyDataSetChanged()
-                }else{
-                    adapter.notifyItemInserted(urls.size-data.size)
+                } else {
+                    adapter.notifyItemInserted(urls.size - data.size)
 
                 }
                 page++
 
                 //第一次只加载了一张图片，无法出发上拉加载功能，因此这里静默多加载一次
-                if (page == 2 && urls.size == 1){
+                if (page == 2 && urls.size == 1) {
                     getData()
                 }
 
@@ -131,7 +140,14 @@ class PictureDetailListActivity : BaseActivity() {
     }
 
     private class PictureHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var ivContent: SimpleDraweeView= view.findViewById(R.id.ivCover)
+        var ivContent: SimpleDraweeView = view.findViewById(R.id.ivCover)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (isFinishing) {
+            dataSource?.cancelAllNet()
+        }
     }
 }
 

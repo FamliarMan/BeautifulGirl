@@ -32,15 +32,12 @@ class PictureTitleAdapter(private val context: Context, private val pictures: Mu
         val titleVo = pictures[position]
         holder.tvTitle.text = titleVo.title
         holder.tvDesc.text = titleVo.desc
-        holder.ivCover.setImageURI(Uri.parse(titleVo.coverUrl))
-//        val options = RequestOptions()
-//            .placeholder(R.mipmap.holder_picture)
-//            .centerCrop()
-//            .dontAnimate()
-//        Glide.with(context)
-//            .load(titleVo.coverUrl)
-//            .apply(options)
-//            .into(holder.ivCover)
+        if(titleVo.coverUrl==""){
+            holder.ivCover.visibility=View.GONE
+        }else{
+            holder.ivCover.setImageURI(Uri.parse(titleVo.coverUrl))
+            holder.ivCover.visibility=View.VISIBLE
+        }
         holder.mainLayout.setOnClickListener {
                 onItemClickListener!!.onItemClick(titleVo,position)
 

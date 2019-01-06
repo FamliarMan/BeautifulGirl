@@ -14,11 +14,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|enterAlways">
-            <TextView
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:gravity="center"
-                android:text="滑动隐藏布局"/>
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@mipmap/girl"
+
+            />
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>

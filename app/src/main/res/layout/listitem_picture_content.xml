@@ -7,17 +7,20 @@
     android:layout_width="match_parent"
     android:layout_margin="3dp"
     android:layout_height="wrap_content">
-    <RelativeLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:padding="15dp"
+        android:layout_height="wrap_content">
 
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/ivCover"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_margin="15dp"
             app:actualImageScaleType="fitXY"
-            app:placeholderImage="@mipmap/holder_picture"
+            app:placeholderImage="@mipmap/ic_loading"
+            app:retryImage="@mipmap/ic_load_error"
+            android:layout_marginRight="15dp"
         />
         <TextView
             android:id="@+id/tvTitle"

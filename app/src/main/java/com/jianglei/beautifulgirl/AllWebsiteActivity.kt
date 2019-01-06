@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -26,6 +27,7 @@ import utils.ToastUtils
 
 class AllWebsiteActivity : BaseActivity() {
     private var allWebsites: ArrayList<WebsiteVo>? = null
+    private var dataSource:DataSource?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_website)
@@ -44,9 +46,15 @@ class AllWebsiteActivity : BaseActivity() {
         rvWebsites.adapter = adapter
     }
 
+    override fun onPause() {
+        super.onPause()
+        if(isFinishing){
+            dataSource?.cancelAllNet()
+        }
+    }
 
     private fun getPictureTypes(vo: WebsiteVo) {
-        val dataSource = DataSourceCenter.getDataSource(vo.dataSourceKey)
+        dataSource = DataSourceCenter.getDataSource(vo.dataSourceKey)
         showProgress(true)
         dataSource?.fetAllTypes(vo.homePageUrl, object : OnDataResultListener<MutableList<PictureTypeVo>> {
             override fun onSuccess(data: MutableList<PictureTypeVo>) {
@@ -68,6 +76,7 @@ class AllWebsiteActivity : BaseActivity() {
         })
 
     }
+
 
     private inner class WebsiteAdapter(private var context: Context, private var websites: MutableList<WebsiteVo>) :
         RecyclerView.Adapter<WebsiteHolder>() {

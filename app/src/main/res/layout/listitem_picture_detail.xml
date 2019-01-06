@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="360dp"
         android:layout_margin="15dp"
-        app:placeholderImage="@mipmap/holder_picture"
+        app:placeholderImage="@mipmap/ic_loading"
+        app:retryImage="@mipmap/ic_load_error"
     />
 </android.support.v7.widget.CardView>

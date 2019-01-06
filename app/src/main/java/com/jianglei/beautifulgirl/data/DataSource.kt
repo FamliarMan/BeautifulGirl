@@ -24,5 +24,11 @@ interface DataSource {
      */
     fun fetAllTypes(homePageUrl:String,listener: OnDataResultListener<MutableList<PictureTypeVo>>)
 
+    /**
+     * 取消所有请求
+     */
+    fun cancelAllNet(){
+        RetrofitManager.cancelNet()
+    }
 
 }
