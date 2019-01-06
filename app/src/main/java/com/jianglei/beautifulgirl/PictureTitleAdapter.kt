@@ -1,6 +1,7 @@
 package com.jianglei.beautifulgirl
 
 import android.content.Context
+import android.net.Uri
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.jianglei.beautifulgirl.spider.PictureTitleVo
 
 /**
@@ -33,14 +32,15 @@ class PictureTitleAdapter(private val context: Context, private val pictures: Mu
         val titleVo = pictures[position]
         holder.tvTitle.text = titleVo.title
         holder.tvDesc.text = titleVo.desc
-        val options = RequestOptions()
-            .placeholder(R.mipmap.holder_picture)
-            .centerCrop()
-            .dontAnimate()
-        Glide.with(context)
-            .load(titleVo.coverUrl)
-            .apply(options)
-            .into(holder.ivCover)
+        holder.ivCover.setImageURI(Uri.parse(titleVo.coverUrl))
+//        val options = RequestOptions()
+//            .placeholder(R.mipmap.holder_picture)
+//            .centerCrop()
+//            .dontAnimate()
+//        Glide.with(context)
+//            .load(titleVo.coverUrl)
+//            .apply(options)
+//            .into(holder.ivCover)
         holder.mainLayout.setOnClickListener {
                 onItemClickListener!!.onItemClick(titleVo,position)
 

@@ -2,15 +2,17 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layoutMain"
     android:layout_width="match_parent"
     android:layout_margin="3dp"
     android:layout_height="wrap_content">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/ivCover"
         android:layout_width="match_parent"
         android:layout_height="360dp"
         android:layout_margin="15dp"
+        app:placeholderImage="@mipmap/holder_picture"
     />
 </android.support.v7.widget.CardView>

@@ -1,6 +1,7 @@
 package com.jianglei.beautifulgirl
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,8 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.interfaces.DraweeController
+import com.facebook.drawee.view.SimpleDraweeView
 import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
@@ -79,7 +81,12 @@ class PictureDetailListActivity : BaseActivity() {
                     return
                 }
                 urls.addAll(data)
-                adapter.notifyDataSetChanged()
+                if(page == 1){
+                    adapter.notifyDataSetChanged()
+                }else{
+                    adapter.notifyItemInserted(urls.size-data.size)
+
+                }
                 page++
 
                 //第一次只加载了一张图片，无法出发上拉加载功能，因此这里静默多加载一次
@@ -104,22 +111,27 @@ class PictureDetailListActivity : BaseActivity() {
         }
 
         override fun onBindViewHolder(holder: PictureHolder, position: Int) {
-            val options = RequestOptions()
-                .placeholder(R.mipmap.holder_picture)
-                .centerCrop()
-
-                .dontAnimate()
-            Glide.with(context)
-                .asGif()
-                .load(urls[position])
-                .apply(options)
-                .into(holder.ivContent)
+            val controller = Fresco.newDraweeControllerBuilder()
+                .setUri(Uri.parse(urls[position]))
+                .setAutoPlayAnimations(true)
+                .build()
+            holder.ivContent.controller = (controller)
+//            val options = RequestOptions()
+//                .placeholder(R.mipmap.holder_picture)
+//                .centerCrop()
+//
+//                .dontAnimate()
+//            Glide.with(context)
+//                .asGif()
+//                .load(urls[position])
+//                .apply(options)
+//                .into(holder.ivContent)
         }
 
     }
 
     private class PictureHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var ivContent: ImageView = view.findViewById(R.id.ivCover)
+        var ivContent: SimpleDraweeView= view.findViewById(R.id.ivCover)
     }
 }
 

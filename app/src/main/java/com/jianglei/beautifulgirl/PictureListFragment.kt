@@ -48,11 +48,11 @@ class PictureListFragment : Fragment() {
         url = arguments?.getString("url")
         val view = inflater.inflate(R.layout.fragment_picture_list, container, false)
         dataSourceKey = arguments?.getString("dataSourceKey")
-        if(dataSourceKey ==null){
+        if (dataSourceKey == null) {
             return view
         }
         dataSource = DataSourceCenter.getDataSource(dataSourceKey!!)
-        if(dataSource == null){
+        if (dataSource == null) {
             return view
         }
         rvContent = view.findViewById(R.id.rvContent)
@@ -85,7 +85,7 @@ class PictureListFragment : Fragment() {
             override fun onRefresh() {
                 page = 1
                 pictureTitles.clear()
-                rvContent.pullRefreshEnable=true
+                rvContent.pullRefreshEnable = true
                 fetchData()
             }
 
@@ -107,7 +107,12 @@ class PictureListFragment : Fragment() {
                 }
 
                 pictureTitles.addAll(data)
-                titleAdapter.notifyDataSetChanged()
+                if (page == 1) {
+                    titleAdapter.notifyDataSetChanged()
+                } else {
+                    titleAdapter.notifyItemInserted(pictureTitles.size - data.size)
+
+                }
 
                 page++
             }
