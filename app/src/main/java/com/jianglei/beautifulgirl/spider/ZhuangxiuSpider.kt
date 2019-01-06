@@ -63,7 +63,13 @@ class ZhuangxiuSpider : DataSource {
                         listener.onSuccess(ArrayList())
                         return
                     }
-                    val img = contentPic[0].getElementsByTag("img")[0]
+                    val imags = contentPic[0].getElementsByTag("img")
+                    if (imags.size == 0){
+                        listener.onSuccess(ArrayList())
+                        return
+
+                    }
+                    val img = imags[0]
                     val res = ArrayList<String>()
                     res.add(img.attr("src"))
                     listener.onSuccess(res)
