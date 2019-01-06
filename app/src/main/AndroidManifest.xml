@@ -25,6 +25,8 @@
         </activity>
         <activity android:name=".PictureDetailListActivity">
         </activity>
+        <activity android:name=".AllWebsiteActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -23,7 +23,6 @@ open class BaseActivity : AppCompatActivity() {
 
     fun showProgress(isShow: Boolean) {
         if (isShow) {
-            progress.show()
             progress.visibility = View.VISIBLE
             main_layout.visibility = View.GONE
         } else {

@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.jianglei.beautifulgirl.data.DataSourceCenter
+import com.jianglei.beautifulgirl.data.WebsiteCenter
 import com.jianglei.beautifulgirl.spider.PictureTitleVo
 import com.jianglei.beautifulgirl.spider.FanliSpider
 import com.jianglei.beautifulgirl.spider.SpiderResultListener
@@ -17,7 +18,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         DataSourceCenter.init()
         test.setOnClickListener {
-            val intent = Intent(this@MainActivity, ContentActivity::class.java)
+            val intent = Intent(this@MainActivity,AllWebsiteActivity::class.java)
+            intent.putParcelableArrayListExtra("websites", WebsiteCenter.getAllNormalWebsites())
             startActivity(intent)
         }
     }

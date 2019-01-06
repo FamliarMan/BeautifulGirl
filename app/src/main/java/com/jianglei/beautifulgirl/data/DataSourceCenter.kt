@@ -12,7 +12,7 @@ object DataSourceCenter {
      * 注册一个数据源
      */
     fun registerDataSource(key: String, dataSource: DataSource) {
-        allDataSources.put(key, dataSource)
+        allDataSources[key] = dataSource
     }
 
     /**
@@ -23,7 +23,7 @@ object DataSourceCenter {
     }
 
     fun init(){
-        registerDataSource(SOURCE_FANLI_PICTURE,FanliSpider() as DataSource)
+        registerDataSource(SOURCE_FANLI_PICTURE,FanliSpider() )
     }
     /**
      * 饭粒动态图的图片
