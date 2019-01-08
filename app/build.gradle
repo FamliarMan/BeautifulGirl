@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "com.jianglei.beautifulgirl"
         minSdkVersion 15
-        targetSdkVersion 22
+        targetSdkVersion 27
         versionCode 2
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -51,8 +51,12 @@ dependencies {
 
 
     implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+    implementation 'com.github.open-android:IjkPlayer:1.0.0'
+//    implementation 'tv.danmaku.ijk.media:ijkplayer-x86_64:0.8.8'
 
-    implementation project(":vitamio")
+//    implementation project(":vitamio")
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

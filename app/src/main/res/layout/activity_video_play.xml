@@ -5,8 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".video.VideoPlayActivity">
-    <io.vov.vitamio.widget.VideoView
+    <com.dl7.player.media.IjkPlayerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/playContent"
