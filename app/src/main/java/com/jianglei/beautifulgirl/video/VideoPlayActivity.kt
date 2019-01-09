@@ -9,22 +9,51 @@ import android.view.KeyEvent
 import android.view.Window
 import android.view.WindowManager
 import com.dl7.player.media.IjkPlayerView
+import com.jianglei.beautifulgirl.BaseActivity
 import com.jianglei.beautifulgirl.R
+import com.jianglei.beautifulgirl.data.DataSource
+import com.jianglei.beautifulgirl.data.DataSourceCenter
+import com.jianglei.beautifulgirl.data.OnDataResultListener
 import kotlinx.android.synthetic.main.activity_video_play.*
+import utils.ToastUtils
 
-class VideoPlayActivity : AppCompatActivity() {
+class VideoPlayActivity : BaseActivity() {
+    private var dataSource: DataSource? = null
+    private var dataSourceKey: String? = null
+    private var detailUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_video_play)
+        detailUrl = intent.getStringExtra("detailUrl")
+        dataSourceKey = intent.getStringExtra("dataSourceKey")
+        if (dataSourceKey == null || detailUrl == null) {
+            ToastUtils.showMsg(this, "Wrong action")
+            return
+        }
+        dataSource = DataSourceCenter.getDataSource(dataSourceKey!!)
+        showProgress(true)
         init()
+        dataSource!!.fetSingleContentDetail(detailUrl!!, object : OnDataResultListener<String> {
+            override fun onSuccess(data: String) {
+                showProgress(false)
+                play(data)
+            }
+
+            override fun onError(msg: String) {
+                showProgress(false)
+                ToastUtils.showMsg(this@VideoPlayActivity, "获取视频地址失败")
+            }
+        })
     }
 
     fun init() {
         playContent.init()
-            .setVideoPath(Uri.parse("http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8"))
             .setMediaQuality(IjkPlayerView.MEDIA_QUALITY_HIGH)
+    }
+    fun play(url:String){
+        playContent.setVideoPath(Uri.parse(url))
             .start()
     }
 

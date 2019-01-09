@@ -6,7 +6,8 @@ import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.RetrofitManager
 import com.jianglei.beautifulgirl.data.WebService
-import com.jianglei.beautifulgirl.vo.PictureTypeVo
+import com.jianglei.beautifulgirl.vo.Category
+import com.jianglei.beautifulgirl.vo.ContentTitle
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 import retrofit2.Call
@@ -19,7 +20,7 @@ import retrofit2.Response
 class FanliSpider : DataSource {
     override fun fetAllTypes(
         homePageUrl: String,
-        listener: OnDataResultListener<MutableList<PictureTypeVo>>
+        listener: OnDataResultListener<MutableList<Category>>
     ) {
         RetrofitManager.retrofit
             .create(WebService::class.java)
@@ -67,11 +68,11 @@ class FanliSpider : DataSource {
         })
     }
 
-    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<PictureTitleVo>>) {
+    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
 
         startClaw(url, page,
-            object : SpiderResultListener<MutableList<PictureTitleVo>> {
-                override fun success(result: MutableList<PictureTitleVo>) {
+            object : SpiderResultListener<MutableList<ContentTitle>> {
+                override fun success(result: MutableList<ContentTitle>) {
                     listener.onSuccess(result)
                 }
 
@@ -95,7 +96,7 @@ class FanliSpider : DataSource {
         return res
     }
 
-    private fun startClaw(url: String, page: Int, listener: SpiderResultListener<MutableList<PictureTitleVo>>) {
+    private fun startClaw(url: String, page: Int, listener: SpiderResultListener<MutableList<ContentTitle>>) {
         RetrofitManager.retrofit.create(WebService::class.java)
             .fetchHtmlFromWebsite(url + "page/$page")
             .enqueue(object : Callback<ResponseBody> {
@@ -115,7 +116,7 @@ class FanliSpider : DataSource {
                         response.body()?.close()
                         return
                     }
-                    val res: MutableList<PictureTitleVo> = ArrayList()
+                    val res: MutableList<ContentTitle> = ArrayList()
                     val doc = Jsoup.parse(response.body()?.string())
                     val articles = doc.select("article")
                     try {
@@ -126,7 +127,7 @@ class FanliSpider : DataSource {
                             val cover = focus.select("img")[0].attr("data-original")
                             val title = article.getElementsByTag("h2")[0]
                                 .getElementsByTag("a")[0].text()
-                            res.add(PictureTitleVo(title, desc, path, cover))
+                            res.add(ContentTitle(title, desc, path, cover))
                         }
                         listener.success(res)
                     } catch (e: Exception) {
@@ -140,7 +141,7 @@ class FanliSpider : DataSource {
             })
     }
 
-    private fun analyzeType(html: String?): MutableList<PictureTypeVo> {
+    private fun analyzeType(html: String?): MutableList<Category> {
         if (html == null) {
             return ArrayList()
         }
@@ -148,13 +149,13 @@ class FanliSpider : DataSource {
         val document = Jsoup.parse(html)
         val lis = document.getElementsByClass("nav")[0]
             .getElementsByTag("li")
-        val res = ArrayList<PictureTypeVo>()
+        val res = ArrayList<Category>()
         for (ls in lis) {
             val a = ls.getElementsByTag("a")
             if (a.size == 0) {
                 continue
             }
-            val pictureTypeVo = PictureTypeVo(a.text(), a.attr("href"))
+            val pictureTypeVo = Category(a.text(), a.attr("href"))
             if (validType.contains(pictureTypeVo.title)) {
                 res.add(pictureTypeVo)
             }

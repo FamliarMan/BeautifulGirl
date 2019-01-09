@@ -4,7 +4,8 @@ import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.OnWebResultListener
 import com.jianglei.beautifulgirl.data.RetrofitManager
-import com.jianglei.beautifulgirl.vo.PictureTypeVo
+import com.jianglei.beautifulgirl.vo.Category
+import com.jianglei.beautifulgirl.vo.ContentTitle
 import org.jsoup.Jsoup
 
 /**
@@ -12,7 +13,7 @@ import org.jsoup.Jsoup
  * @author jianglei on 1/6/19.
  */
 class ZhuangxiuSpider : DataSource {
-    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<PictureTitleVo>>) {
+    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl = url.substring(0, url.length - 2) + "$page/"
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
             override fun onSuccess(html: String?) {
@@ -28,7 +29,7 @@ class ZhuangxiuSpider : DataSource {
                         val name = a.text()
                         val imgs = a.getElementsByTag("img")
                         val coverUrl = imgs[0].attr("src")
-                        PictureTitleVo(name, "", detailUrl, coverUrl)
+                        ContentTitle(name, "", detailUrl, coverUrl)
                     }.toMutableList()
                     listener.onSuccess(res)
                 } catch (e: Exception) {
@@ -89,7 +90,7 @@ class ZhuangxiuSpider : DataSource {
         },"gb2312")
     }
 
-    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<PictureTypeVo>>) {
+    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>) {
         RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
             override fun onSuccess(html: String?) {
                 if (html == null) {
@@ -97,13 +98,13 @@ class ZhuangxiuSpider : DataSource {
                     return
                 }
                 try {
-                    val res: List<PictureTypeVo>
+                    val res: List<Category>
                     val doc = Jsoup.parse(html)
                     val nav = doc.getElementsByClass("nav")[0]
                     val types = nav.getElementsByTag("li")
                     res = types.map {
                         val a = it.getElementsByTag("a")[0]
-                        PictureTypeVo(a.text(), a.attr("href"))
+                        Category(a.text(), a.attr("href"))
                     }.filter {
                         it.title != "首页"
                     }

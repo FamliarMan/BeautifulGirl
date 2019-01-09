@@ -5,11 +5,9 @@ import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.OnWebResultListener
 import com.jianglei.beautifulgirl.data.RetrofitManager
-import com.jianglei.beautifulgirl.spider.PictureTitleVo
-import com.jianglei.beautifulgirl.vo.PictureTypeVo
-import okhttp3.ResponseBody
+import com.jianglei.beautifulgirl.vo.ContentTitle
+import com.jianglei.beautifulgirl.vo.Category
 import org.jsoup.Jsoup
-import retrofit2.Call
 import java.net.URL
 
 
@@ -17,7 +15,7 @@ import java.net.URL
  * @author jianglei on 1/6/19.
  */
 class CaoliuSpider : DataSource {
-    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<PictureTitleVo>>) {
+    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl = "$url&page=$page"
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
             override fun onSuccess(html: String?) {
@@ -36,7 +34,7 @@ class CaoliuSpider : DataSource {
                         val fullUrl = URL(url)
                         val needUrl = "https://" + fullUrl.host + "/" + a.attr("href")
                         val title = a.text()
-                        PictureTitleVo(title, desc, needUrl, "")
+                        ContentTitle(title, desc, needUrl, "")
                     }.toMutableList()
                     listener.onSuccess(res)
                 } catch (e: Exception) {
@@ -82,7 +80,7 @@ class CaoliuSpider : DataSource {
         })
     }
 
-    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<PictureTypeVo>>) {
+    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>) {
         RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
             override fun onSuccess(html: String?) {
                 if (html == null) {
@@ -98,7 +96,7 @@ class CaoliuSpider : DataSource {
                         0,
                         homePageUrl.length - "index.php".length
                     ) + partUrl
-                    PictureTypeVo(a.text(), realUrl)
+                    Category(a.text(), realUrl)
                 }.filter {
                     Log.d("jianglei", it.title + "  " + it.url)
                     (it.title == "新時代的我們" || it.title == "達蓋爾的旗幟")

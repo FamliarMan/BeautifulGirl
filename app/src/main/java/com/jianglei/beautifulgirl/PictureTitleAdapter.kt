@@ -9,12 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.jianglei.beautifulgirl.spider.PictureTitleVo
+import com.jianglei.beautifulgirl.vo.ContentTitle
 
 /**
  * @author jianglei on 1/4/19.
  */
-class PictureTitleAdapter(private val context: Context, private val pictures: MutableList<PictureTitleVo>) :
+class PictureTitleAdapter(private val context: Context, private val contents: MutableList<ContentTitle>) :
     RecyclerView.Adapter<PictureTitleAdapter.PictureTitleHolder>() {
     var onItemClickListener: OnItemClickListener? = null
 
@@ -25,11 +25,11 @@ class PictureTitleAdapter(private val context: Context, private val pictures: Mu
     }
 
     override fun getItemCount(): Int {
-        return pictures.size
+        return contents.size
     }
 
     override fun onBindViewHolder(holder: PictureTitleHolder, position: Int) {
-        val titleVo = pictures[position]
+        val titleVo = contents[position]
         holder.tvTitle.text = titleVo.title
         holder.tvDesc.text = titleVo.desc
         if(titleVo.coverUrl==""){
@@ -53,7 +53,7 @@ class PictureTitleAdapter(private val context: Context, private val pictures: Mu
     }
 
     interface OnItemClickListener {
-        fun onItemClick(titleVo: PictureTitleVo, pos: Int)
+        fun onItemClick(title: ContentTitle, pos: Int)
     }
 }
 

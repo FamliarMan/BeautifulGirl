@@ -2,25 +2,21 @@ package com.jianglei.beautifulgirl
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v7.widget.CardView
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.vo.PictureTypeVo
+import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.WebsiteVo
 import kotlinx.android.synthetic.main.activity_all_website.*
 import utils.ToastUtils
@@ -56,8 +52,8 @@ class AllWebsiteActivity : BaseActivity() {
     private fun getPictureTypes(vo: WebsiteVo) {
         dataSource = DataSourceCenter.getDataSource(vo.dataSourceKey)
         showProgress(true)
-        dataSource?.fetAllTypes(vo.homePageUrl, object : OnDataResultListener<MutableList<PictureTypeVo>> {
-            override fun onSuccess(data: MutableList<PictureTypeVo>) {
+        dataSource?.fetAllTypes(vo.homePageUrl, object : OnDataResultListener<MutableList<Category>> {
+            override fun onSuccess(data: MutableList<Category>) {
                 data.forEach{
                     Log.d("jianglei","获取分类:"+it.title+" "+it.url)
                 }

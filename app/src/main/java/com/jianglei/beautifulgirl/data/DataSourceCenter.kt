@@ -3,6 +3,7 @@ package com.jianglei.beautifulgirl.data
 import com.jianglei.beautifulgirl.spider.FanliSpider
 import com.jianglei.beautifulgirl.spider.ZhuangxiuSpider
 import com.jianglei.beautifulgirl.spider.vpn.CaoliuSpider
+import com.jianglei.beautifulgirl.spider.vpn.NineOnePornSpider
 
 /**
  * @author jianglei on 1/3/19.
@@ -28,6 +29,7 @@ object DataSourceCenter {
         registerDataSource(SOURCE_FANLI_PICTURE, FanliSpider())
         registerDataSource(SOURCE_ZHUANGXIU_PICTURE, ZhuangxiuSpider())
         registerDataSource(SOURCE_CAOLIU_PICTURE, CaoliuSpider())
+        registerDataSource(SOURCE_91_VIDEO,NineOnePornSpider())
     }
 
     /**
@@ -43,6 +45,11 @@ object DataSourceCenter {
      * 草榴的图片
      */
     const val SOURCE_CAOLIU_PICTURE = "caoliu"
+
+    /**
+     * 91的视频
+     */
+    const val SOURCE_91_VIDEO = "91video"
 
 }
 

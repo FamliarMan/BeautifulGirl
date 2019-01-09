@@ -41,6 +41,15 @@ object WebsiteCenter {
             R.mipmap.caoliu,
             DataSourceCenter.SOURCE_CAOLIU_PICTURE
         )
+
+        allVpnWebSites.add(websiteVo)
+
+        websiteVo =  WebsiteVo(
+            "91自拍",
+            "http://www.91porn.com/v.php?next=watch",
+            R.mipmap.ic_91,
+            DataSourceCenter.SOURCE_91_VIDEO
+        )
         allVpnWebSites.add(websiteVo)
     }
 

@@ -32,24 +32,38 @@ data class WebsiteVo(var name: String, var homePageUrl: String, var icon: Int, v
     }
 }
 
-data class PictureTypeVo(var title: String, var url: String) : Parcelable {
+data class Category(var title: String, var url: String) : Parcelable {
+    /**
+     *当前分类下内容的类型
+     */
+    var type: Int = TYPE_PICTURE
+
     constructor(source: Parcel) : this(
         source.readString(),
         source.readString()
-    )
+    ) {
+        type = source.readInt()
+    }
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeString(title)
         writeString(url)
+        writeInt(type)
     }
 
     companion object {
+        const val TYPE_PICTURE = 0
+
+        const val TYPE_VIDEO = 1
+
+        const val TYPE_BOOK = 2
+
         @JvmField
-        val CREATOR: Parcelable.Creator<PictureTypeVo> = object : Parcelable.Creator<PictureTypeVo> {
-            override fun createFromParcel(source: Parcel): PictureTypeVo = PictureTypeVo(source)
-            override fun newArray(size: Int): Array<PictureTypeVo?> = arrayOfNulls(size)
+        val CREATOR: Parcelable.Creator<Category> = object : Parcelable.Creator<Category> {
+            override fun createFromParcel(source: Parcel): Category = Category(source)
+            override fun newArray(size: Int): Array<Category?> = arrayOfNulls(size)
         }
     }
 }
