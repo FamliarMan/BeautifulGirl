@@ -36,17 +36,21 @@ class NineOnePornSpider : DataSource {
                             .getElementsByTag("a")[0]
                         //获取跳转地址url
                         val detailUrl = a.attr("href")
-                        val title = a.attr("title")
                         //获取封面url
                         val coverUrl = a.getElementsByTag("img")[0]
                             .attr("src")
+                        val title = a.getElementsByTag("img")[0].attr("title")
 
-                        val spans = it.getElementsByClass("info")
+                        val allInfo = it.text()
                         var sb = StringBuilder()
-                        for (span in spans) {
-                            sb.append(span.text().replace("&nbsp", ""))
-                                .append(" ")
-                        }
+                        val sindex = allInfo.indexOf("时长")
+
+                        val duration = allInfo.substring(sindex + 3, sindex + 8)
+                        sb.append("时长:").append(duration).append(" ")
+
+                        val start = allInfo.indexOf("添加时间")
+                        val info = allInfo.substring(start).replace("还未被评分", "")
+                        sb.append(info)
                         val desc = sb.toString()
                         val res = ContentTitle(title, desc, detailUrl, coverUrl)
                         res.type = Category.TYPE_VIDEO
