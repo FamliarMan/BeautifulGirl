@@ -77,7 +77,7 @@ class NineOnePornSpider : DataSource {
     override fun fetDetailPictures(url: String, page: Int, listener: OnDataResultListener<MutableList<String>>) {
     }
 
-    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>) {
+    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>,page:Int) {
         RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
             override fun onSuccess(html: String?) {
                 if (html == null) {

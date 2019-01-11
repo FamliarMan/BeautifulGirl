@@ -20,7 +20,8 @@ import retrofit2.Response
 class FanliSpider : DataSource {
     override fun fetAllTypes(
         homePageUrl: String,
-        listener: OnDataResultListener<MutableList<Category>>
+        listener: OnDataResultListener<MutableList<Category>>,
+        page:Int
     ) {
         RetrofitManager.retrofit
             .create(WebService::class.java)

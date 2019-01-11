@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
             intent.putParcelableArrayListExtra("websites", WebsiteCenter.getAllNormalWebsites())
 
 //            val intent = Intent(this@MainActivity,VideoPlayActivity::class.java)
-//            startActivity(intent)
+            startActivity(intent)
         }
 
         vpn.setOnClickListener {

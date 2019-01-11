@@ -17,12 +17,12 @@ interface DataSource {
     /**
      * 获取某个帖子的所有图片数据
      */
-    fun fetDetailPictures(url:String,page:Int,listener: OnDataResultListener<MutableList<String>>)
+    fun fetDetailPictures(url:String,page:Int,listener: OnDataResultListener<MutableList<String>>){}
 
     /**
      * 获取某个网站的所有图片栏目
      */
-    fun fetAllTypes(homePageUrl:String,listener: OnDataResultListener<MutableList<Category>>)
+    fun fetAllTypes(homePageUrl:String,listener: OnDataResultListener<MutableList<Category>>,page:Int=1)
 
     /**
      * 获取单个条目的具体地址，比如视频地址

@@ -44,11 +44,18 @@ object WebsiteCenter {
 
         allVpnWebSites.add(websiteVo)
 
-        websiteVo =  WebsiteVo(
+        websiteVo = WebsiteVo(
             "91自拍",
             "http://www.91porn.com/v.php?next=watch",
             R.mipmap.ic_91,
             DataSourceCenter.SOURCE_91_VIDEO
+        )
+        allVpnWebSites.add(websiteVo)
+        websiteVo = WebsiteVo(
+            "xvideos",
+            "https://www.xvideos.com/channels-index",
+            R.mipmap.xvideos,
+            DataSourceCenter.SOURCE_XVIDEOS_VIDE
         )
         allVpnWebSites.add(websiteVo)
     }
@@ -57,7 +64,7 @@ object WebsiteCenter {
         return allNormalWebSites
     }
 
-    fun getAllVpnWebsites():ArrayList<WebsiteVo>{
+    fun getAllVpnWebsites(): ArrayList<WebsiteVo> {
         return allVpnWebSites
     }
 }

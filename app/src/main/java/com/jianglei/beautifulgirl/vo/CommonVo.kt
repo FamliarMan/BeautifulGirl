@@ -38,11 +38,23 @@ data class Category(var title: String, var url: String) : Parcelable {
      */
     var type: Int = TYPE_PICTURE
 
+    /**
+     * 封面url
+     */
+    var coverUrl: String? = null
+
+    /**
+     * 分类的描述
+     */
+    var desc:String? = null
+
     constructor(source: Parcel) : this(
         source.readString(),
         source.readString()
     ) {
         type = source.readInt()
+        coverUrl = source.readString()
+        desc = source.readString()
     }
 
     override fun describeContents() = 0
@@ -51,6 +63,8 @@ data class Category(var title: String, var url: String) : Parcelable {
         writeString(title)
         writeString(url)
         writeInt(type)
+        writeString(coverUrl)
+        writeString(desc)
     }
 
     companion object {

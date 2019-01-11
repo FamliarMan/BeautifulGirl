@@ -23,7 +23,7 @@ import utils.ToastUtils
 
 class AllWebsiteActivity : BaseActivity() {
     private var allWebsites: ArrayList<WebsiteVo>? = null
-    private var dataSource:DataSource?=null
+    private var dataSource: DataSource? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_website)
@@ -44,7 +44,7 @@ class AllWebsiteActivity : BaseActivity() {
 
     override fun onPause() {
         super.onPause()
-        if(isFinishing){
+        if (isFinishing) {
             dataSource?.cancelAllNet()
         }
     }
@@ -54,14 +54,22 @@ class AllWebsiteActivity : BaseActivity() {
         showProgress(true)
         dataSource?.fetAllTypes(vo.homePageUrl, object : OnDataResultListener<MutableList<Category>> {
             override fun onSuccess(data: MutableList<Category>) {
-                data.forEach{
-                    Log.d("jianglei","获取分类:"+it.title+" "+it.url)
+                data.forEach {
+                    Log.d("jianglei", "获取分类:" + it.title + " " + it.url)
                 }
                 showProgress(false)
-                val intent = Intent(this@AllWebsiteActivity, ContentActivity::class.java)
-                intent.putParcelableArrayListExtra("types", data as java.util.ArrayList<out Parcelable>)
-                intent.putExtra("dataSourceKey",vo.dataSourceKey)
-                startActivity(intent)
+                if (data.size > 15) {
+                    //分类数量大于15，要专门前往分类页面
+                    val intent = Intent(this@AllWebsiteActivity, CategoryActivity::class.java)
+                    intent.putExtra("dataSourceKey", vo.dataSourceKey)
+                    intent.putExtra("websiteVo", vo)
+                    startActivity(intent)
+                } else {
+                    val intent = Intent(this@AllWebsiteActivity, ContentActivity::class.java)
+                    intent.putParcelableArrayListExtra("types", data as java.util.ArrayList<out Parcelable>)
+                    intent.putExtra("dataSourceKey", vo.dataSourceKey)
+                    startActivity(intent)
+                }
             }
 
             override fun onError(msg: String) {

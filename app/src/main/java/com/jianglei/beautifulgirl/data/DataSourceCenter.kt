@@ -4,6 +4,7 @@ import com.jianglei.beautifulgirl.spider.FanliSpider
 import com.jianglei.beautifulgirl.spider.ZhuangxiuSpider
 import com.jianglei.beautifulgirl.spider.vpn.CaoliuSpider
 import com.jianglei.beautifulgirl.spider.vpn.NineOnePornSpider
+import com.jianglei.beautifulgirl.spider.vpn.XvideosSpider
 
 /**
  * @author jianglei on 1/3/19.
@@ -30,6 +31,7 @@ object DataSourceCenter {
         registerDataSource(SOURCE_ZHUANGXIU_PICTURE, ZhuangxiuSpider())
         registerDataSource(SOURCE_CAOLIU_PICTURE, CaoliuSpider())
         registerDataSource(SOURCE_91_VIDEO,NineOnePornSpider())
+        registerDataSource(SOURCE_XVIDEOS_VIDE,XvideosSpider())
     }
 
     /**
@@ -50,6 +52,11 @@ object DataSourceCenter {
      * 91的视频
      */
     const val SOURCE_91_VIDEO = "91video"
+
+    /**
+     * xvideos的视频
+     */
+    const val SOURCE_XVIDEOS_VIDE ="xvideos"
 
 }
 
