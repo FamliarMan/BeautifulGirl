@@ -32,15 +32,13 @@ class RetrofitManager {
             val okhttpClient = OkHttpClient.Builder()
                 .cache(Cache(File(getCacheDir(context) + "/beautiful"), 1024 * 1024 * 5))
                 .addInterceptor(logInterceptor)
-                .addInterceptor(object:Interceptor{
-                    override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
-                        val request = chain.request().newBuilder()
-                            .addHeader("X-Forwarded-For",IpUtils.getRandomIp())
-                            .addHeader("Accept-Language"," zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
-                            .build()
-                        return chain.proceed(request)
-                    }
-                })
+                .addInterceptor { chain ->
+                    val request = chain.request().newBuilder()
+                        .addHeader("X-Forwarded-For",IpUtils.getRandomIp())
+                        .addHeader("Accept-Language"," zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
+                        .build()
+                    chain.proceed(request)
+                }
                 .build()
             retrofit = Retrofit.Builder()
                 .baseUrl("http://127.0.0.1/")

@@ -3,6 +3,7 @@ package com.jianglei.beautifulgirl
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -111,6 +112,9 @@ class PictureListFragment : Fragment() {
                     rvContent.pushRefreshEnable = false
                     Toast.makeText(activity, R.string.no_more_data, Toast.LENGTH_LONG).show()
                     return
+                }
+                data.forEach{
+                    Log.d("jianglei",it.title+"  "+it.coverUrl)
                 }
 
                 contentTitles.addAll(data)

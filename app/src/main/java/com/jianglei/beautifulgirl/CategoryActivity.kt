@@ -1,9 +1,11 @@
 package com.jianglei.beautifulgirl
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -41,6 +43,18 @@ class CategoryActivity : AppCompatActivity() {
         rvCategory.setGridLayout(2)
         adapter = CategoryAdapter(this, categories)
         rvCategory.setAdapter(adapter)
+        adapter.onItemClickListener = (object : OnItemClickListener<Category> {
+            override fun onItemClick(vo: Category, pos: Int) {
+                val intent = Intent(this@CategoryActivity, ContentActivity::class.java)
+                val types = java.util.ArrayList<Category>()
+                types.add(vo)
+                intent.putParcelableArrayListExtra("types", types)
+                intent.putExtra("dataSourceKey", dataSourceKey)
+                startActivity(intent)
+            }
+        })
+
+
         rvCategory.setOnPullLoadMoreListener(object : PullLoadMoreRecyclerView.PullLoadMoreListener {
             override fun onLoadMore() {
                 fetchData()
@@ -53,6 +67,9 @@ class CategoryActivity : AppCompatActivity() {
 
             }
         })
+        rvCategory.setRefreshing(true)
+        fetchData()
+
     }
 
     private fun fetchData() {
@@ -67,17 +84,21 @@ class CategoryActivity : AppCompatActivity() {
                     rvCategory.pushRefreshEnable = false
                     return
                 }
-                data.forEach{
-                    Log.d("longyi",it.title+" "+it.coverUrl)
+                data.forEach {
+                    Log.d("longyi", it.title + " " + it.coverUrl)
                 }
                 categories.addAll(data)
                 adapter.notifyItemInserted(categories.size - data.size)
-                rvCategory.setPullLoadMoreCompleted()
+                rvCategory.post{
+                    rvCategory.setPullLoadMoreCompleted()
+                }
 
             }
 
             override fun onError(msg: String) {
-                rvCategory.setPullLoadMoreCompleted()
+                rvCategory.post{
+                    rvCategory.setPullLoadMoreCompleted()
+                }
                 ToastUtils.showMsg(this@CategoryActivity, msg)
             }
 

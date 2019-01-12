@@ -31,7 +31,7 @@ class XvideosSpider : DataSource {
     /**
      * 获取下一个时间戳的正则
      */
-    private val regx = "<!-- ([\\d]{10})-->"
+    private val regx = "<!--[\\s*]([\\d]{10})[\\s*]-->"
     private val pattern = Pattern.compile(regx)
 
     /**
@@ -42,7 +42,7 @@ class XvideosSpider : DataSource {
     /**
      * 获取高清ts视频地址的正则
      */
-    private val highTS = "setVideoUrlHLS\\('(.*?)'\\)"
+    private val highTS = "setVideoHLS\\('(.*?)'\\)"
     private val highTSPattern = Pattern.compile(highTS)
 
     private val categoryRegx = "<img src=\"(.*?)\""
@@ -54,7 +54,10 @@ class XvideosSpider : DataSource {
     private fun getRealUrl(partUrl: String): String? {
         //首页频道
         if (partUrl.startsWith("https://www.xvideos.com/new")) {
-            return "$partUrl/$titlePage"
+            if(titlePage == 1){
+                return "https://www.xvideos.com"
+            }
+            return "$partUrl/"+(titlePage-1)
         }
         //剩下是普通频道
         return when {
@@ -85,11 +88,13 @@ class XvideosSpider : DataSource {
                     val a = it.selectFirst("a")
                     val host = URL(url)
                     val detailUrl = "https://" + host.host + a.attr("href")
-                    val coverUrl = a.selectFirst("img").attr("src")
+                    val coverUrl = a.selectFirst("img").attr("data-src")
                     val thumbUnder = it.selectFirst(".thumb-under")
                     val title = thumbUnder.selectFirst("a").text()
                     val desc = thumbUnder.selectFirst(".metadata").text()
-                    ContentTitle(title, desc, detailUrl, coverUrl)
+                    val contentTitle = ContentTitle(title, desc, detailUrl, coverUrl)
+                    contentTitle.type = Category.TYPE_VIDEO
+                    contentTitle
                 }.toMutableList()
                 listener.onSuccess(res)
 
@@ -193,13 +198,13 @@ class XvideosSpider : DataSource {
     }
 
     private fun getRealPlayUrl(html: String): String? {
-        val highMp4Matcher = highMp4Pattern.matcher(html)
-        if (highMp4Matcher.find()) {
-            return highMp4Matcher.group(1)
-        }
         val highTsMatcher = highTSPattern.matcher(html)
         if (highTsMatcher.find()) {
             return highTsMatcher.group(1)
+        }
+        val highMp4Matcher = highMp4Pattern.matcher(html)
+        if (highMp4Matcher.find()) {
+            return highMp4Matcher.group(1)
         }
         return null
     }
