@@ -33,12 +33,13 @@ class PictureListFragment : Fragment() {
     private var dataSourceKey: String? = null
 
     companion object {
-        fun newInstance(title: String, url: String, dataSourceKey: String): PictureListFragment {
+        fun newInstance(title: String, url: String, dataSourceKey: String,isFromActivity:Boolean=false): PictureListFragment {
             val fragment = PictureListFragment()
             val bundle = Bundle()
             bundle.putString("title", title)
             bundle.putString("url", url)
             bundle.putString("dataSourceKey", dataSourceKey)
+            bundle.putBoolean("isFromActivity",isFromActivity)
             fragment.arguments = bundle
             return fragment
         }
@@ -59,6 +60,10 @@ class PictureListFragment : Fragment() {
         rvContent = view.findViewById(R.id.rvContent)
         initRecyclerview()
         isPrepared = true
+        val isFromActivity = arguments?.getBoolean("isFromActivity")
+        if(isFromActivity!!){
+            visible = true
+        }
         lazyLoad()
         return view
     }

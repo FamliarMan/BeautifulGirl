@@ -82,3 +82,15 @@ data class Category(var title: String, var url: String) : Parcelable {
     }
 }
 
+
+
+/**
+ * xvideos搜索返回的关键字返回结构
+ */
+data class XVideoKeyWordWrapper(var KEYWORDS:MutableList<XVideoKeyWord>)
+/**
+ * xvideos搜索返回的关键字
+ */
+data class XVideoKeyWord(var N:String,var R:String)
+
+

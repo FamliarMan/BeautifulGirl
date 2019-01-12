@@ -1,29 +1,29 @@
 package com.jianglei.beautifulgirl
 
+import android.app.ActionBar
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toolbar
 import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.vo.Category
-import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.WebsiteVo
+import com.jianglei.beautifulgirl.R
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_category.*
+import utils.DensityUtils
 import utils.ToastUtils
 
-class CategoryActivity : AppCompatActivity() {
+class CategoryActivity : BaseActivity() {
 
     private var categories: MutableList<Category> = ArrayList()
     private var dataSourceKey: String? = null
@@ -34,6 +34,7 @@ class CategoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
+        initToolbar()
         dataSourceKey = intent.getStringExtra("dataSourceKey")
         websiteVo = intent.getParcelableExtra("websiteVo")
         if (dataSourceKey == null || websiteVo == null) {
@@ -72,6 +73,26 @@ class CategoryActivity : AppCompatActivity() {
 
     }
 
+    private fun initToolbar() {
+        toolBar.setOnMenuItemClickListener(object : android.support.v7.widget.Toolbar.OnMenuItemClickListener {
+            override fun onMenuItemClick(item: MenuItem?): Boolean {
+                when {
+                    item?.itemId == R.id.action_search-> {
+                        val intent = Intent(this@CategoryActivity,SearchActivity::class.java)
+                        intent.putExtra("dataSourceKey",dataSourceKey)
+                        startActivity(intent)
+
+                    }
+                    else -> {
+                        return true
+                    }
+                }
+                return true
+            }
+        })
+    }
+
+
     private fun fetchData() {
         dataSource!!.fetAllTypes(websiteVo!!.homePageUrl, object : OnDataResultListener<MutableList<Category>> {
             override fun onSuccess(data: MutableList<Category>) {
@@ -89,14 +110,14 @@ class CategoryActivity : AppCompatActivity() {
                 }
                 categories.addAll(data)
                 adapter.notifyItemInserted(categories.size - data.size)
-                rvCategory.post{
+                rvCategory.post {
                     rvCategory.setPullLoadMoreCompleted()
                 }
 
             }
 
             override fun onError(msg: String) {
-                rvCategory.post{
+                rvCategory.post {
                     rvCategory.setPullLoadMoreCompleted()
                 }
                 ToastUtils.showMsg(this@CategoryActivity, msg)
@@ -105,6 +126,12 @@ class CategoryActivity : AppCompatActivity() {
         }, page)
 
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search, menu)
+        return true
+    }
+
 
     class CategoryAdapter(var context: Context, var categories: MutableList<Category>) :
         RecyclerView.Adapter<CategoryHolder>() {

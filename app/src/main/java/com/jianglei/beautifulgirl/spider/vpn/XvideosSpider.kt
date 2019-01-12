@@ -1,12 +1,14 @@
 package com.jianglei.beautifulgirl.spider.vpn
 
-import com.jianglei.beautifulgirl.data.DataSource
-import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.OnWebResultListener
-import com.jianglei.beautifulgirl.data.RetrofitManager
+import com.jianglei.beautifulgirl.data.*
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
+import com.jianglei.beautifulgirl.vo.XVideoKeyWord
+import com.jianglei.beautifulgirl.vo.XVideoKeyWordWrapper
 import org.jsoup.Jsoup
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.lang.Exception
 import java.net.URL
 import java.util.regex.Pattern
@@ -47,6 +49,7 @@ class XvideosSpider : DataSource {
 
     private val categoryRegx = "<img src=\"(.*?)\""
     private val categoryPattern = Pattern.compile(categoryRegx)
+    private var callHolder = ArrayList<Call<XVideoKeyWordWrapper>>()
 
     /**
      * 拿到获取下一页封面内容的真正的url的值
@@ -54,10 +57,18 @@ class XvideosSpider : DataSource {
     private fun getRealUrl(partUrl: String): String? {
         //首页频道
         if (partUrl.startsWith("https://www.xvideos.com/new")) {
-            if(titlePage == 1){
+            if (titlePage == 1) {
                 return "https://www.xvideos.com"
             }
-            return "$partUrl/"+(titlePage-1)
+            return "$partUrl/" + (titlePage - 1)
+        }
+        //搜索时
+        if (partUrl.startsWith("https://www.xvideos.com/?k=")) {
+            return when {
+                titlePage == 1 -> partUrl
+                else -> partUrl + "&p=" + (titlePage - 1)
+            }
+
         }
         //剩下是普通频道
         return when {
@@ -209,14 +220,50 @@ class XvideosSpider : DataSource {
         return null
     }
 
-    private fun getCategroyUrl(text:String):String?{
+    private fun getCategroyUrl(text: String): String? {
         val m = categoryPattern.matcher(text)
-        return if(m.find()){
+        return if (m.find()) {
             m.group(1)
-        }else{
+        } else {
             null
         }
 
+
+    }
+
+    override fun getSearchUrl(searchTxt: String): String {
+        return "https://www.xvideos.com/?k=$searchTxt&top"
+    }
+
+    override fun cancelAllNet() {
+        super.cancelAllNet()
+        callHolder.forEach {
+            it.cancel()
+        }
+    }
+
+    override fun getSearchSuggest(keyword: String, listener: OnDataResultListener<MutableList<XVideoKeyWord>>) {
+        cancelAllNet()
+        val suggestCall = RetrofitManager.retrofit
+            .create(WebService::class.java)
+            .xvideoSearch(keyword)
+
+        callHolder.add(suggestCall)
+        suggestCall.enqueue(object : Callback<XVideoKeyWordWrapper> {
+            override fun onFailure(call: Call<XVideoKeyWordWrapper>, t: Throwable) {
+                listener.onError(t.localizedMessage)
+            }
+
+            override fun onResponse(
+                call: Call<XVideoKeyWordWrapper>,
+                response: Response<XVideoKeyWordWrapper>
+            ) {
+                val res = response.body()
+                if (res != null) {
+                    listener.onSuccess(res.KEYWORDS)
+                }
+            }
+        })
 
     }
 

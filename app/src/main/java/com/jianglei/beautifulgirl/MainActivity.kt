@@ -15,10 +15,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         DataSourceCenter.init()
         test.setOnClickListener {
-            val intent = Intent(this@MainActivity,AllWebsiteActivity::class.java)
-            intent.putParcelableArrayListExtra("websites", WebsiteCenter.getAllNormalWebsites())
+//            val intent = Intent(this@MainActivity,AllWebsiteActivity::class.java)
+//            intent.putParcelableArrayListExtra("websites", WebsiteCenter.getAllNormalWebsites())
 
-//            val intent = Intent(this@MainActivity,VideoPlayActivity::class.java)
+            val intent = Intent(this@MainActivity,SearchActivity::class.java)
+            intent.putExtra("dataSourceKey",DataSourceCenter.SOURCE_XVIDEOS_VIDE)
             startActivity(intent)
         }
 

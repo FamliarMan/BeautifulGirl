@@ -2,6 +2,7 @@ package com.jianglei.beautifulgirl.data
 
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.Category
+import com.jianglei.beautifulgirl.vo.XVideoKeyWord
 
 /**
  * 一个具体的数据来源，比如爬虫，比如接口
@@ -35,6 +36,19 @@ interface DataSource {
      */
     fun cancelAllNet(){
         RetrofitManager.cancelNet()
+    }
+
+
+    /**
+     * 获取搜索建议
+     */
+    fun getSearchSuggest(keyword:String,listener:OnDataResultListener<MutableList<XVideoKeyWord>>){}
+
+    /**
+     * 获取一个网站搜索前往的页面地址
+     */
+    fun getSearchUrl(searchTxt:String):String{
+        return ""
     }
 
 }
