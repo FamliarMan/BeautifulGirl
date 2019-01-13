@@ -7,4 +7,5 @@
     <string name="no_picture">这个贴子中没有图片哦</string>
     <string name="need_vpn">这个页面比较邪恶，需要vpn才能访问</string>
     <string name="search_note">搜索任意内容</string>
+    <string name="retry">重新尝试</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.jianglei.beautifulgirl
 
-import android.app.ActionBar
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -10,17 +9,14 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
 import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.WebsiteVo
-import com.jianglei.beautifulgirl.R
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_category.*
-import utils.DensityUtils
 import utils.ToastUtils
 
 class CategoryActivity : BaseActivity() {

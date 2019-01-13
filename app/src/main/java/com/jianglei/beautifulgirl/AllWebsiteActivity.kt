@@ -16,6 +16,7 @@ import android.widget.TextView
 import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
+import com.jianglei.beautifulgirl.data.WebsiteCenter
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.WebsiteVo
 import kotlinx.android.synthetic.main.activity_all_website.*
@@ -27,11 +28,8 @@ class AllWebsiteActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_website)
-        allWebsites = intent.getParcelableArrayListExtra("websites")
-        if (allWebsites == null) {
-            return
-        }
         rvWebsites.layoutManager = GridLayoutManager(this, 2)
+        allWebsites = WebsiteCenter.getAllNormalWebsites()
         val adapter = WebsiteAdapter(this, allWebsites!!)
         adapter.onItemClickListener = object : OnItemClickListener<WebsiteVo> {
             override fun onItemClick(vo: WebsiteVo, pos: Int) {
@@ -40,7 +38,22 @@ class AllWebsiteActivity : BaseActivity() {
 
         }
         rvWebsites.adapter = adapter
+
+        bottomNav.setOnNavigationItemSelectedListener {
+            when {
+                it.itemId == R.id.action_in_wall -> {
+                    allWebsites = WebsiteCenter.getAllNormalWebsites()
+                    adapter.updateData(allWebsites!!)
+                }
+                else -> {
+                    allWebsites = WebsiteCenter.getAllVpnWebsites()
+                    adapter.updateData(allWebsites!!)
+                }
+            }
+            true
+        }
     }
+
 
     override fun onPause() {
         super.onPause()
@@ -85,6 +98,12 @@ class AllWebsiteActivity : BaseActivity() {
     private inner class WebsiteAdapter(private var context: Context, private var websites: MutableList<WebsiteVo>) :
         RecyclerView.Adapter<WebsiteHolder>() {
         var onItemClickListener: OnItemClickListener<WebsiteVo>? = null
+
+        fun updateData(websites: MutableList<WebsiteVo>) {
+            this.websites = websites
+            notifyDataSetChanged()
+        }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WebsiteHolder {
             val view = LayoutInflater.from(context).inflate(R.layout.listitem_all_websites, parent, false)
             return WebsiteHolder(view)

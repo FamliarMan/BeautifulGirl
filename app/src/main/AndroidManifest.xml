@@ -18,11 +18,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".BaseActivity">
         </activity>
@@ -31,6 +26,11 @@
         <activity android:name=".PictureDetailListActivity">
         </activity>
         <activity android:name=".AllWebsiteActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".video.VideoPlayActivity"
@@ -41,6 +41,8 @@
         <activity android:name=".SearchActivity">
         </activity>
         <activity android:name=".SearchResultActivity">
+        </activity>
+        <activity android:name=".HomePageActivity">
         </activity>
     </application>
 

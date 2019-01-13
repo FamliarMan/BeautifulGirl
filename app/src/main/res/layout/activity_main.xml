@@ -25,7 +25,7 @@
     </FrameLayout>
     <RelativeLayout android:layout_width="match_parent"
                     android:layout_weight="1"
-                    android:background="@mipmap/ic_wall"
+                    android:background="@mipmap/ico_wall"
                     android:layout_height="0dp">
 
         <Button

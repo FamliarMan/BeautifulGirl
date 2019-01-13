@@ -9,9 +9,21 @@
     tools:context=".video.VideoPlayActivity">
     <com.dl7.player.media.IjkPlayerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="200dp"
         android:id="@+id/playContent"
 
     />
+    <Button
+        android:id="@+id/retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/retry"
+        android:layout_below="@id/playContent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:background="#DDDDDD"
+        android:visibility="gone"
+    />
+
 
 </RelativeLayout>

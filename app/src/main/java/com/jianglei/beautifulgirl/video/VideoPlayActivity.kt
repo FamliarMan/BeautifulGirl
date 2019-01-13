@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import com.dl7.player.media.IjkPlayerView
@@ -34,7 +35,17 @@ class VideoPlayActivity : BaseActivity() {
         }
         dataSource = DataSourceCenter.getDataSource(dataSourceKey!!)
         showProgress(true)
+        getPlayUrl()
         init()
+
+        retry.setOnClickListener {
+            retry.visibility = View.GONE
+            getPlayUrl()
+
+        }
+    }
+
+    fun getPlayUrl(){
         dataSource!!.fetSingleContentDetail(detailUrl!!, object : OnDataResultListener<String> {
             override fun onSuccess(data: String) {
                 showProgress(false)
@@ -44,15 +55,17 @@ class VideoPlayActivity : BaseActivity() {
             override fun onError(msg: String) {
                 showProgress(false)
                 ToastUtils.showMsg(this@VideoPlayActivity, "获取视频地址失败")
+                retry.visibility = View.VISIBLE
             }
         })
-    }
 
+    }
     fun init() {
         playContent.init()
             .setMediaQuality(IjkPlayerView.MEDIA_QUALITY_HIGH)
     }
-    fun play(url:String){
+
+    fun play(url: String) {
         playContent.setVideoPath(Uri.parse(url))
             .start()
     }

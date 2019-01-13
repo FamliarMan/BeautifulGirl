@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_in_wall"
+          android:title="墙里"
+          android:icon="@mipmap/ic_car"
+          app:showAsAction="always"/>
+
+    <item android:id="@+id/action_out_wall"
+          android:title="墙外"
+          android:icon="@mipmap/ico_wall"
+          app:showAsAction="always"/>
+</menu>
