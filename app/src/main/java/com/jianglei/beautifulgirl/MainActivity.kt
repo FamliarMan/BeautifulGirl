@@ -13,7 +13,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        DataSourceCenter.init()
         test.setOnClickListener {
 //            val intent = Intent(this@MainActivity,AllWebsiteActivity::class.java)
 //            intent.putParcelableArrayListExtra("websites", WebsiteCenter.getAllNormalWebsites())
