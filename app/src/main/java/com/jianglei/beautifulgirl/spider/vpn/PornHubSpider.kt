@@ -13,6 +13,7 @@ import retrofit2.Response
 import java.net.URI
 import java.net.URL
 import java.util.regex.Pattern
+import kotlin.math.truncate
 
 
 /**
@@ -24,7 +25,12 @@ class PornHubSpider : DataSource {
     private var playRegx = "var flashvars_[\\d]*\\s*=\\s*(\\{.+\\})"
     private var playPattern = Pattern.compile(playRegx)
     override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
-        val realUrl = "$url&page=$page"
+        val realUrl: String?
+        if (url.contains("?")) {
+            realUrl = "$url&page=$page"
+        } else {
+            realUrl = "$url?page=$page"
+        }
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
             override fun onSuccess(html: String?) {
                 if (html == null) {
@@ -52,6 +58,7 @@ class PornHubSpider : DataSource {
                         contentTitle.type = Category.TYPE_VIDEO
                         contentTitle
                     }.toMutableList()
+
                 listener.onSuccess(res)
             }
 
@@ -91,8 +98,17 @@ class PornHubSpider : DataSource {
                         category.type = Category.TYPE_VIDEO
                         category
                     }.toMutableList()
+
+                    //将首页加上
+
+                    val categoryHome = Category("首页", "https://www.pornhub.com/video")
+                    categoryHome.coverUrl =
+                            "https://ci.phncdn.com/videos/201811/30/194467401/original/(m=ecuKGgaaaa)(mh=R0CvAjxoPPyvzHVm)14.jpg"
+                    categoryHome.type = Category.TYPE_VIDEO
+                    res.add(0, categoryHome)
                     listener.onSuccess(res)
                 } catch (e: Exception) {
+                    listener.onError(e.localizedMessage)
 
                 }
             }
