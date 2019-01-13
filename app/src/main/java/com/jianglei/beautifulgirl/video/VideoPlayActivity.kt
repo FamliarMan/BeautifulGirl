@@ -4,17 +4,15 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import com.dl7.player.media.IjkPlayerView
 import com.jianglei.beautifulgirl.BaseActivity
 import com.jianglei.beautifulgirl.R
 import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
+import com.jianglei.beautifulgirl.vo.PlayUrl
 import kotlinx.android.synthetic.main.activity_video_play.*
 import utils.ToastUtils
 
@@ -46,10 +44,14 @@ class VideoPlayActivity : BaseActivity() {
     }
 
     fun getPlayUrl(){
-        dataSource!!.fetSingleContentDetail(detailUrl!!, object : OnDataResultListener<String> {
-            override fun onSuccess(data: String) {
+        dataSource!!.fetchVideoUrls(detailUrl!!, object : OnDataResultListener<MutableList<PlayUrl>> {
+            override fun onSuccess(data: MutableList<PlayUrl>) {
                 showProgress(false)
-                play(data)
+                data.forEach{
+                    if (it.defaultQuality){
+                        play(it.videoUrl)
+                    }
+                }
             }
 
             override fun onError(msg: String) {
@@ -63,6 +65,7 @@ class VideoPlayActivity : BaseActivity() {
     fun init() {
         playContent.init()
             .setMediaQuality(IjkPlayerView.MEDIA_QUALITY_HIGH)
+
     }
 
     fun play(url: String) {

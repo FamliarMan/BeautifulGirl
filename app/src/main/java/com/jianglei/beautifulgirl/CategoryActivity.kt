@@ -73,9 +73,9 @@ class CategoryActivity : BaseActivity() {
         toolBar.setOnMenuItemClickListener(object : android.support.v7.widget.Toolbar.OnMenuItemClickListener {
             override fun onMenuItemClick(item: MenuItem?): Boolean {
                 when {
-                    item?.itemId == R.id.action_search-> {
-                        val intent = Intent(this@CategoryActivity,SearchActivity::class.java)
-                        intent.putExtra("dataSourceKey",dataSourceKey)
+                    item?.itemId == R.id.action_search -> {
+                        val intent = Intent(this@CategoryActivity, SearchActivity::class.java)
+                        intent.putExtra("dataSourceKey", dataSourceKey)
                         startActivity(intent)
 
                     }
@@ -99,13 +99,13 @@ class CategoryActivity : BaseActivity() {
                         getString(R.string.no_more_data)
                     )
                     rvCategory.pushRefreshEnable = false
-                    return
+                } else {
+                    data.forEach {
+                        Log.d("longyi", it.title + " " + it.coverUrl)
+                    }
+                    categories.addAll(data)
+                    adapter.notifyItemInserted(categories.size - data.size)
                 }
-                data.forEach {
-                    Log.d("longyi", it.title + " " + it.coverUrl)
-                }
-                categories.addAll(data)
-                adapter.notifyItemInserted(categories.size - data.size)
                 rvCategory.post {
                     rvCategory.setPullLoadMoreCompleted()
                 }

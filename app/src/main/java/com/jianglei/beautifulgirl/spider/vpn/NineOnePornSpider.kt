@@ -7,6 +7,7 @@ import com.jianglei.beautifulgirl.data.OnWebResultListener
 import com.jianglei.beautifulgirl.data.RetrofitManager
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.Category
+import com.jianglei.beautifulgirl.vo.PlayUrl
 import org.jsoup.Jsoup
 import java.lang.StringBuilder
 
@@ -54,7 +55,7 @@ class NineOnePornSpider : DataSource {
                         val desc = sb.toString()
                         val res = ContentTitle(title, desc, detailUrl, coverUrl)
                         res.type = Category.TYPE_VIDEO
-                        Log.d("jianglei",res.title+"  "+res.detailUrl)
+                        Log.d("jianglei", res.title + "  " + res.detailUrl)
                         res
 
                     }.toMutableList()
@@ -77,7 +78,7 @@ class NineOnePornSpider : DataSource {
     override fun fetDetailPictures(url: String, page: Int, listener: OnDataResultListener<MutableList<String>>) {
     }
 
-    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>,page:Int) {
+    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>, page: Int) {
         RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
             override fun onSuccess(html: String?) {
                 if (html == null) {
@@ -112,7 +113,7 @@ class NineOnePornSpider : DataSource {
         })
     }
 
-    override fun fetSingleContentDetail(detailUrl: String, listener: OnDataResultListener<String>) {
+    override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayUrl>>) {
 
         RetrofitManager.get91Html(detailUrl, object : OnWebResultListener {
             override fun onSuccess(html: String?) {
@@ -126,7 +127,9 @@ class NineOnePornSpider : DataSource {
 
                     val videoUrl = doc.select("video").first().select("source").first().attr("src")
                     Log.d("jianglei", "视频链接：$videoUrl")
-                    listener.onSuccess(videoUrl)
+                    val playUrl = PlayUrl(true, "mp4", "360", videoUrl)
+                    val res = listOf<PlayUrl>(playUrl)
+                    listener.onSuccess(res.toMutableList())
 
                 } catch (e: Exception) {
                     e.printStackTrace()

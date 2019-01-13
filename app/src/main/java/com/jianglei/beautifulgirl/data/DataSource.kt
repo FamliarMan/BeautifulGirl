@@ -2,7 +2,8 @@ package com.jianglei.beautifulgirl.data
 
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.Category
-import com.jianglei.beautifulgirl.vo.XVideoKeyWord
+import com.jianglei.beautifulgirl.vo.PlayUrl
+import com.jianglei.beautifulgirl.vo.SearchVideoKeyWord
 
 /**
  * 一个具体的数据来源，比如爬虫，比如接口
@@ -26,10 +27,9 @@ interface DataSource {
     fun fetAllTypes(homePageUrl:String,listener: OnDataResultListener<MutableList<Category>>,page:Int=1)
 
     /**
-     * 获取单个条目的具体地址，比如视频地址
+     * 获取视频地址
      */
-    fun fetSingleContentDetail(detailUrl:String,listener: OnDataResultListener<String>){
-
+    fun fetchVideoUrls(detailUrl:String, listener: OnDataResultListener<MutableList<PlayUrl>>){
     }
     /**
      * 取消所有请求
@@ -42,7 +42,7 @@ interface DataSource {
     /**
      * 获取搜索建议
      */
-    fun getSearchSuggest(keyword:String,listener:OnDataResultListener<MutableList<XVideoKeyWord>>){}
+    fun getSearchSuggest(keyword:String,listener:OnDataResultListener<MutableList<SearchVideoKeyWord>>){}
 
     /**
      * 获取一个网站搜索前往的页面地址

@@ -1,10 +1,7 @@
 package com.jianglei.beautifulgirl.spider.vpn
 
 import com.jianglei.beautifulgirl.data.*
-import com.jianglei.beautifulgirl.vo.Category
-import com.jianglei.beautifulgirl.vo.ContentTitle
-import com.jianglei.beautifulgirl.vo.XVideoKeyWord
-import com.jianglei.beautifulgirl.vo.XVideoKeyWordWrapper
+import com.jianglei.beautifulgirl.vo.*
 import org.jsoup.Jsoup
 import retrofit2.Call
 import retrofit2.Callback
@@ -174,7 +171,7 @@ class XvideosSpider : DataSource {
     }
 
 
-    override fun fetSingleContentDetail(detailUrl: String, listener: OnDataResultListener<String>) {
+    override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayUrl>>) {
         RetrofitManager.getWebsiteHtml(detailUrl, object : OnWebResultListener {
             override fun onSuccess(html: String?) {
                 if (html == null) {
@@ -186,7 +183,10 @@ class XvideosSpider : DataSource {
                     listener.onError("获取播放地址失败")
                     return
                 }
-                listener.onSuccess(realPlayUrl)
+
+                val playUrl = PlayUrl(true, "tls", "720", realPlayUrl)
+                val res = listOf(playUrl)
+                listener.onSuccess(res.toMutableList())
 
             }
 
@@ -242,7 +242,7 @@ class XvideosSpider : DataSource {
         }
     }
 
-    override fun getSearchSuggest(keyword: String, listener: OnDataResultListener<MutableList<XVideoKeyWord>>) {
+    override fun getSearchSuggest(keyword: String, listener: OnDataResultListener<MutableList<SearchVideoKeyWord>>) {
         cancelAllNet()
         val suggestCall = RetrofitManager.retrofit
             .create(WebService::class.java)

@@ -10,13 +10,13 @@ import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.vo.Category
-import com.jianglei.beautifulgirl.vo.XVideoKeyWord
+import com.jianglei.beautifulgirl.vo.SearchVideoKeyWord
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : BaseActivity() {
 
-    private lateinit var adapter: CommonRecyclerAdapter<XVideoKeyWord>
-    private var keyWords: MutableList<XVideoKeyWord> = ArrayList()
+    private lateinit var adapter: CommonRecyclerAdapter<SearchVideoKeyWord>
+    private var keyWords: MutableList<SearchVideoKeyWord> = ArrayList()
     private var dataSource: DataSource? = null
     private var dataSourceKey: String? = null
     private var lastInputTime = 0L
@@ -31,11 +31,11 @@ class SearchActivity : BaseActivity() {
             return
         }
         dataSource = DataSourceCenter.getDataSource(dataSourceKey!!)
-        adapter = object : CommonRecyclerAdapter<XVideoKeyWord>(
+        adapter = object : CommonRecyclerAdapter<SearchVideoKeyWord>(
             this, R.layout.listitem_xvideos_search,
             keyWords
         ) {
-            override fun onUpdate(helper: BaseAdapterHelper?, item: XVideoKeyWord?, position: Int) {
+            override fun onUpdate(helper: BaseAdapterHelper?, item: SearchVideoKeyWord?, position: Int) {
                 helper?.setText(R.id.tvKeyword, item?.N)
                 helper?.setText(R.id.tvNumber, item?.R)
             }
@@ -89,8 +89,8 @@ class SearchActivity : BaseActivity() {
             adapter.clear()
             return
         }
-        dataSource!!.getSearchSuggest(searchText!!, object : OnDataResultListener<MutableList<XVideoKeyWord>> {
-            override fun onSuccess(data: MutableList<XVideoKeyWord>) {
+        dataSource!!.getSearchSuggest(searchText!!, object : OnDataResultListener<MutableList<SearchVideoKeyWord>> {
+            override fun onSuccess(data: MutableList<SearchVideoKeyWord>) {
                 adapter.clear()
                 adapter.addAll(data)
             }

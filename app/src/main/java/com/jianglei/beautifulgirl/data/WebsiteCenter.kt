@@ -58,6 +58,14 @@ object WebsiteCenter {
             DataSourceCenter.SOURCE_XVIDEOS_VIDE
         )
         allVpnWebSites.add(websiteVo)
+
+        websiteVo = WebsiteVo(
+            "pornhub",
+            "https://www.pornhub.com/categories",
+            R.mipmap.pornhub,
+            DataSourceCenter.SOURCE_PORNHUB_VIDEO
+        )
+        allVpnWebSites.add(websiteVo)
     }
 
     fun getAllNormalWebsites(): ArrayList<WebsiteVo> {

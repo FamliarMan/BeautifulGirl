@@ -87,10 +87,16 @@ data class Category(var title: String, var url: String) : Parcelable {
 /**
  * xvideos搜索返回的关键字返回结构
  */
-data class XVideoKeyWordWrapper(var KEYWORDS:MutableList<XVideoKeyWord>)
+data class XVideoKeyWordWrapper(var KEYWORDS:MutableList<SearchVideoKeyWord>)
 /**
- * xvideos搜索返回的关键字
+ * 搜索返回的关键字
  */
-data class XVideoKeyWord(var N:String,var R:String)
+data class SearchVideoKeyWord(var N:String, var R:String)
 
-
+/**
+ * [defaultQuality]: 是否是默认选中
+ * [format]: 当前视频格式
+ * [quality]: 当前视频质量
+ * [videoUrl]: 当前视频地址
+ */
+data class PlayUrl(var defaultQuality:Boolean,var format:String,var quality:String,var videoUrl:String )

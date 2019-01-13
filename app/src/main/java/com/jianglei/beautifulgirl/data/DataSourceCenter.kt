@@ -4,6 +4,7 @@ import com.jianglei.beautifulgirl.spider.FanliSpider
 import com.jianglei.beautifulgirl.spider.ZhuangxiuSpider
 import com.jianglei.beautifulgirl.spider.vpn.CaoliuSpider
 import com.jianglei.beautifulgirl.spider.vpn.NineOnePornSpider
+import com.jianglei.beautifulgirl.spider.vpn.PornHubSpider
 import com.jianglei.beautifulgirl.spider.vpn.XvideosSpider
 
 /**
@@ -30,8 +31,9 @@ object DataSourceCenter {
         registerDataSource(SOURCE_FANLI_PICTURE, FanliSpider())
         registerDataSource(SOURCE_ZHUANGXIU_PICTURE, ZhuangxiuSpider())
         registerDataSource(SOURCE_CAOLIU_PICTURE, CaoliuSpider())
-        registerDataSource(SOURCE_91_VIDEO,NineOnePornSpider())
-        registerDataSource(SOURCE_XVIDEOS_VIDE,XvideosSpider())
+        registerDataSource(SOURCE_91_VIDEO, NineOnePornSpider())
+        registerDataSource(SOURCE_XVIDEOS_VIDE, XvideosSpider())
+        registerDataSource(SOURCE_PORNHUB_VIDEO, PornHubSpider())
     }
 
     /**
@@ -56,7 +58,12 @@ object DataSourceCenter {
     /**
      * xvideos的视频
      */
-    const val SOURCE_XVIDEOS_VIDE ="xvideos"
+    const val SOURCE_XVIDEOS_VIDE = "xvideos"
+
+    /**
+     * pornhub的视频
+     */
+    const val SOURCE_PORNHUB_VIDEO = "pornhub"
 
 }
 
