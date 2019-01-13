@@ -52,7 +52,12 @@ class PornHubSpider : DataSource {
                         var detailUrl = a.attr("href")
                         detailUrl = "https://" + host.host + detailUrl
                         val title = a.attr("title")
-                        val coverUrl = imgFade.selectFirst("img").attr("src")
+                        val img = imgFade.selectFirst("img")
+                        var coverUrl = img.attr("src")
+                        if (!coverUrl.startsWith("http")) {
+                            //特殊情况，src不是正常的图片地址，转而去取其他属性
+                            coverUrl = img.attr("data-thumb_url")
+                        }
                         val desc = it.selectFirst(".views").text()
                         val contentTitle = ContentTitle(title, desc, detailUrl, coverUrl)
                         contentTitle.type = Category.TYPE_VIDEO

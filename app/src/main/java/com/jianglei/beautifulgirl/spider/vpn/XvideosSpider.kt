@@ -209,13 +209,13 @@ class XvideosSpider : DataSource {
     }
 
     private fun getRealPlayUrl(html: String): String? {
-        val highTsMatcher = highTSPattern.matcher(html)
-        if (highTsMatcher.find()) {
-            return highTsMatcher.group(1)
-        }
         val highMp4Matcher = highMp4Pattern.matcher(html)
         if (highMp4Matcher.find()) {
             return highMp4Matcher.group(1)
+        }
+        val highTsMatcher = highTSPattern.matcher(html)
+        if (highTsMatcher.find()) {
+            return highTsMatcher.group(1)
         }
         return null
     }
