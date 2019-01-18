@@ -7,9 +7,10 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".video.VideoPlayActivity">
-    <com.dl7.player.media.IjkPlayerView
+    <com.kk.taurus.playerbase.widget.BaseVideoView
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:background="#000000"
         android:id="@+id/playContent"
 
     />

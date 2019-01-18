@@ -4,15 +4,25 @@ import android.app.Application
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.RetrofitManager
+import com.kk.taurus.exoplayer.ExoMediaPlayer
+import com.kk.taurus.playerbase.config.PlayerConfig
+import com.kk.taurus.playerbase.config.PlayerLibrary
 
 /**
  * @author jianglei on 1/4/19.
  */
 class MyApplication : Application() {
+    companion object {
+        public var ignoreMobile = true
+    }
     override fun onCreate() {
         super.onCreate()
         RetrofitManager.init(this)
         DataSourceCenter.init()
         Fresco.initialize(this)
+        PlayerConfig.setUseDefaultNetworkEventProducer(true)
+        //初始化库
+        PlayerLibrary.init(this)
+        ExoMediaPlayer.init(this)
     }
 }

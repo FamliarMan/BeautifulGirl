@@ -2,24 +2,32 @@ package com.jianglei.beautifulgirl.video
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
-import com.dl7.player.media.IjkPlayerView
+import android.view.ViewGroup
 import com.jianglei.beautifulgirl.BaseActivity
 import com.jianglei.beautifulgirl.R
 import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.vo.PlayUrl
+import com.kk.taurus.playerbase.assist.InterEvent
+import com.kk.taurus.playerbase.assist.OnVideoViewEventHandler
+import com.kk.taurus.playerbase.event.OnPlayerEventListener
+import com.kk.taurus.playerbase.player.IPlayer
+import com.kk.taurus.playerbase.receiver.ReceiverGroup
+import com.kk.taurus.playerbase.widget.BaseVideoView
 import kotlinx.android.synthetic.main.activity_video_play.*
+import utils.DensityUtils
 import utils.ToastUtils
 
 class VideoPlayActivity : BaseActivity() {
     private var dataSource: DataSource? = null
     private var dataSourceKey: String? = null
     private var detailUrl: String? = null
+    private var userPause: Boolean = false
+    private var isLandscape: Boolean = false
+    private lateinit var mReceiverGroup: ReceiverGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +40,6 @@ class VideoPlayActivity : BaseActivity() {
             return
         }
         dataSource = DataSourceCenter.getDataSource(dataSourceKey!!)
-        showProgress(true)
         getPlayUrl()
         init()
 
@@ -43,12 +50,13 @@ class VideoPlayActivity : BaseActivity() {
         }
     }
 
-    fun getPlayUrl(){
+    fun getPlayUrl() {
+        showProgress(true)
         dataSource!!.fetchVideoUrls(detailUrl!!, object : OnDataResultListener<MutableList<PlayUrl>> {
             override fun onSuccess(data: MutableList<PlayUrl>) {
                 showProgress(false)
-                data.forEach{
-                    if (it.defaultQuality){
+                data.forEach {
+                    if (it.defaultQuality) {
                         play(it.videoUrl)
                     }
                 }
@@ -62,71 +70,128 @@ class VideoPlayActivity : BaseActivity() {
         })
 
     }
-    fun init() {
-        playContent.init()
-            .setMediaQuality(IjkPlayerView.MEDIA_QUALITY_HIGH)
 
+    fun init() {
+        updateVideo(false)
+        mReceiverGroup = ReceiverGroupManager.get().getReceiverGroup(this)
+        playContent.setReceiverGroup(mReceiverGroup)
+        playContent.setEventHandler(object : OnVideoViewEventHandler() {
+            override fun onAssistHandle(assist: BaseVideoView?, eventCode: Int, bundle: Bundle?) {
+                super.onAssistHandle(assist, eventCode, bundle)
+                when (eventCode) {
+                    InterEvent.CODE_REQUEST_PAUSE -> {
+                        userPause = true
+                    }
+
+                    DataInter.Event.EVENT_CODE_REQUEST_BACK -> {
+                        if (isLandscape) {
+                            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                        } else {
+                            finish()
+                        }
+                    }
+                    DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN -> {
+                        requestedOrientation = if (isLandscape) {
+                            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                        } else {
+                            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                        }
+                    }
+                    DataInter.Event.EVENT_CODE_ERROR_SHOW -> {
+                        playContent.stop()
+                    }
+
+                }
+            }
+
+        })
+        playContent.setOnPlayerEventListener(object : OnPlayerEventListener {
+            override fun onPlayerEvent(eventCode: Int, bundle: Bundle?) {
+
+                when (eventCode) {
+                    OnPlayerEventListener.PLAYER_EVENT_ON_VIDEO_RENDER_START -> {
+                    }
+                }
+            }
+        })
     }
 
     fun play(url: String) {
-        playContent.setVideoPath(Uri.parse(url))
-            .start()
+
+        val dataSource = com.kk.taurus.playerbase.entity.DataSource(url)
+        playContent.setDataSource(dataSource)
+        playContent.start()
+    }
+
+    private fun updateVideo(landscape: Boolean) {
+        val margin = DensityUtils.dip2px(this, 2f)
+        val layoutParams = playContent.layoutParams as ViewGroup.MarginLayoutParams
+        if (landscape) {
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+            layoutParams.setMargins(0, 0, 0, 0)
+        } else {
+            layoutParams.width = DensityUtils.getScreenWidth(this) - (margin * 2)
+            layoutParams.height = layoutParams.width * 3 / 4
+            layoutParams.setMargins(margin, margin, margin, margin)
+        }
+        playContent.layoutParams = layoutParams
     }
 
     override fun onResume() {
         super.onResume()
-        playContent.onResume()
+        val state = playContent.state
+        if (state == IPlayer.STATE_PLAYBACK_COMPLETE)
+            return
+        if (playContent.isInPlaybackState) {
+            if (!userPause)
+                playContent.resume()
+        } else {
+            playContent.rePlay(0)
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        playContent.onPause()
+
+        val state = playContent.state
+        if (state == IPlayer.STATE_PLAYBACK_COMPLETE)
+            return
+        if (playContent.isInPlaybackState) {
+            playContent.pause()
+        } else {
+            playContent.stop()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        playContent.onDestroy()
+        playContent.stopPlayback()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
-        playContent.configurationChanged(newConfig)
-//        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE ) {//横屏
-////            val flag = WindowManager.LayoutParams.FLAG_FULLSCREEN
-////            val window = window
-////            window.setFlags(flag, flag)
-//            supportActionBar!!.hide()
-//        }else if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT){
-//            supportActionBar!!.show()
-//        }
-    }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (playContent.handleVolumeKey(keyCode)) {
-            return true
+        if (newConfig == null) {
+            return
         }
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // 检测屏幕的方向：纵向或横向
-            if (this.resources.configuration.orientation
-                == Configuration.ORIENTATION_LANDSCAPE
-            ) {
-                //当前为横屏，切换至竖屏
-                this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-
-            } else if (this.resources.configuration.orientation
-                == Configuration.ORIENTATION_PORTRAIT
-            ) {
-                //当前为竖屏，按退出键后就结束当前activity
-                finish()
-            }
-
-            return true
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            isLandscape = true
+            supportActionBar?.hide()
+            window.decorView.systemUiVisibility = View.INVISIBLE
+            updateVideo(true)
+        } else {
+            isLandscape = false
+            supportActionBar?.show()
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+            updateVideo(false)
         }
-        return super.onKeyDown(keyCode, event)
+        mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_IS_LANDSCAPE, isLandscape)
     }
 
     override fun onBackPressed() {
-        if (playContent.onBackPressed()) {
+        if (isLandscape) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             return
         }
         super.onBackPressed()
