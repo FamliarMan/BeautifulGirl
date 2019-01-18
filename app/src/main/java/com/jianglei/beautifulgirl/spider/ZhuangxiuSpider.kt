@@ -16,7 +16,7 @@ class ZhuangxiuSpider : DataSource {
     override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl = url.substring(0, url.length - 2) + "$page/"
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
+            override fun onSuccess(html: String) {
                 try {
                     val doc = Jsoup.parse(html)
                     val dds = doc.getElementsByClass("list-left public-box")[0]
@@ -50,11 +50,7 @@ class ZhuangxiuSpider : DataSource {
     override fun fetDetailPictures(url: String, page: Int, listener: OnDataResultListener<MutableList<String>>) {
         val realUrl = url.substring(0, url.length - 2) + "$page/"
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("解析网页失败")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 try {
 
                     val doc = Jsoup.parse(html)
@@ -92,11 +88,7 @@ class ZhuangxiuSpider : DataSource {
 
     override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>,page:Int) {
         RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error!")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 try {
                     val res: List<Category>
                     val doc = Jsoup.parse(html)

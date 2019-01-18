@@ -18,11 +18,7 @@ class CaoliuSpider : DataSource {
     override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl = "$url&page=$page"
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error!")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 try {
                     val doc = Jsoup.parse(html)
                     var trs = doc.getElementsByClass("tr3 t_one tac")
@@ -58,11 +54,7 @@ class CaoliuSpider : DataSource {
             return
         }
         RetrofitManager.getWebsiteHtml(url, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)
                 val inputs = doc.getElementsByTag("input")
                 val res = inputs.map {
@@ -82,10 +74,7 @@ class CaoliuSpider : DataSource {
 
     override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>,page:Int) {
         RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error")
-                }
+            override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)
                 val trs = doc.getElementsByClass("tr3 f_one")
                 val res = trs.map {

@@ -13,7 +13,6 @@ import retrofit2.Response
 import java.net.URI
 import java.net.URL
 import java.util.regex.Pattern
-import kotlin.math.truncate
 
 
 /**
@@ -32,11 +31,7 @@ class PornHubSpider : DataSource {
             realUrl = "$url?page=$page"
         }
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)
                 var ul = doc.select("#videoCategory")
                 if (ul.size == 0) {
@@ -79,11 +74,7 @@ class PornHubSpider : DataSource {
             return
         }
         RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 try {
                     val doc = Jsoup.parse(html)
                     val catPics = doc.select("[class~=cat_pic]")
@@ -126,11 +117,7 @@ class PornHubSpider : DataSource {
 
     override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayUrl>>) {
         RetrofitManager.getWebsiteHtml(detailUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 val matcher = playPattern.matcher(html)
                 if (!matcher.find()) {
                     listener.onSuccess(ArrayList())

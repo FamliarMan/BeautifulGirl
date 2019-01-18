@@ -84,11 +84,7 @@ class XvideosSpider : DataSource {
             return
         }
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 nextPageNum = getNextPageNum(html)
                 val doc = Jsoup.parse(html)
                 val thumbBlock = doc.select(".thumb-block")
@@ -118,11 +114,7 @@ class XvideosSpider : DataSource {
     override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>, page: Int) {
         val realUrl = "$homePageUrl/" + (page - 1)
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 try {
 
                     val doc = Jsoup.parse(html)
@@ -173,11 +165,7 @@ class XvideosSpider : DataSource {
 
     override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayUrl>>) {
         RetrofitManager.getWebsiteHtml(detailUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 val realPlayUrl = getRealPlayUrl(html)
                 if (realPlayUrl == null) {
                     listener.onError("获取播放地址失败")

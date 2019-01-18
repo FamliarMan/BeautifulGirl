@@ -116,6 +116,7 @@ class AllWebsiteActivity : BaseActivity() {
         override fun onBindViewHolder(holder: WebsiteHolder, position: Int) {
             holder.ivContent.setImageResource(websites[position].icon)
             holder.tvName.text = websites[position].name
+            holder.tvType.text = websites[position].type
             holder.mainItem.setOnClickListener {
                 onItemClickListener?.onItemClick(websites[position], position)
             }
@@ -128,5 +129,6 @@ class AllWebsiteActivity : BaseActivity() {
         var ivContent: ImageView = view.findViewById(R.id.iv_icon)
         var tvName: TextView = view.findViewById(R.id.name)
         var mainItem: CardView = view.findViewById(R.id.main_item)
+        var tvType:TextView = view.findViewById(R.id.tv_type)
     }
 }

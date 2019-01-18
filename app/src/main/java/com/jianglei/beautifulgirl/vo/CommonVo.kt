@@ -6,11 +6,19 @@ import android.os.Parcelable
 /**
  * @author jianglei on 1/6/19.
  */
-data class WebsiteVo(var name: String, var homePageUrl: String, var icon: Int, var dataSourceKey: String) : Parcelable {
+@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+data class WebsiteVo(
+    var name: String,
+    var homePageUrl: String,
+    var icon: Int,
+    var dataSourceKey: String,
+    var type: String
+) : Parcelable {
     constructor(source: Parcel) : this(
         source.readString(),
         source.readString(),
         source.readInt(),
+        source.readString(),
         source.readString()
     )
 
@@ -21,6 +29,7 @@ data class WebsiteVo(var name: String, var homePageUrl: String, var icon: Int, v
         writeString(homePageUrl)
         writeInt(icon)
         writeString(dataSourceKey)
+        writeString(type)
     }
 
     companion object {

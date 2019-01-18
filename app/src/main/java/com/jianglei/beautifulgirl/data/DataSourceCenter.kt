@@ -1,6 +1,7 @@
 package com.jianglei.beautifulgirl.data
 
 import com.jianglei.beautifulgirl.spider.FanliSpider
+import com.jianglei.beautifulgirl.spider.NineFourPicture
 import com.jianglei.beautifulgirl.spider.ZhuangxiuSpider
 import com.jianglei.beautifulgirl.spider.vpn.CaoliuSpider
 import com.jianglei.beautifulgirl.spider.vpn.NineOnePornSpider
@@ -34,6 +35,7 @@ object DataSourceCenter {
         registerDataSource(SOURCE_91_VIDEO, NineOnePornSpider())
         registerDataSource(SOURCE_XVIDEOS_VIDE, XvideosSpider())
         registerDataSource(SOURCE_PORNHUB_VIDEO, PornHubSpider())
+        registerDataSource(SOURCE_94_TAOTU_PICTURE,NineFourPicture())
     }
 
     /**
@@ -64,6 +66,11 @@ object DataSourceCenter {
      * pornhub的视频
      */
     const val SOURCE_PORNHUB_VIDEO = "pornhub"
+
+    /**
+     * 94套图网
+     */
+    const val SOURCE_94_TAOTU_PICTURE = "94taotu"
 
 }
 

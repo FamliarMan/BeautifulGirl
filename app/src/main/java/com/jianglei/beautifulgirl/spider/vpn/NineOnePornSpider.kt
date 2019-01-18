@@ -19,11 +19,7 @@ class NineOnePornSpider : DataSource {
     override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl = "$url&page=$page"
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 try {
                     val doc = Jsoup.parse(html)
                     val listchannel = doc.getElementsByClass("listchannel")
@@ -43,7 +39,7 @@ class NineOnePornSpider : DataSource {
                         val title = a.getElementsByTag("img")[0].attr("title")
 
                         val allInfo = it.text()
-                        var sb = StringBuilder()
+                        val sb = StringBuilder()
                         val sindex = allInfo.indexOf("时长")
 
                         val duration = allInfo.substring(sindex + 3, sindex + 8)
@@ -80,11 +76,7 @@ class NineOnePornSpider : DataSource {
 
     override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>, page: Int) {
         RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
-                if (html == null) {
-                    listener.onError("Network Error")
-                    return
-                }
+            override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)
                 try {
                     val a = doc.getElementById("navsubbar")
@@ -116,19 +108,15 @@ class NineOnePornSpider : DataSource {
     override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayUrl>>) {
 
         RetrofitManager.get91Html(detailUrl, object : OnWebResultListener {
-            override fun onSuccess(html: String?) {
+            override fun onSuccess(html: String) {
 
-                if (html == null) {
-                    listener.onError("Network Error")
-                    return
-                }
                 try {
                     val doc = Jsoup.parse(html)
 
                     val videoUrl = doc.select("video").first().select("source").first().attr("src")
                     Log.d("jianglei", "视频链接：$videoUrl")
                     val playUrl = PlayUrl(true, "mp4", "360", videoUrl)
-                    val res = listOf<PlayUrl>(playUrl)
+                    val res = listOf(playUrl)
                     listener.onSuccess(res.toMutableList())
 
                 } catch (e: Exception) {

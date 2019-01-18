@@ -66,7 +66,7 @@ class SearchActivity : BaseActivity() {
                     dataSource!!.cancelAllNet()
                     rvSearchResult.removeCallbacks(searchRunnable)
                 }
-                rvSearchResult.postDelayed(searchRunnable, 1000)
+                rvSearchResult.postDelayed(searchRunnable, 500)
                 lastInputTime = System.currentTimeMillis()
                 return false
             }

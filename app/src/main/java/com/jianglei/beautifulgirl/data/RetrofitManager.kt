@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Environment
 import android.util.Log
 import okhttp3.Cache
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,7 +15,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import utils.IpUtils
 import java.io.File
 import java.nio.charset.Charset
-import kotlin.math.log
 
 /**
  * @author jianglei on 1/4/19.
