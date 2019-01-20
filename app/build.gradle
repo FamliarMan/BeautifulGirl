@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin:'kotlin-kapt'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -62,6 +64,8 @@ dependencies {
 //    implementation('com.github.open-android:IjkPlayer:1.0.0') {
 //        exclude group: 'tv.danmaku.ijk.media', module: 'ijkplayer-armv7a'
 //    }
+    kapt project(":processor")
+    implementation project(":annotation")
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

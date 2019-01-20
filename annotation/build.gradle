@@ -1,0 +1,13 @@
+apply plugin:'kotlin'
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
+repositories {
+    mavenCentral()
+}

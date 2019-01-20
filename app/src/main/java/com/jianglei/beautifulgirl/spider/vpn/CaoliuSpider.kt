@@ -1,6 +1,7 @@
 package com.jianglei.beautifulgirl.spider.vpn
 
 import android.util.Log
+import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.data.DataSource
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.OnWebResultListener
@@ -14,6 +15,7 @@ import java.net.URL
 /**
  * @author jianglei on 1/6/19.
  */
+@WebSource(1)
 class CaoliuSpider : DataSource {
     override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl = "$url&page=$page"
