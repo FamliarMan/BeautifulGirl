@@ -49,7 +49,11 @@ class RetrofitManager {
             return if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()
                 || !Environment.isExternalStorageRemovable()
             ) {
-                context.externalCacheDir.path
+                if(context.externalCacheDir == null){
+                    context.cacheDir.path
+                }else{
+                    context.externalCacheDir!!.path
+                }
             } else {
                 context.cacheDir.path
             }

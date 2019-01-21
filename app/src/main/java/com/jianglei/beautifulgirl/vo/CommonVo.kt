@@ -58,8 +58,8 @@ data class Category(var title: String, var url: String) : Parcelable {
     var desc:String? = null
 
     constructor(source: Parcel) : this(
-        source.readString(),
-        source.readString()
+        source.readString()!!,
+        source.readString()!!
     ) {
         type = source.readInt()
         coverUrl = source.readString()
