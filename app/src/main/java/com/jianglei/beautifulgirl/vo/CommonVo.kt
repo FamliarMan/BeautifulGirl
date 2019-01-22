@@ -41,6 +41,19 @@ data class WebsiteVo(
     }
 }
 
+/**
+ * 一个网站基本的描述，[name] 是网站标题，
+ * [homePageUrl]是开始抓取的页面url，
+ * [icon]是网站的图标
+ * [type] 网站的类型藐视，可以是“图片”或“视频”
+ */
+data class WebsiteDescVo(
+    var name: String,
+    var homePageUrl: String,
+    var icon: Int,
+    var type: String
+)
+
 data class Category(var title: String, var url: String) : Parcelable {
     /**
      *当前分类下内容的类型

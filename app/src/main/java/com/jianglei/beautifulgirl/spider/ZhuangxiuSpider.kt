@@ -1,19 +1,33 @@
 package com.jianglei.beautifulgirl.spider
 
-import com.jianglei.beautifulgirl.data.DataSource
+import com.jianglei.annotation.WebSource
+import com.jianglei.beautifulgirl.R
+import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.OnWebResultListener
 import com.jianglei.beautifulgirl.data.RetrofitManager
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
+import com.jianglei.beautifulgirl.vo.WebsiteDescVo
 import org.jsoup.Jsoup
 
 /**
  * 妆秀网爬虫
  * @author jianglei on 1/6/19.
  */
-class ZhuangxiuSpider : DataSource {
-    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+@WebSource(false)
+class ZhuangxiuSpider : WebDataSource {
+
+    override fun fetchWebsite(): WebsiteDescVo {
+        return WebsiteDescVo(
+            "妆秀性感美女图片",
+            "http://www.zhuangxiule.cn/",
+            R.mipmap.ic_zhuangxiu,
+            "图片"
+        )
+    }
+
+    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl = url.substring(0, url.length - 2) + "$page/"
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {
@@ -44,7 +58,7 @@ class ZhuangxiuSpider : DataSource {
                     listener.onError(msg)
                 }
             }
-        },"gb2312")
+        }, "gb2312")
     }
 
     override fun fetDetailPictures(url: String, page: Int, listener: OnDataResultListener<MutableList<String>>) {
@@ -61,7 +75,7 @@ class ZhuangxiuSpider : DataSource {
                         return
                     }
                     val imags = contentPic[0].getElementsByTag("img")
-                    if (imags.size == 0){
+                    if (imags.size == 0) {
                         listener.onSuccess(ArrayList())
                         return
 
@@ -83,10 +97,14 @@ class ZhuangxiuSpider : DataSource {
                     listener.onError(msg)
                 }
             }
-        },"gb2312")
+        }, "gb2312")
     }
 
-    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>,page:Int) {
+    override fun fetchAllCategory(
+        homePageUrl: String,
+        listener: OnDataResultListener<MutableList<Category>>,
+        page: Int
+    ) {
         RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {
                 try {
@@ -116,6 +134,6 @@ class ZhuangxiuSpider : DataSource {
                 }
             }
 
-        },"gb2312")
+        }, "gb2312")
     }
 }

@@ -13,18 +13,18 @@ import com.jianglei.beautifulgirl.spider.vpn.XvideosSpider
  */
 
 object DataSourceCenter {
-    private val allDataSources = HashMap<String, DataSource>()
+    private val allDataSources = HashMap<String, WebDataSource>()
     /**
      * 注册一个数据源
      */
-    fun registerDataSource(key: String, dataSource: DataSource) {
-        allDataSources[key] = dataSource
+    fun registerDataSource(key: String, webDataSource: WebDataSource) {
+        allDataSources[key] = webDataSource
     }
 
     /**
      * 获取一个数据源
      */
-    fun getDataSource(key: String): DataSource? {
+    fun getDataSource(key: String): WebDataSource? {
         return allDataSources[key]
     }
 

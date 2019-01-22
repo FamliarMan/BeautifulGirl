@@ -2,12 +2,15 @@ package com.jianglei.beautifulgirl.spider
 
 import android.accounts.NetworkErrorException
 import android.util.Log
-import com.jianglei.beautifulgirl.data.DataSource
+import com.jianglei.annotation.WebSource
+import com.jianglei.beautifulgirl.R
+import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.RetrofitManager
 import com.jianglei.beautifulgirl.data.WebService
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
+import com.jianglei.beautifulgirl.vo.WebsiteDescVo
 import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 import retrofit2.Call
@@ -17,8 +20,18 @@ import retrofit2.Response
 /**饭粒动态图网站蜘蛛
  * @author jianglei on 1/2/19.
  */
-class FanliSpider : DataSource {
-    override fun fetAllTypes(
+@WebSource(false,0)
+class FanliSpider : WebDataSource {
+
+    override fun fetchWebsite(): WebsiteDescVo {
+        return WebsiteDescVo(
+            "饭粒邪恶网",
+            "https://www.retuwo.com/",
+            R.mipmap.favicon,
+            "图片"
+        )
+    }
+    override fun fetchAllCategory(
         homePageUrl: String,
         listener: OnDataResultListener<MutableList<Category>>,
         page:Int
@@ -69,7 +82,7 @@ class FanliSpider : DataSource {
         })
     }
 
-    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
 
         startClaw(url, page,
             object : SpiderResultListener<MutableList<ContentTitle>> {

@@ -1,19 +1,31 @@
 package com.jianglei.beautifulgirl.spider
 
-import com.jianglei.beautifulgirl.data.DataSource
+import com.jianglei.annotation.WebSource
+import com.jianglei.beautifulgirl.R
+import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.OnWebResultListener
 import com.jianglei.beautifulgirl.data.RetrofitManager
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
+import com.jianglei.beautifulgirl.vo.WebsiteDescVo
 import org.jsoup.Jsoup
 
 /**
  * 94套图
  * @author jianglei on 1/18/19.
  */
-class NineFourPicture : DataSource {
-    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+@WebSource(false)
+class NineFourPicture : WebDataSource {
+    override fun fetchWebsite(): WebsiteDescVo {
+        return WebsiteDescVo(
+            "94套图网",
+            "http://www.94xxx.pw/",
+            R.mipmap.ninefour,
+            "图片"
+        )
+    }
+    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl = url + "page/$page"
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {
@@ -48,7 +60,7 @@ class NineFourPicture : DataSource {
 
     }
 
-    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>, page: Int) {
+    override fun fetchAllCategory(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>, page: Int) {
         RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {
                 try {

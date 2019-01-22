@@ -8,20 +8,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.jianglei.beautifulgirl.data.DataSource
+import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.video.VideoPlayActivity
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
+import com.jianglei.beautifulgirl.vo.PlayUrl
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
+import utils.ToastUtils
 
 /**
  * @author jianglei on 1/3/19.
  */
-class PictureListFragment : Fragment() {
+class PictureListFragment : BaseFragment() {
     private var contentTitles: MutableList<ContentTitle> = ArrayList()
-    private var dataSource: DataSource? = null
+    private var webDataSource: WebDataSource? = null
     private var page = 1
     private var visible: Boolean = false
     private var isPrepared: Boolean = false
@@ -30,16 +32,20 @@ class PictureListFragment : Fragment() {
     private lateinit var rvContent: PullLoadMoreRecyclerView
     private var title: String? = null
     private var url: String? = null
-    private var dataSourceKey: String? = null
 
     companion object {
-        fun newInstance(title: String, url: String, dataSourceKey: String,isFromActivity:Boolean=false): PictureListFragment {
+        fun newInstance(
+            title: String,
+            url: String,
+            dataSource: WebDataSource,
+            isFromActivity: Boolean = false
+        ): PictureListFragment {
             val fragment = PictureListFragment()
             val bundle = Bundle()
             bundle.putString("title", title)
             bundle.putString("url", url)
-            bundle.putString("dataSourceKey", dataSourceKey)
-            bundle.putBoolean("isFromActivity",isFromActivity)
+            bundle.putSerializable("dataSource", dataSource)
+            bundle.putBoolean("isFromActivity", isFromActivity)
             fragment.arguments = bundle
             return fragment
         }
@@ -49,19 +55,15 @@ class PictureListFragment : Fragment() {
         title = arguments?.getString("title")
         url = arguments?.getString("url")
         val view = inflater.inflate(R.layout.fragment_picture_list, container, false)
-        dataSourceKey = arguments?.getString("dataSourceKey")
-        if (dataSourceKey == null) {
-            return view
-        }
-        dataSource = DataSourceCenter.getDataSource(dataSourceKey!!)
-        if (dataSource == null) {
+        webDataSource = arguments?.getSerializable("dataSource") as WebDataSource?
+        if (webDataSource == null) {
             return view
         }
         rvContent = view.findViewById(R.id.rvContent)
         initRecyclerview()
         isPrepared = true
         val isFromActivity = arguments?.getBoolean("isFromActivity")
-        if(isFromActivity!!){
+        if (isFromActivity!!) {
             visible = true
         }
         lazyLoad()
@@ -73,14 +75,11 @@ class PictureListFragment : Fragment() {
         titleAdapter.onItemClickListener = object : PictureTitleAdapter.OnItemClickListener {
             override fun onItemClick(title: ContentTitle, pos: Int) {
                 if (title.type == Category.TYPE_VIDEO) {
-                    val intent = Intent(activity, VideoPlayActivity::class.java)
-                    intent.putExtra("detailUrl", title.detailUrl)
-                    intent.putExtra("dataSourceKey", dataSourceKey)
-                    startActivity(intent)
+                    getVideoPlayUrl(title.detailUrl)
                 } else {
                     val intent = Intent(activity, PictureDetailListActivity::class.java)
                     intent.putExtra("detailUrl", title.detailUrl)
-                    intent.putExtra("dataSourceKey", dataSourceKey)
+                    intent.putExtra("dataSource", webDataSource)
                     startActivity(intent)
                 }
 
@@ -106,11 +105,39 @@ class PictureListFragment : Fragment() {
 
     }
 
+    private fun getVideoPlayUrl(detailUrl: String) {
+        showProgress(true)
+        webDataSource?.fetchVideoUrls(detailUrl, object : OnDataResultListener<MutableList<PlayUrl>> {
+            override fun onSuccess(data: MutableList<PlayUrl>) {
+                showProgress(false)
+                var playUrl: String? = null
+                data.forEach {
+                    if (it.defaultQuality) {
+                        playUrl = it.videoUrl
+                    }
+                }
+                val intent = Intent(activity, VideoPlayActivity::class.java)
+                intent.putExtra("playUrl", playUrl)
+                startActivity(intent)
+            }
+
+            override fun onError(msg: String) {
+                if (activity == null) {
+                    return
+                }
+                showProgress(false)
+                ToastUtils.showMsg(activity!!.applicationContext, getString(R.string.get_video_play_url_error))
+            }
+        })
+
+
+    }
+
     private fun fetchData() {
         if (url == null) {
             return
         }
-        dataSource!!.fetchTitles(url!!, page, object : OnDataResultListener<MutableList<ContentTitle>> {
+        webDataSource!!.fetchCoverContents(url!!, page, object : OnDataResultListener<MutableList<ContentTitle>> {
             override fun onSuccess(data: MutableList<ContentTitle>) {
                 rvContent.setPullLoadMoreCompleted()
                 if (data.size == 0) {
@@ -118,8 +145,8 @@ class PictureListFragment : Fragment() {
                     Toast.makeText(activity, R.string.no_more_data, Toast.LENGTH_LONG).show()
                     return
                 }
-                data.forEach{
-                    Log.d("jianglei",it.title+"  "+it.coverUrl)
+                data.forEach {
+                    Log.d("jianglei", it.title + "  " + it.coverUrl)
                 }
 
                 contentTitles.addAll(data)
@@ -164,7 +191,7 @@ class PictureListFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         if (isRemoving) {
-            dataSource?.cancelAllNet()
+            webDataSource?.cancelAllNet()
         }
     }
 }

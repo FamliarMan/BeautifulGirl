@@ -8,4 +8,5 @@
     <string name="need_vpn">这个页面比较邪恶，需要vpn才能访问</string>
     <string name="search_note">搜索任意内容</string>
     <string name="retry">重新尝试</string>
+    <string name="get_video_play_url_error">获取视频播放地址失败</string>
 </resources>

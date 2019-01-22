@@ -8,35 +8,30 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.facebook.drawee.interfaces.DraweeController
 import com.facebook.drawee.view.SimpleDraweeView
-import com.jianglei.beautifulgirl.data.DataSource
-import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
+import com.jianglei.beautifulgirl.data.WebDataSource
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import kotlinx.android.synthetic.main.layout_recyclerview.*
 import utils.ToastUtils
 
 class PictureDetailListActivity : BaseActivity() {
-    private var dataSource: DataSource? = null
+    private var dataSource: WebDataSource? = null
     private var detailUrl: String? = null
     private var page = 1
     private var urls: MutableList<String> = ArrayList()
-    private var dataSourceKey: String? = null
     private lateinit var adapter: PictureAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_recyclerview)
         detailUrl = intent.getStringExtra("detailUrl")
-        dataSourceKey = intent.getStringExtra("dataSourceKey")
-        if (dataSourceKey == null || detailUrl == null) {
+        dataSource = intent.getSerializableExtra("dataSource") as WebDataSource?
+        if (dataSource == null || detailUrl == null) {
             ToastUtils.showMsg(this, "Wrong action")
             return
         }
-        dataSource = DataSourceCenter.getDataSource(dataSourceKey!!)
         initRecyclerview()
         rvContent.setRefreshing(true)
         getData()

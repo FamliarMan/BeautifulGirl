@@ -1,5 +1,6 @@
 package com.jianglei.beautifulgirl
 
+import WebSourceCenter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,26 +14,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.jianglei.beautifulgirl.data.DataSource
-import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.WebsiteCenter
+import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.vo.Category
-import com.jianglei.beautifulgirl.vo.WebsiteVo
 import kotlinx.android.synthetic.main.activity_all_website.*
 import utils.ToastUtils
 
 class AllWebsiteActivity : BaseActivity() {
-    private var allWebsites: ArrayList<WebsiteVo>? = null
-    private var dataSource: DataSource? = null
+    private var allWebsites: ArrayList<WebDataSource>? = null
+    private var webDataSource: WebDataSource? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_website)
         rvWebsites.layoutManager = GridLayoutManager(this, 2)
-        allWebsites = WebsiteCenter.getAllNormalWebsites()
+        allWebsites = WebSourceCenter.normalWebSources
         val adapter = WebsiteAdapter(this, allWebsites!!)
-        adapter.onItemClickListener = object : OnItemClickListener<WebsiteVo> {
-            override fun onItemClick(vo: WebsiteVo, pos: Int) {
+        adapter.onItemClickListener = object : OnItemClickListener<WebDataSource> {
+            override fun onItemClick(vo: WebDataSource, pos: Int) {
                 getPictureTypes(vo)
             }
 
@@ -42,11 +40,11 @@ class AllWebsiteActivity : BaseActivity() {
         bottomNav.setOnNavigationItemSelectedListener {
             when {
                 it.itemId == R.id.action_in_wall -> {
-                    allWebsites = WebsiteCenter.getAllNormalWebsites()
+                    allWebsites = WebSourceCenter.normalWebSources
                     adapter.updateData(allWebsites!!)
                 }
                 else -> {
-                    allWebsites = WebsiteCenter.getAllVpnWebsites()
+                    allWebsites = WebSourceCenter.vpnWebSources
                     adapter.updateData(allWebsites!!)
                 }
             }
@@ -58,14 +56,15 @@ class AllWebsiteActivity : BaseActivity() {
     override fun onPause() {
         super.onPause()
         if (isFinishing) {
-            dataSource?.cancelAllNet()
+            webDataSource?.cancelAllNet()
         }
     }
 
-    private fun getPictureTypes(vo: WebsiteVo) {
-        dataSource = DataSourceCenter.getDataSource(vo.dataSourceKey)
+    private fun getPictureTypes(vo: WebDataSource) {
+        val websiteDesc = vo.fetchWebsite()
+        webDataSource = vo
         showProgress(true)
-        dataSource?.fetAllTypes(vo.homePageUrl, object : OnDataResultListener<MutableList<Category>> {
+        webDataSource?.fetchAllCategory(websiteDesc.homePageUrl, object : OnDataResultListener<MutableList<Category>> {
             override fun onSuccess(data: MutableList<Category>) {
                 data.forEach {
                     Log.d("jianglei", "获取分类:" + it.title + " " + it.url)
@@ -74,13 +73,12 @@ class AllWebsiteActivity : BaseActivity() {
                 if (data.size > 15) {
                     //分类数量大于15，要专门前往分类页面
                     val intent = Intent(this@AllWebsiteActivity, CategoryActivity::class.java)
-                    intent.putExtra("dataSourceKey", vo.dataSourceKey)
-                    intent.putExtra("websiteVo", vo)
+                    intent.putExtra("dataSource", vo)
                     startActivity(intent)
                 } else {
                     val intent = Intent(this@AllWebsiteActivity, ContentActivity::class.java)
                     intent.putParcelableArrayListExtra("types", data as java.util.ArrayList<out Parcelable>)
-                    intent.putExtra("dataSourceKey", vo.dataSourceKey)
+                    intent.putExtra("dataSource", vo)
                     startActivity(intent)
                 }
             }
@@ -95,11 +93,11 @@ class AllWebsiteActivity : BaseActivity() {
     }
 
 
-    private inner class WebsiteAdapter(private var context: Context, private var websites: MutableList<WebsiteVo>) :
+    private inner class WebsiteAdapter(private var context: Context, private var websites: MutableList<WebDataSource>) :
         RecyclerView.Adapter<WebsiteHolder>() {
-        var onItemClickListener: OnItemClickListener<WebsiteVo>? = null
+        var onItemClickListener: OnItemClickListener<WebDataSource>? = null
 
-        fun updateData(websites: MutableList<WebsiteVo>) {
+        fun updateData(websites: MutableList<WebDataSource>) {
             this.websites = websites
             notifyDataSetChanged()
         }
@@ -114,9 +112,10 @@ class AllWebsiteActivity : BaseActivity() {
         }
 
         override fun onBindViewHolder(holder: WebsiteHolder, position: Int) {
-            holder.ivContent.setImageResource(websites[position].icon)
-            holder.tvName.text = websites[position].name
-            holder.tvType.text = websites[position].type
+            val websiteDesc = websites[position].fetchWebsite()
+            holder.ivContent.setImageResource(websiteDesc.icon)
+            holder.tvName.text = websiteDesc.name
+            holder.tvType.text = websiteDesc.type
             holder.mainItem.setOnClickListener {
                 onItemClickListener?.onItemClick(websites[position], position)
             }

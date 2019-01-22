@@ -1,5 +1,7 @@
 package com.jianglei.beautifulgirl.spider.vpn
 
+import com.jianglei.annotation.WebSource
+import com.jianglei.beautifulgirl.R
 import com.jianglei.beautifulgirl.data.*
 import com.jianglei.beautifulgirl.vo.*
 import org.jsoup.Jsoup
@@ -14,7 +16,8 @@ import java.util.regex.Pattern
  * xvideos的爬虫
  * @author jianglei on 1/10/19.
  */
-class XvideosSpider : DataSource {
+@WebSource(true)
+class XvideosSpider : WebDataSource {
     /**
      * 当前获取封面内容的页码
      */
@@ -48,6 +51,16 @@ class XvideosSpider : DataSource {
     private val categoryPattern = Pattern.compile(categoryRegx)
     private var callHolder = ArrayList<Call<XVideoKeyWordWrapper>>()
 
+
+    override fun fetchWebsite(): WebsiteDescVo {
+        return WebsiteDescVo(
+            "xvideos",
+            "https://www.xvideos.com/channels-index",
+            R.mipmap.xvideos,
+            "视频"
+        )
+    }
+
     /**
      * 拿到获取下一页封面内容的真正的url的值
      */
@@ -76,7 +89,7 @@ class XvideosSpider : DataSource {
 
     }
 
-    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         titlePage = page
         val realUrl = getRealUrl(url)
         if (realUrl == null) {
@@ -111,7 +124,7 @@ class XvideosSpider : DataSource {
     }
 
 
-    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>, page: Int) {
+    override fun fetchAllCategory(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>, page: Int) {
         val realUrl = "$homePageUrl/" + (page - 1)
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {

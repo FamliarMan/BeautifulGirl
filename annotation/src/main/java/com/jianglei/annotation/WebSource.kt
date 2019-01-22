@@ -6,4 +6,4 @@ package com.jianglei.annotation
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
-annotation class WebSource(val index:Int=0)
+annotation class WebSource(val needVpn :Boolean,val index:Int=0)

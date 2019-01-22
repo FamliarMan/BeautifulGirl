@@ -6,9 +6,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import com.classic.adapter.BaseAdapterHelper
 import com.classic.adapter.CommonRecyclerAdapter
-import com.jianglei.beautifulgirl.data.DataSource
-import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
+import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.SearchVideoKeyWord
 import kotlinx.android.synthetic.main.activity_search.*
@@ -17,8 +16,7 @@ class SearchActivity : BaseActivity() {
 
     private lateinit var adapter: CommonRecyclerAdapter<SearchVideoKeyWord>
     private var keyWords: MutableList<SearchVideoKeyWord> = ArrayList()
-    private var dataSource: DataSource? = null
-    private var dataSourceKey: String? = null
+    private var webDataSource: WebDataSource? = null
     private var lastInputTime = 0L
     private var searchText: String? = null
     private var searchRunnable: Runnable = Runnable { search() }
@@ -26,11 +24,10 @@ class SearchActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        dataSourceKey = intent.getStringExtra("dataSourceKey") ?: return
-        if (dataSourceKey == null) {
+        webDataSource = intent.getSerializableExtra("dataSource") as WebDataSource?
+        if (webDataSource == null) {
             return
         }
-        dataSource = DataSourceCenter.getDataSource(dataSourceKey!!)
         adapter = object : CommonRecyclerAdapter<SearchVideoKeyWord>(
             this, R.layout.listitem_xvideos_search,
             keyWords
@@ -63,7 +60,7 @@ class SearchActivity : BaseActivity() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 searchText = newText
                 if (lastInputTime != 0L && System.currentTimeMillis() - lastInputTime < 1000) {
-                    dataSource!!.cancelAllNet()
+                    webDataSource!!.cancelAllNet()
                     rvSearchResult.removeCallbacks(searchRunnable)
                 }
                 rvSearchResult.postDelayed(searchRunnable, 500)
@@ -77,10 +74,10 @@ class SearchActivity : BaseActivity() {
 
     fun goSearchResultActivity(searchTxt: String) {
 
-        val category = Category("searchResult", dataSource!!.getSearchUrl(searchTxt))
+        val category = Category("searchResult", webDataSource!!.getSearchUrl(searchTxt))
         val intent = Intent(this@SearchActivity, SearchResultActivity::class.java)
         intent.putExtra("category", category)
-        intent.putExtra("dataSourceKey", dataSourceKey)
+        intent.putExtra("dataSource", webDataSource)
         startActivity(intent)
     }
 
@@ -89,7 +86,7 @@ class SearchActivity : BaseActivity() {
             adapter.clear()
             return
         }
-        dataSource!!.getSearchSuggest(searchText!!, object : OnDataResultListener<MutableList<SearchVideoKeyWord>> {
+        webDataSource!!.getSearchSuggest(searchText!!, object : OnDataResultListener<MutableList<SearchVideoKeyWord>> {
             override fun onSuccess(data: MutableList<SearchVideoKeyWord>) {
                 adapter.clear()
                 adapter.addAll(data)

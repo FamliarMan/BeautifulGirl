@@ -1,11 +1,10 @@
 package com.jianglei.beautifulgirl.spider.vpn
 
 import com.google.gson.Gson
+import com.jianglei.annotation.WebSource
+import com.jianglei.beautifulgirl.R
 import com.jianglei.beautifulgirl.data.*
-import com.jianglei.beautifulgirl.vo.Category
-import com.jianglei.beautifulgirl.vo.ContentTitle
-import com.jianglei.beautifulgirl.vo.PlayUrl
-import com.jianglei.beautifulgirl.vo.SearchVideoKeyWord
+import com.jianglei.beautifulgirl.vo.*
 import org.jsoup.Jsoup
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,11 +18,22 @@ import java.util.regex.Pattern
  * pornhub 的爬虫
  * @author jianglei on 1/13/19.
  */
-class PornHubSpider : DataSource {
+@WebSource(true)
+class PornHubSpider : WebDataSource {
+
     private var callHolder = ArrayList<Call<PornHubKeyWordWrapper>>()
     private var playRegx = "var flashvars_[\\d]*\\s*=\\s*(\\{.+\\})"
     private var playPattern = Pattern.compile(playRegx)
-    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+
+    override fun fetchWebsite(): WebsiteDescVo {
+        return WebsiteDescVo(
+            "pornhub",
+            "https://www.pornhub.com/categories",
+            R.mipmap.pornhub,
+            "视频"
+        )
+    }
+    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl: String?
         if (url.contains("?")) {
             realUrl = "$url&page=$page"
@@ -68,7 +78,7 @@ class PornHubSpider : DataSource {
         })
     }
 
-    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>, page: Int) {
+    override fun fetchAllCategory(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>, page: Int) {
         if (page > 1) {
             listener.onSuccess(ArrayList())
             return

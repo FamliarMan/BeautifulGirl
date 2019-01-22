@@ -8,7 +8,7 @@ import java.io.File
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
-import javax.tools.Diagnostic
+import javax.lang.model.util.Elements
 
 /**
  * @author jianglei on 1/19/19.
@@ -19,24 +19,46 @@ class WebProcessor : AbstractProcessor() {
 
 
     private lateinit var mLogger: Logger
+    private var elementUtils: Elements? = null
+    /**
+     * 是否处理过
+     */
+    private var hasProcess = false
     override fun getSupportedAnnotationTypes(): Set<String> {
         return setOf(WebSource::class.java.canonicalName)
     }
 
     override fun init(p0: ProcessingEnvironment?) {
         super.init(p0)
+        elementUtils = p0?.elementUtils
         mLogger = Logger(processingEnv.messager)
-        mLogger.warning("init --------------------------------")
-        println("init second --------------------------------")
     }
 
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
-        print("ni hao --------------------------------")
-//        p1?.getElementsAnnotatedWith(WebSource::class.java)
-//            ?.forEach {
-//
-//            }
-        val webSource = ClassName("com.jianglei.beautifulgirl.data", "DataSource")
+        val kaptKotlinGeneratedDir = processingEnv.options["kapt.kotlin.generated"]
+        if (hasProcess) {
+            return true
+        }
+        hasProcess = true
+        val allSources = ArrayList<SourceVo>()
+        p1?.getElementsAnnotatedWith(WebSource::class.java)
+            ?.forEach {
+                val anno = it.getAnnotation(WebSource::class.java)
+                val enclosingElemnt = it as TypeElement
+                val className = enclosingElemnt.asClassName()
+                val sourceVo = SourceVo(className, anno.needVpn, anno.index)
+                allSources.add(sourceVo)
+            }
+
+        val file = createFile(allSources)
+        val filePath = File(kaptKotlinGeneratedDir)
+        file.writeTo(filePath)
+        return true
+    }
+
+    private fun createFile(sources: MutableList<SourceVo>): FileSpec {
+        sources.sortBy { it.index }
+        val webSource = ClassName("com.jianglei.beautifulgirl.data", "WebDataSource")
         val arrayList = ClassName("kotlin.collections", "ArrayList")
         val arrayListOfWebSource = arrayList.parameterizedBy(webSource)
         val normalWebSource = PropertySpec.builder("normalWebSources", arrayListOfWebSource)
@@ -45,24 +67,28 @@ class WebProcessor : AbstractProcessor() {
         val vpnWebSource = PropertySpec.builder("vpnWebSources", arrayListOfWebSource)
             .initializer("%T()", arrayListOfWebSource)
             .build()
-        val initFun = FunSpec.builder("init").build()
         val name = TypeSpec.objectBuilder("WebSourceCenter")
             .addProperty(normalWebSource)
             .addProperty(vpnWebSource)
-            .addInitializerBlock()
-            .addFunction(initFun)
+            .addInitializerBlock(createInit(sources))
             .build()
-        val file = FileSpec.builder("", "WebSourceCenter")
+        return FileSpec.builder("", "WebSourceCenter")
             .addType(name)
             .build()
-        val kaptKotlinGeneratedDir = processingEnv.options["kapt.kotlin.generated"]
-        val filePath = File(kaptKotlinGeneratedDir)
-        file.writeTo(filePath)
-        mLogger.warning("exist:" + filePath.exists() + "-------------")
-        return true
     }
 
-    companion object {
-        const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
+    private fun createInit(sources: MutableList<SourceVo>): CodeBlock {
+        val initCodeBlockBuilder = CodeBlock.Builder()
+        for (sourceVo in sources) {
+            if (sourceVo.needVpn) {
+                initCodeBlockBuilder.addStatement("vpnWebSources.add(%T());", sourceVo.className)
+            } else {
+                initCodeBlockBuilder.addStatement("normalWebSources.add(%T());", sourceVo.className)
+            }
+        }
+        return initCodeBlockBuilder.build()
     }
+
+
+    class SourceVo(val className: ClassName, val needVpn: Boolean, val index: Int)
 }

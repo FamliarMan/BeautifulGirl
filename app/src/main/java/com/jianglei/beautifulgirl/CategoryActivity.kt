@@ -5,15 +5,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
-import com.jianglei.beautifulgirl.data.DataSource
-import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
+import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.vo.Category
-import com.jianglei.beautifulgirl.vo.WebsiteVo
+import com.jianglei.beautifulgirl.vo.WebsiteDescVo
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_category.*
@@ -22,21 +22,20 @@ import utils.ToastUtils
 class CategoryActivity : BaseActivity() {
 
     private var categories: MutableList<Category> = ArrayList()
-    private var dataSourceKey: String? = null
-    private var dataSource: DataSource? = null
-    private var websiteVo: WebsiteVo? = null
+    private var webDataSource: WebDataSource? = null
+    private var websiteVo: WebsiteDescVo? = null
     private var page = 1
     private lateinit var adapter: CategoryAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
         initToolbar()
-        dataSourceKey = intent.getStringExtra("dataSourceKey")
-        websiteVo = intent.getParcelableExtra("websiteVo")
-        if (dataSourceKey == null || websiteVo == null) {
+        webDataSource = intent.getSerializableExtra("dataSource") as WebDataSource?
+        if (webDataSource == null) {
             return
         }
-        dataSource = DataSourceCenter.getDataSource(dataSourceKey!!)
+        websiteVo = webDataSource!!.fetchWebsite()
+        websiteVo = webDataSource!!.fetchWebsite()
         rvCategory.setGridLayout(2)
         adapter = CategoryAdapter(this, categories)
         rvCategory.setAdapter(adapter)
@@ -46,7 +45,7 @@ class CategoryActivity : BaseActivity() {
                 val types = java.util.ArrayList<Category>()
                 types.add(vo)
                 intent.putParcelableArrayListExtra("types", types)
-                intent.putExtra("dataSourceKey", dataSourceKey)
+                intent.putExtra("dataSource", webDataSource)
                 startActivity(intent)
             }
         })
@@ -70,27 +69,25 @@ class CategoryActivity : BaseActivity() {
     }
 
     private fun initToolbar() {
-        toolBar.setOnMenuItemClickListener(object : android.support.v7.widget.Toolbar.OnMenuItemClickListener {
-            override fun onMenuItemClick(item: MenuItem?): Boolean {
-                when {
-                    item?.itemId == R.id.action_search -> {
-                        val intent = Intent(this@CategoryActivity, SearchActivity::class.java)
-                        intent.putExtra("dataSourceKey", dataSourceKey)
-                        startActivity(intent)
+        toolBar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
+            when {
+                item?.itemId == R.id.action_search -> {
+                    val intent = Intent(this@CategoryActivity, SearchActivity::class.java)
+                    intent.putExtra("dataSource", webDataSource)
+                    startActivity(intent)
 
-                    }
-                    else -> {
-                        return true
-                    }
                 }
-                return true
+                else -> {
+                    return@OnMenuItemClickListener true
+                }
             }
+            true
         })
     }
 
 
     private fun fetchData() {
-        dataSource!!.fetAllTypes(websiteVo!!.homePageUrl, object : OnDataResultListener<MutableList<Category>> {
+        webDataSource!!.fetchAllCategory(websiteVo!!.homePageUrl, object : OnDataResultListener<MutableList<Category>> {
             override fun onSuccess(data: MutableList<Category>) {
                 page++
                 if (data.size == 0) {

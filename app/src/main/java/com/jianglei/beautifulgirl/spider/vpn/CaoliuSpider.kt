@@ -2,12 +2,15 @@ package com.jianglei.beautifulgirl.spider.vpn
 
 import android.util.Log
 import com.jianglei.annotation.WebSource
-import com.jianglei.beautifulgirl.data.DataSource
+import com.jianglei.beautifulgirl.R
+import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.OnWebResultListener
 import com.jianglei.beautifulgirl.data.RetrofitManager
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.Category
+import com.jianglei.beautifulgirl.vo.WebsiteDescVo
+import com.jianglei.beautifulgirl.vo.WebsiteVo
 import org.jsoup.Jsoup
 import java.net.URL
 
@@ -15,9 +18,18 @@ import java.net.URL
 /**
  * @author jianglei on 1/6/19.
  */
-@WebSource(1)
-class CaoliuSpider : DataSource {
-    override fun fetchTitles(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+@WebSource(true, 1)
+class CaoliuSpider : WebDataSource {
+    override fun fetchWebsite(): WebsiteDescVo {
+        return WebsiteDescVo(
+            "草榴",
+            "https://www.t66y.com/index.php",
+            R.mipmap.caoliu,
+            "图片"
+        )
+    }
+
+    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl = "$url&page=$page"
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {
@@ -74,7 +86,11 @@ class CaoliuSpider : DataSource {
         })
     }
 
-    override fun fetAllTypes(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>,page:Int) {
+    override fun fetchAllCategory(
+        homePageUrl: String,
+        listener: OnDataResultListener<MutableList<Category>>,
+        page: Int
+    ) {
         RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)

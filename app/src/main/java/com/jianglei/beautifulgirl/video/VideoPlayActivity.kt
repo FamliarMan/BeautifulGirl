@@ -7,10 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.jianglei.beautifulgirl.BaseActivity
 import com.jianglei.beautifulgirl.R
-import com.jianglei.beautifulgirl.data.DataSource
-import com.jianglei.beautifulgirl.data.DataSourceCenter
-import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.vo.PlayUrl
 import com.kk.taurus.playerbase.assist.InterEvent
 import com.kk.taurus.playerbase.assist.OnVideoViewEventHandler
 import com.kk.taurus.playerbase.event.OnPlayerEventListener
@@ -22,9 +18,7 @@ import utils.DensityUtils
 import utils.ToastUtils
 
 class VideoPlayActivity : BaseActivity() {
-    private var dataSource: DataSource? = null
-    private var dataSourceKey: String? = null
-    private var detailUrl: String? = null
+    private var playUrl: String? = null
     private var userPause: Boolean = false
     private var isLandscape: Boolean = false
     private lateinit var mReceiverGroup: ReceiverGroup
@@ -33,43 +27,16 @@ class VideoPlayActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_video_play)
-        detailUrl = intent.getStringExtra("detailUrl")
-        dataSourceKey = intent.getStringExtra("dataSourceKey")
-        if (dataSourceKey == null || detailUrl == null) {
+        playUrl = intent.getStringExtra("playUrl")
+        if (playUrl == null) {
             ToastUtils.showMsg(this, "Wrong action")
             return
         }
-        dataSource = DataSourceCenter.getDataSource(dataSourceKey!!)
-        getPlayUrl()
+//        getPlayUrl()
         init()
-
-        retry.setOnClickListener {
-            retry.visibility = View.GONE
-            getPlayUrl()
-
-        }
+        play(playUrl!!)
     }
 
-    fun getPlayUrl() {
-        showProgress(true)
-        dataSource!!.fetchVideoUrls(detailUrl!!, object : OnDataResultListener<MutableList<PlayUrl>> {
-            override fun onSuccess(data: MutableList<PlayUrl>) {
-                showProgress(false)
-                data.forEach {
-                    if (it.defaultQuality) {
-                        play(it.videoUrl)
-                    }
-                }
-            }
-
-            override fun onError(msg: String) {
-                showProgress(false)
-                ToastUtils.showMsg(this@VideoPlayActivity, "获取视频地址失败")
-                retry.visibility = View.VISIBLE
-            }
-        })
-
-    }
 
     fun init() {
         updateVideo(false)
@@ -105,15 +72,12 @@ class VideoPlayActivity : BaseActivity() {
             }
 
         })
-        playContent.setOnPlayerEventListener(object : OnPlayerEventListener {
-            override fun onPlayerEvent(eventCode: Int, bundle: Bundle?) {
-
-                when (eventCode) {
-                    OnPlayerEventListener.PLAYER_EVENT_ON_VIDEO_RENDER_START -> {
-                    }
+        playContent.setOnPlayerEventListener { eventCode, _ ->
+            when (eventCode) {
+                OnPlayerEventListener.PLAYER_EVENT_ON_VIDEO_RENDER_START -> {
                 }
             }
-        })
+        }
     }
 
     fun play(url: String) {
