@@ -10,7 +10,6 @@ import com.jianglei.beautifulgirl.data.RetrofitManager
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.WebsiteDescVo
-import com.jianglei.beautifulgirl.vo.WebsiteVo
 import org.jsoup.Jsoup
 import java.net.URL
 
@@ -35,7 +34,7 @@ class CaoliuSpider : WebDataSource {
             override fun onSuccess(html: String) {
                 try {
                     val doc = Jsoup.parse(html)
-                    var trs = doc.getElementsByClass("tr3 t_one tac")
+                    val trs = doc.getElementsByClass("tr3 t_one tac")
                     //目前置顶帖去不掉
                     val res = trs.map {
                         val td = it.getElementsByClass("tal")[0]

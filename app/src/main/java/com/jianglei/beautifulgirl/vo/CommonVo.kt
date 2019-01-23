@@ -7,39 +7,6 @@ import android.os.Parcelable
  * @author jianglei on 1/6/19.
  */
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-data class WebsiteVo(
-    var name: String,
-    var homePageUrl: String,
-    var icon: Int,
-    var dataSourceKey: String,
-    var type: String
-) : Parcelable {
-    constructor(source: Parcel) : this(
-        source.readString(),
-        source.readString(),
-        source.readInt(),
-        source.readString(),
-        source.readString()
-    )
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeString(name)
-        writeString(homePageUrl)
-        writeInt(icon)
-        writeString(dataSourceKey)
-        writeString(type)
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<WebsiteVo> = object : Parcelable.Creator<WebsiteVo> {
-            override fun createFromParcel(source: Parcel): WebsiteVo = WebsiteVo(source)
-            override fun newArray(size: Int): Array<WebsiteVo?> = arrayOfNulls(size)
-        }
-    }
-}
 
 /**
  * 一个网站基本的描述，[name] 是网站标题，
