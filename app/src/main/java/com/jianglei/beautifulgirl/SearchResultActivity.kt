@@ -18,7 +18,7 @@ class SearchResultActivity : BaseActivity() {
             return
         }
         if (savedInstanceState == null) {
-            val fragment = PictureListFragment.newInstance(
+            val fragment = ContentCoverListFragment.newInstance(
                 category!!.title,
                 category!!.url,
                 dataSource!!,

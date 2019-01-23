@@ -19,7 +19,7 @@ import java.util.regex.Pattern
  * @author jianglei on 1/13/19.
  */
 @WebSource(true)
-class PornHubSpider : WebDataSource {
+class PornHubSpider : WebVideoSource,SearchSource{
 
     private var callHolder = ArrayList<Call<PornHubKeyWordWrapper>>()
     private var playRegx = "var flashvars_[\\d]*\\s*=\\s*(\\{.+\\})"

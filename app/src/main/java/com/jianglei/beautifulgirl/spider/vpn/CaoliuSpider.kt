@@ -3,10 +3,7 @@ package com.jianglei.beautifulgirl.spider.vpn
 import android.util.Log
 import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.R
-import com.jianglei.beautifulgirl.data.WebDataSource
-import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.OnWebResultListener
-import com.jianglei.beautifulgirl.data.RetrofitManager
+import com.jianglei.beautifulgirl.data.*
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.WebsiteDescVo
@@ -18,7 +15,7 @@ import java.net.URL
  * @author jianglei on 1/6/19.
  */
 @WebSource(true, 1)
-class CaoliuSpider : WebDataSource {
+class CaoliuSpider : WebPictureSource{
     override fun fetchWebsite(): WebsiteDescVo {
         return WebsiteDescVo(
             "草榴",

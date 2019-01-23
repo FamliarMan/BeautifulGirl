@@ -17,7 +17,7 @@ import java.util.regex.Pattern
  * @author jianglei on 1/10/19.
  */
 @WebSource(true)
-class XvideosSpider : WebDataSource {
+class XvideosSpider : WebVideoSource, SearchSource {
     /**
      * 当前获取封面内容的页码
      */
@@ -125,7 +125,11 @@ class XvideosSpider : WebDataSource {
     }
 
 
-    override fun fetchAllCategory(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>, page: Int) {
+    override fun fetchAllCategory(
+        homePageUrl: String,
+        listener: OnDataResultListener<MutableList<Category>>,
+        page: Int
+    ) {
         val realUrl = "$homePageUrl/" + (page - 1)
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {

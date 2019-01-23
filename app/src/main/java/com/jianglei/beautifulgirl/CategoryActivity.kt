@@ -11,6 +11,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import com.jianglei.beautifulgirl.data.OnDataResultListener
+import com.jianglei.beautifulgirl.data.SearchSource
 import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.WebsiteDescVo
@@ -30,7 +31,6 @@ class CategoryActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
-        initToolbar()
         webDataSourceId = intent.getStringExtra("dataSourceId")
         if (webDataSourceId == null) {
             return
@@ -39,6 +39,7 @@ class CategoryActivity : BaseActivity() {
         if (webDataSource == null) {
             return
         }
+        initToolbar()
         websiteVo = webDataSource!!.fetchWebsite()
         websiteVo = webDataSource!!.fetchWebsite()
         rvCategory.setGridLayout(2)
@@ -126,8 +127,12 @@ class CategoryActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.search, menu)
-        return true
+        return if (webDataSource is SearchSource) {
+            menuInflater.inflate(R.menu.search, menu)
+            true
+        } else {
+            super.onCreateOptionsMenu(menu)
+        }
     }
 
 

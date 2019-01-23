@@ -3,10 +3,7 @@ package com.jianglei.beautifulgirl.spider.vpn
 import android.util.Log
 import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.R
-import com.jianglei.beautifulgirl.data.WebDataSource
-import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.OnWebResultListener
-import com.jianglei.beautifulgirl.data.RetrofitManager
+import com.jianglei.beautifulgirl.data.*
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.PlayUrl
@@ -19,7 +16,7 @@ import java.lang.StringBuilder
  * @author jianglei on 1/9/19.
  */
 @WebSource(true, 3)
-class NineOnePornSpider : WebDataSource {
+class NineOnePornSpider : WebVideoSource{
     override fun fetchWebsite(): WebsiteDescVo {
         return WebsiteDescVo(
             "91自拍",
@@ -84,8 +81,6 @@ class NineOnePornSpider : WebDataSource {
         })
     }
 
-    override fun fetDetailPictures(url: String, page: Int, listener: OnDataResultListener<MutableList<String>>) {
-    }
 
     override fun fetchAllCategory(
         homePageUrl: String,

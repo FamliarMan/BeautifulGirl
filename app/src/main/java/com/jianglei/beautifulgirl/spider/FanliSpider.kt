@@ -4,10 +4,7 @@ import android.accounts.NetworkErrorException
 import android.util.Log
 import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.R
-import com.jianglei.beautifulgirl.data.WebDataSource
-import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.RetrofitManager
-import com.jianglei.beautifulgirl.data.WebService
+import com.jianglei.beautifulgirl.data.*
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.WebsiteDescVo
@@ -21,7 +18,7 @@ import retrofit2.Response
  * @author jianglei on 1/2/19.
  */
 @WebSource(false,0)
-class FanliSpider : WebDataSource {
+class FanliSpider : WebPictureSource{
 
     override fun fetchWebsite(): WebsiteDescVo {
         return WebsiteDescVo(

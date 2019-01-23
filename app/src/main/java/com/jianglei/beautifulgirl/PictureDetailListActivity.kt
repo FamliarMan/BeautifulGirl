@@ -1,5 +1,6 @@
 package com.jianglei.beautifulgirl
 
+import WebSourceCenter
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -12,13 +13,13 @@ import android.widget.Toast
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
 import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.WebDataSource
+import com.jianglei.beautifulgirl.data.WebPictureSource
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import kotlinx.android.synthetic.main.layout_recyclerview.*
 import utils.ToastUtils
 
 class PictureDetailListActivity : BaseActivity() {
-    private var dataSource: WebDataSource? = null
+    private var dataSource: WebPictureSource? = null
     private var detailUrl: String? = null
     private var page = 1
     private var urls: MutableList<String> = ArrayList()
@@ -28,7 +29,7 @@ class PictureDetailListActivity : BaseActivity() {
         setContentView(R.layout.layout_recyclerview)
         detailUrl = intent.getStringExtra("detailUrl")
         val dataSourceId = intent.getStringExtra("dataSourceId")
-        dataSource = WebSourceCenter.getWebSource(dataSourceId)
+        dataSource = WebSourceCenter.getWebSource(dataSourceId) as WebPictureSource
         if (dataSource == null || detailUrl == null) {
             ToastUtils.showMsg(this, "Wrong action")
             return

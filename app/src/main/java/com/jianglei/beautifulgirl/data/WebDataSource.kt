@@ -1,8 +1,9 @@
 package com.jianglei.beautifulgirl.data
 
-import com.jianglei.beautifulgirl.vo.*
+import com.jianglei.beautifulgirl.vo.Category
+import com.jianglei.beautifulgirl.vo.ContentTitle
+import com.jianglei.beautifulgirl.vo.WebsiteDescVo
 import java.io.Serializable
-import java.util.*
 
 /**
  * 一个具体的数据来源，比如爬虫，比如接口
@@ -24,21 +25,12 @@ interface WebDataSource : Serializable {
      */
     fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>)
 
-    /**
-     * 获取某个帖子的所有图片数据
-     */
-    fun fetDetailPictures(url: String, page: Int, listener: OnDataResultListener<MutableList<String>>) {}
 
     /**
      * 获取某个网站的所有分类栏目
      */
     fun fetchAllCategory(homePageUrl: String, listener: OnDataResultListener<MutableList<Category>>, page: Int = 1)
 
-    /**
-     * 获取视频地址
-     */
-    fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayUrl>>) {
-    }
 
     /**
      * 取消所有请求
@@ -48,16 +40,5 @@ interface WebDataSource : Serializable {
     }
 
 
-    /**
-     * 获取搜索建议
-     */
-    fun getSearchSuggest(keyword: String, listener: OnDataResultListener<MutableList<SearchVideoKeyWord>>) {}
-
-    /**
-     * 获取一个网站搜索前往的页面地址
-     */
-    fun getSearchUrl(searchTxt: String): String {
-        return ""
-    }
 
 }

@@ -2,10 +2,7 @@ package com.jianglei.beautifulgirl.spider
 
 import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.R
-import com.jianglei.beautifulgirl.data.WebDataSource
-import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.OnWebResultListener
-import com.jianglei.beautifulgirl.data.RetrofitManager
+import com.jianglei.beautifulgirl.data.*
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.WebsiteDescVo
@@ -16,7 +13,7 @@ import org.jsoup.Jsoup
  * @author jianglei on 1/6/19.
  */
 @WebSource(false)
-class ZhuangxiuSpider : WebDataSource {
+class ZhuangxiuSpider : WebPictureSource{
 
     override fun fetchWebsite(): WebsiteDescVo {
         return WebsiteDescVo(

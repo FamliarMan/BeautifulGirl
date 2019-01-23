@@ -7,6 +7,7 @@ import android.support.v7.widget.SearchView
 import com.classic.adapter.BaseAdapterHelper
 import com.classic.adapter.CommonRecyclerAdapter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
+import com.jianglei.beautifulgirl.data.SearchSource
 import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.SearchVideoKeyWord
@@ -75,7 +76,8 @@ class SearchActivity : BaseActivity() {
 
     fun goSearchResultActivity(searchTxt: String) {
 
-        val category = Category("searchResult", webDataSource!!.getSearchUrl(searchTxt))
+        val searchSource = webDataSource!! as SearchSource
+        val category = Category("searchResult", searchSource.getSearchUrl(searchTxt))
         val intent = Intent(this@SearchActivity, SearchResultActivity::class.java)
         intent.putExtra("category", category)
         intent.putExtra("dataSourceId", webDataSource!!.id)
@@ -87,7 +89,8 @@ class SearchActivity : BaseActivity() {
             adapter.clear()
             return
         }
-        webDataSource!!.getSearchSuggest(searchText!!, object : OnDataResultListener<MutableList<SearchVideoKeyWord>> {
+        val searchSource = webDataSource!! as SearchSource
+        searchSource.getSearchSuggest(searchText!!, object : OnDataResultListener<MutableList<SearchVideoKeyWord>> {
             override fun onSuccess(data: MutableList<SearchVideoKeyWord>) {
                 adapter.clear()
                 adapter.addAll(data)

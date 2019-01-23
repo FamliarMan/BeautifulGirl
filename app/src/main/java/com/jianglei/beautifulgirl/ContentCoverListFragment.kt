@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.WebDataSource
+import com.jianglei.beautifulgirl.data.WebVideoSource
 import com.jianglei.beautifulgirl.video.VideoPlayActivity
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
@@ -18,9 +19,11 @@ import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import utils.ToastUtils
 
 /**
+ * 所有封面内容的展示，包括视频的或图片的
+ * 可以从这个页面进入详情页
  * @author jianglei on 1/3/19.
  */
-class PictureListFragment : BaseFragment() {
+class ContentCoverListFragment : BaseFragment() {
     private var contentTitles: MutableList<ContentTitle> = ArrayList()
     private var webDataSource: WebDataSource? = null
     private var page = 1
@@ -38,8 +41,8 @@ class PictureListFragment : BaseFragment() {
             url: String,
             dataSource: WebDataSource,
             isFromActivity: Boolean = false
-        ): PictureListFragment {
-            val fragment = PictureListFragment()
+        ): ContentCoverListFragment {
+            val fragment = ContentCoverListFragment()
             val bundle = Bundle()
             bundle.putString("title", title)
             bundle.putString("url", url)
@@ -107,7 +110,9 @@ class PictureListFragment : BaseFragment() {
 
     private fun getVideoPlayUrl(detailUrl: String) {
         showProgress(true)
-        webDataSource?.fetchVideoUrls(detailUrl, object : OnDataResultListener<MutableList<PlayUrl>> {
+
+        val webVideoSource = webDataSource as WebVideoSource
+        webVideoSource.fetchVideoUrls(detailUrl, object : OnDataResultListener<MutableList<PlayUrl>> {
             override fun onSuccess(data: MutableList<PlayUrl>) {
                 showProgress(false)
                 var playUrl: String? = null
