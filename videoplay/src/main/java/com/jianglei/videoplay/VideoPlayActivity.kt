@@ -1,12 +1,11 @@
-package com.jianglei.beautifulgirl.video
+package com.jianglei.videoplay
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup
-import com.jianglei.beautifulgirl.BaseActivity
-import com.jianglei.beautifulgirl.R
 import com.kk.taurus.playerbase.assist.InterEvent
 import com.kk.taurus.playerbase.assist.OnVideoViewEventHandler
 import com.kk.taurus.playerbase.event.OnPlayerEventListener
@@ -14,10 +13,8 @@ import com.kk.taurus.playerbase.player.IPlayer
 import com.kk.taurus.playerbase.receiver.ReceiverGroup
 import com.kk.taurus.playerbase.widget.BaseVideoView
 import kotlinx.android.synthetic.main.activity_video_play.*
-import utils.DensityUtils
-import utils.ToastUtils
 
-class VideoPlayActivity : BaseActivity() {
+class VideoPlayActivity : AppCompatActivity() {
     private var playUrl: String? = null
     private var userPause: Boolean = false
     private var isLandscape: Boolean = false
@@ -29,7 +26,6 @@ class VideoPlayActivity : BaseActivity() {
         setContentView(R.layout.activity_video_play)
         playUrl = intent.getStringExtra("playUrl")
         if (playUrl == null) {
-            ToastUtils.showMsg(this, "Wrong action")
             return
         }
 //        getPlayUrl()

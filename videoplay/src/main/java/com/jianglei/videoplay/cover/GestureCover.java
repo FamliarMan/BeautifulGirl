@@ -1,4 +1,4 @@
-package com.jianglei.beautifulgirl.video.cover;
+package com.jianglei.videoplay.cover;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,8 +13,8 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.jianglei.beautifulgirl.R;
-import com.jianglei.beautifulgirl.video.DataInter;
+import com.jianglei.videoplay.DataInter;
+import com.jianglei.videoplay.R;
 import com.kk.taurus.playerbase.event.BundlePool;
 import com.kk.taurus.playerbase.event.EventKey;
 import com.kk.taurus.playerbase.event.OnPlayerEventListener;

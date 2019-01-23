@@ -1,11 +1,11 @@
-package com.jianglei.beautifulgirl.video.cover;
+package com.jianglei.videoplay.cover;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import com.jianglei.beautifulgirl.R;
-import com.jianglei.beautifulgirl.video.DataInter;
+import com.jianglei.videoplay.DataInter;
+import com.jianglei.videoplay.R;
 import com.kk.taurus.playerbase.receiver.BaseCover;
 
 public class CloseCover extends BaseCover {

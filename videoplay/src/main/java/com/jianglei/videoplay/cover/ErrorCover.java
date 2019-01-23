@@ -1,12 +1,11 @@
-package com.jianglei.beautifulgirl.video.cover;
+package com.jianglei.videoplay.cover;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import com.jianglei.beautifulgirl.MyApplication;
-import com.jianglei.beautifulgirl.R;
-import com.jianglei.beautifulgirl.video.DataInter;
+import com.jianglei.videoplay.DataInter;
+import com.jianglei.videoplay.R;
 import com.kk.taurus.playerbase.config.PConst;
 import com.kk.taurus.playerbase.event.BundlePool;
 import com.kk.taurus.playerbase.event.EventKey;
@@ -75,7 +74,6 @@ public class ErrorCover extends BaseCover {
                 requestRetry(bundle);
                 break;
             case STATUS_MOBILE:
-                MyApplication.Companion.setIgnoreMobile(true);
                 setErrorState(false);
                 requestResume(bundle);
                 break;
@@ -117,9 +115,6 @@ public class ErrorCover extends BaseCover {
                     setErrorState(false);
                 }
             } else {
-                if (MyApplication.Companion.getIgnoreMobile()) {
-                    return;
-                }
                 mStatus = STATUS_MOBILE;
                 setErrorInfo("您正在使用移动网络！");
                 setHandleInfo("继续");

@@ -14,14 +14,14 @@
  *    limitations under the License.
  */
 
-package com.jianglei.beautifulgirl.video.cover;
+package com.jianglei.videoplay.cover;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import com.jianglei.beautifulgirl.R;
-import com.jianglei.beautifulgirl.video.DataInter;
+import com.jianglei.videoplay.DataInter;
+import com.jianglei.videoplay.R;
 import com.kk.taurus.playerbase.event.OnPlayerEventListener;
 import com.kk.taurus.playerbase.receiver.BaseCover;
 
@@ -68,10 +68,10 @@ public class CompleteCover extends BaseCover {
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.tv_replay:
-                    requestReplay(null);
-                    break;
+            int i = v.getId();
+            if (i == R.id.tv_replay) {
+                requestReplay(null);
+
             }
             setPlayCompleteState(false);
         }

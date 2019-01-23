@@ -1,4 +1,4 @@
-package com.jianglei.beautifulgirl.video;
+package com.jianglei.videoplay;
 
 import com.kk.taurus.playerbase.assist.InterEvent;
 import com.kk.taurus.playerbase.assist.InterKey;

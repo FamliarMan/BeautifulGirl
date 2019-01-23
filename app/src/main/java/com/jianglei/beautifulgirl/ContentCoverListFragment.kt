@@ -11,10 +11,10 @@ import android.widget.Toast
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.data.WebVideoSource
-import com.jianglei.beautifulgirl.video.VideoPlayActivity
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.PlayUrl
+import com.jianglei.videoplay.VideoPlayActivity
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import utils.ToastUtils
 

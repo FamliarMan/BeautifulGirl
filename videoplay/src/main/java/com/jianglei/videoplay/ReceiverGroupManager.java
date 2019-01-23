@@ -1,11 +1,12 @@
-package com.jianglei.beautifulgirl.video;
+package com.jianglei.videoplay;
 
 import android.content.Context;
-import com.jianglei.beautifulgirl.video.cover.*;
+import com.jianglei.videoplay.cover.*;
 import com.kk.taurus.playerbase.receiver.GroupValue;
 import com.kk.taurus.playerbase.receiver.ReceiverGroup;
 
-import static com.jianglei.beautifulgirl.video.DataInter.ReceiverKey.*;
+import static com.jianglei.videoplay.DataInter.ReceiverKey.*;
+
 
 /**
  * Created by Taurus on 2018/4/18.

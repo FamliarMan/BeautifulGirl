@@ -1,4 +1,4 @@
-package com.jianglei.beautifulgirl.video;
+package com.jianglei.videoplay;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

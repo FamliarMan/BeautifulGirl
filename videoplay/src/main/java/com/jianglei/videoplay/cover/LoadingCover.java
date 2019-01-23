@@ -1,9 +1,9 @@
-package com.jianglei.beautifulgirl.video.cover;
+package com.jianglei.videoplay.cover;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import com.jianglei.beautifulgirl.R;
+import com.jianglei.videoplay.R;
 import com.kk.taurus.playerbase.event.OnPlayerEventListener;
 import com.kk.taurus.playerbase.player.IPlayer;
 import com.kk.taurus.playerbase.receiver.BaseCover;

@@ -1,4 +1,4 @@
-package com.jianglei.beautifulgirl.video.cover;
+package com.jianglei.videoplay.cover;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -14,8 +14,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import com.jianglei.beautifulgirl.R;
-import com.jianglei.beautifulgirl.video.DataInter;
+import com.jianglei.videoplay.DataInter;
+import com.jianglei.videoplay.R;
 import com.kk.taurus.playerbase.entity.DataSource;
 import com.kk.taurus.playerbase.event.BundlePool;
 import com.kk.taurus.playerbase.event.EventKey;
@@ -145,24 +145,23 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener,
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.cover_player_controller_image_view_back_icon:
-                    notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_BACK, null);
-                    break;
-                case R.id.cover_player_controller_image_view_play_state:
-                    boolean selected = mStateIcon.isSelected();
-                    if (selected) {
-                        requestResume(null);
-                    } else {
-                        requestPause(null);
-                    }
-                    mStateIcon.setSelected(!selected);
-                    break;
-                case R.id.cover_player_controller_image_view_switch_screen:
-                    notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN, null);
-                    break;
-                default:
-                    break;
+            int i = view.getId();
+            if (i == R.id.cover_player_controller_image_view_back_icon) {
+                notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_BACK, null);
+
+            } else if (i == R.id.cover_player_controller_image_view_play_state) {
+                boolean selected = mStateIcon.isSelected();
+                if (selected) {
+                    requestResume(null);
+                } else {
+                    requestPause(null);
+                }
+                mStateIcon.setSelected(!selected);
+
+            } else if (i == R.id.cover_player_controller_image_view_switch_screen) {
+                notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN, null);
+
+            } else {
             }
         }
     };
