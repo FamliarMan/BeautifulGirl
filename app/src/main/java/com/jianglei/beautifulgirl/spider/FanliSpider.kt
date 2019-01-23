@@ -138,7 +138,7 @@ class FanliSpider : WebPictureSource{
                             val cover = focus.select("img")[0].attr("data-original")
                             val title = article.getElementsByTag("h2")[0]
                                 .getElementsByTag("a")[0].text()
-                            res.add(ContentTitle(title, desc, path, cover))
+                            res.add(ContentTitle(title, desc, path, cover,Category.TYPE_PICTURE))
                         }
                         listener.success(res)
                     } catch (e: Exception) {
@@ -166,7 +166,7 @@ class FanliSpider : WebPictureSource{
             if (a.size == 0) {
                 continue
             }
-            val pictureTypeVo = Category(a.text(), a.attr("href"))
+            val pictureTypeVo = Category(a.text(), a.attr("href"),Category.TYPE_PICTURE)
             if (validType.contains(pictureTypeVo.title)) {
                 res.add(pictureTypeVo)
             }

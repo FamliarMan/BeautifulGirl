@@ -77,7 +77,7 @@ class SearchActivity : BaseActivity() {
     fun goSearchResultActivity(searchTxt: String) {
 
         val searchSource = webDataSource!! as SearchSource
-        val category = Category("searchResult", searchSource.getSearchUrl(searchTxt))
+        val category = Category("searchResult", searchSource.getSearchUrl(searchTxt),Category.TYPE_VIDEO)
         val intent = Intent(this@SearchActivity, SearchResultActivity::class.java)
         intent.putExtra("category", category)
         intent.putExtra("dataSourceId", webDataSource!!.id)

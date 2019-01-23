@@ -59,8 +59,7 @@ class NineOnePornSpider : WebVideoSource{
                         val info = allInfo.substring(start).replace("还未被评分", "")
                         sb.append(info)
                         val desc = sb.toString()
-                        val res = ContentTitle(title, desc, detailUrl, coverUrl)
-                        res.type = Category.TYPE_VIDEO
+                        val res = ContentTitle(title, desc, detailUrl, coverUrl,Category.TYPE_VIDEO)
                         Log.d("jianglei", res.title + "  " + res.detailUrl)
                         res
 
@@ -95,7 +94,7 @@ class NineOnePornSpider : WebVideoSource{
                         .getElementsByTag("a")
                     val res = a.map {
 
-                        val category = Category(it.text(), it.attr("href"))
+                        val category = Category(it.text(), it.attr("href"),Category.TYPE_VIDEO)
                         category.type = Category.TYPE_VIDEO
                         category
                     }.filter {

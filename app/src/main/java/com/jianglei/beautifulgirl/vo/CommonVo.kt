@@ -21,11 +21,10 @@ data class WebsiteDescVo(
     var type: String
 )
 
-data class Category(var title: String, var url: String) : Parcelable {
-    /**
-     *当前分类下内容的类型
-     */
-    var type: Int = TYPE_PICTURE
+/**
+ * [title]分类标题，[url]分类的url，[type]分类的类型
+ */
+data class Category(var title: String, var url: String,var type:Int) : Parcelable {
 
     /**
      * 封面url
@@ -39,9 +38,9 @@ data class Category(var title: String, var url: String) : Parcelable {
 
     constructor(source: Parcel) : this(
         source.readString()!!,
-        source.readString()!!
+        source.readString()!!,
+        source.readInt()
     ) {
-        type = source.readInt()
         coverUrl = source.readString()
         desc = source.readString()
     }

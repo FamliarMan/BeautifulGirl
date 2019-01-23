@@ -64,8 +64,7 @@ class PornHubSpider : WebVideoSource,SearchSource{
                             coverUrl = img.attr("data-thumb_url")
                         }
                         val desc = it.selectFirst(".views").text()
-                        val contentTitle = ContentTitle(title, desc, detailUrl, coverUrl)
-                        contentTitle.type = Category.TYPE_VIDEO
+                        val contentTitle = ContentTitle(title, desc, detailUrl, coverUrl,Category.TYPE_VIDEO)
                         contentTitle
                     }.toMutableList()
 
@@ -99,15 +98,15 @@ class PornHubSpider : WebVideoSource,SearchSource{
                         }
                         val host = URL(homePageUrl)
                         val url = "https://" + host.host + a.attr("href")
-                        val category = Category(title, url)
+                        val category = Category(title, url,Category.TYPE_VIDEO)
                         category.coverUrl = coverUrl
-                        category.type = Category.TYPE_VIDEO
                         category
                     }.toMutableList()
 
                     //将首页加上
 
-                    val categoryHome = Category("首页", "https://www.pornhub.com/video")
+                    val categoryHome = Category("首页",
+                        "https://www.pornhub.com/video",Category.TYPE_VIDEO)
                     categoryHome.coverUrl =
                             "https://ci.phncdn.com/videos/201811/30/194467401/original/(m=ecuKGgaaaa)(mh=R0CvAjxoPPyvzHVm)14.jpg"
                     categoryHome.type = Category.TYPE_VIDEO

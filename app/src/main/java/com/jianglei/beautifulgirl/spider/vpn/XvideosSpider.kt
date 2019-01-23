@@ -110,8 +110,7 @@ class XvideosSpider : WebVideoSource, SearchSource {
                     val thumbUnder = it.selectFirst(".thumb-under")
                     val title = thumbUnder.selectFirst("a").text()
                     val desc = thumbUnder.selectFirst(".metadata").text()
-                    val contentTitle = ContentTitle(title, desc, detailUrl, coverUrl)
-                    contentTitle.type = Category.TYPE_VIDEO
+                    val contentTitle = ContentTitle(title, desc, detailUrl, coverUrl,Category.TYPE_VIDEO)
                     contentTitle
                 }.toMutableList()
                 listener.onSuccess(res)
@@ -153,14 +152,14 @@ class XvideosSpider : WebVideoSource, SearchSource {
                         val detailUrl = "https://" + url.host + partUrl
                         val desc = it.selectFirst(".profile-counts")
                             .text()
-                        val category = Category(categoryName, detailUrl)
+                        val category = Category(categoryName, detailUrl,Category.TYPE_VIDEO)
                         category.coverUrl = coverUrl
                         category.desc = desc
                         category.type = Category.TYPE_VIDEO
                         category
 
                     }.toMutableList()
-                    val home = Category("Home", "https://www.xvideos.com/new")
+                    val home = Category("Home", "https://www.xvideos.com/new",Category.TYPE_VIDEO)
                     home.desc = "The newest videos"
                     home.type = Category.TYPE_VIDEO
                     //随便用一张图

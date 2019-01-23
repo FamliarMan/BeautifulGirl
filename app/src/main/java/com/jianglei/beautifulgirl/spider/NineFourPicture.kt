@@ -39,8 +39,7 @@ class NineFourPicture : WebPictureSource{
                         val detailUrl = it.selectFirst(".u-img")
                             .selectFirst("a")
                             .attr("href")
-                        val contentTitle = ContentTitle(title, "", detailUrl, coverUrl)
-                        contentTitle.type = Category.TYPE_PICTURE
+                        val contentTitle = ContentTitle(title, "", detailUrl, coverUrl,Category.TYPE_PICTURE)
                         contentTitle
                     }.toMutableList()
                     listener.onSuccess(res)
@@ -68,7 +67,8 @@ class NineFourPicture : WebPictureSource{
                         .map {
                             it.select("a")
                         }.map {
-                            val category = Category(it.text(), it.attr("href"))
+                            val category = Category(it.text(),
+                                it.attr("href"),Category.TYPE_PICTURE)
                             category.type = Category.TYPE_PICTURE
                             category
                         }.toMutableList()

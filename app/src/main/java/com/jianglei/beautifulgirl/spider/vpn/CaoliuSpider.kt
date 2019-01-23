@@ -40,7 +40,7 @@ class CaoliuSpider : WebPictureSource{
                         val fullUrl = URL(url)
                         val needUrl = "https://" + fullUrl.host + "/" + a.attr("href")
                         val title = a.text()
-                        ContentTitle(title, desc, needUrl, "")
+                        ContentTitle(title, desc, needUrl, "",Category.TYPE_PICTURE)
                     }.toMutableList()
                     listener.onSuccess(res)
                 } catch (e: Exception) {
@@ -99,7 +99,7 @@ class CaoliuSpider : WebPictureSource{
                         0,
                         homePageUrl.length - "index.php".length
                     ) + partUrl
-                    Category(a.text(), realUrl)
+                    Category(a.text(), realUrl,Category.TYPE_PICTURE)
                 }.filter {
                     Log.d("jianglei", it.title + "  " + it.url)
                     (it.title == "新時代的我們" || it.title == "達蓋爾的旗幟")

@@ -40,7 +40,7 @@ class ZhuangxiuSpider : WebPictureSource{
                         val name = a.text()
                         val imgs = a.getElementsByTag("img")
                         val coverUrl = imgs[0].attr("src")
-                        ContentTitle(name, "", detailUrl, coverUrl)
+                        ContentTitle(name, "", detailUrl, coverUrl,Category.TYPE_PICTURE)
                     }.toMutableList()
                     listener.onSuccess(res)
                 } catch (e: Exception) {
@@ -111,7 +111,7 @@ class ZhuangxiuSpider : WebPictureSource{
                     val types = nav.getElementsByTag("li")
                     res = types.map {
                         val a = it.getElementsByTag("a")[0]
-                        Category(a.text(), a.attr("href"))
+                        Category(a.text(), a.attr("href"),Category.TYPE_PICTURE)
                     }.filter {
                         it.title != "首页"
                     }
