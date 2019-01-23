@@ -11,7 +11,8 @@ class SearchResultActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_result)
-        dataSource = intent.getSerializableExtra("dataSource") as WebDataSource
+        val dataSourceId = intent.getStringExtra("dataSourceId")
+        dataSource = WebSourceCenter.getWebSource(dataSourceId)
         category = intent.getParcelableExtra("category")
         if (dataSource== null || category == null) {
             return

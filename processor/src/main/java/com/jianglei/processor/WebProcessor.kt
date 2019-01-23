@@ -24,6 +24,7 @@ class WebProcessor : AbstractProcessor() {
      * 是否处理过
      */
     private var hasProcess = false
+
     override fun getSupportedAnnotationTypes(): Set<String> {
         return setOf(WebSource::class.java.canonicalName)
     }
@@ -71,9 +72,42 @@ class WebProcessor : AbstractProcessor() {
             .addProperty(normalWebSource)
             .addProperty(vpnWebSource)
             .addInitializerBlock(createInit(sources))
+            .addFunction(
+                createGetWebSource()
+            )
             .build()
         return FileSpec.builder("", "WebSourceCenter")
             .addType(name)
+            .build()
+    }
+
+    private fun createGetWebSource(): FunSpec {
+
+        val codeBlock = CodeBlock.Builder()
+            .add(
+                """
+        normalWebSources.forEach{
+            if(it.id.equals(id)){
+                return it
+            }
+        }
+        vpnWebSources.forEach {
+            if(it.id.equals(id)){
+                return it
+            }
+        }
+        return null
+            """.trimMargin()
+            )
+            .build()
+
+        val webSource = ClassName("com.jianglei.beautifulgirl.data",
+            "WebDataSource").copy(nullable = true)
+        return FunSpec.builder("getWebSource")
+            .addCode(codeBlock)
+            .addModifiers(KModifier.PUBLIC)
+            .addParameter("id",String::class.asTypeName().copy(nullable = true))
+            .returns(webSource)
             .build()
     }
 

@@ -24,7 +24,8 @@ class SearchActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        webDataSource = intent.getSerializableExtra("dataSource") as WebDataSource?
+        val dataSourceId = intent.getStringExtra("dataSourceId")
+        webDataSource = WebSourceCenter.getWebSource(dataSourceId)
         if (webDataSource == null) {
             return
         }
@@ -77,7 +78,7 @@ class SearchActivity : BaseActivity() {
         val category = Category("searchResult", webDataSource!!.getSearchUrl(searchTxt))
         val intent = Intent(this@SearchActivity, SearchResultActivity::class.java)
         intent.putExtra("category", category)
-        intent.putExtra("dataSource", webDataSource)
+        intent.putExtra("dataSourceId", webDataSource!!.id)
         startActivity(intent)
     }
 

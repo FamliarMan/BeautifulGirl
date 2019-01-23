@@ -23,6 +23,7 @@ class CategoryActivity : BaseActivity() {
 
     private var categories: MutableList<Category> = ArrayList()
     private var webDataSource: WebDataSource? = null
+    private var webDataSourceId: String? = null
     private var websiteVo: WebsiteDescVo? = null
     private var page = 1
     private lateinit var adapter: CategoryAdapter
@@ -30,7 +31,11 @@ class CategoryActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
         initToolbar()
-        webDataSource = intent.getSerializableExtra("dataSource") as WebDataSource?
+        webDataSourceId = intent.getStringExtra("dataSourceId")
+        if (webDataSourceId == null) {
+            return
+        }
+        webDataSource = WebSourceCenter.getWebSource(webDataSourceId!!)
         if (webDataSource == null) {
             return
         }
@@ -45,7 +50,7 @@ class CategoryActivity : BaseActivity() {
                 val types = java.util.ArrayList<Category>()
                 types.add(vo)
                 intent.putParcelableArrayListExtra("types", types)
-                intent.putExtra("dataSource", webDataSource)
+                intent.putExtra("dataSourceId", webDataSource!!.id)
                 startActivity(intent)
             }
         })
@@ -73,7 +78,7 @@ class CategoryActivity : BaseActivity() {
             when {
                 item?.itemId == R.id.action_search -> {
                     val intent = Intent(this@CategoryActivity, SearchActivity::class.java)
-                    intent.putExtra("dataSource", webDataSource)
+                    intent.putExtra("dataSourceId", webDataSource!!.id)
                     startActivity(intent)
 
                 }

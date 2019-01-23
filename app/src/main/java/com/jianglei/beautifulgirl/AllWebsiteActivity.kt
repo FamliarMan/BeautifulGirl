@@ -73,12 +73,12 @@ class AllWebsiteActivity : BaseActivity() {
                 if (data.size > 15) {
                     //分类数量大于15，要专门前往分类页面
                     val intent = Intent(this@AllWebsiteActivity, CategoryActivity::class.java)
-                    intent.putExtra("dataSource", vo)
+                    intent.putExtra("dataSourceId", vo.id)
                     startActivity(intent)
                 } else {
                     val intent = Intent(this@AllWebsiteActivity, ContentActivity::class.java)
                     intent.putParcelableArrayListExtra("types", data as java.util.ArrayList<out Parcelable>)
-                    intent.putExtra("dataSource", vo)
+                    intent.putExtra("dataSourceId", vo.id)
                     startActivity(intent)
                 }
             }

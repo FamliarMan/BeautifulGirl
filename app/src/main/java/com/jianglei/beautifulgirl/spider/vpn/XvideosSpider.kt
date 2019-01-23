@@ -49,6 +49,7 @@ class XvideosSpider : WebDataSource {
 
     private val categoryRegx = "<img src=\"(.*?)\""
     private val categoryPattern = Pattern.compile(categoryRegx)
+    @Transient
     private var callHolder = ArrayList<Call<XVideoKeyWordWrapper>>()
 
 

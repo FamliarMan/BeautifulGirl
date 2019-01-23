@@ -1,16 +1,15 @@
 package com.jianglei.beautifulgirl
 
+import WebSourceCenter
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.jianglei.beautifulgirl.data.WebDataSource
-import com.jianglei.beautifulgirl.data.DataSourceCenter
 import com.jianglei.beautifulgirl.data.OnDataResultListener
+import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.video.VideoPlayActivity
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
@@ -44,7 +43,7 @@ class PictureListFragment : BaseFragment() {
             val bundle = Bundle()
             bundle.putString("title", title)
             bundle.putString("url", url)
-            bundle.putSerializable("dataSource", dataSource)
+            bundle.putSerializable("dataSourceId", dataSource.id)
             bundle.putBoolean("isFromActivity", isFromActivity)
             fragment.arguments = bundle
             return fragment
@@ -55,7 +54,8 @@ class PictureListFragment : BaseFragment() {
         title = arguments?.getString("title")
         url = arguments?.getString("url")
         val view = inflater.inflate(R.layout.fragment_picture_list, container, false)
-        webDataSource = arguments?.getSerializable("dataSource") as WebDataSource?
+        val dataSourceId = arguments?.getString("dataSourceId")
+        webDataSource = WebSourceCenter.getWebSource(dataSourceId!!)
         if (webDataSource == null) {
             return view
         }
@@ -79,7 +79,7 @@ class PictureListFragment : BaseFragment() {
                 } else {
                     val intent = Intent(activity, PictureDetailListActivity::class.java)
                     intent.putExtra("detailUrl", title.detailUrl)
-                    intent.putExtra("dataSource", webDataSource)
+                    intent.putExtra("dataSourceId", webDataSource!!.id)
                     startActivity(intent)
                 }
 

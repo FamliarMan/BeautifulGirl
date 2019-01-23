@@ -15,7 +15,8 @@ class ContentActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_content)
-        dataSource = intent.getSerializableExtra("dataSource") as WebDataSource?
+        val dataSourceId = intent.getStringExtra("dataSourceId")
+        dataSource = WebSourceCenter.getWebSource(dataSourceId)
         pictureTypes = intent.getParcelableArrayListExtra<Category>("types")
         if (pictureTypes == null || dataSource == null) {
             Toast.makeText(this, "Wrong website url", Toast.LENGTH_LONG).show()

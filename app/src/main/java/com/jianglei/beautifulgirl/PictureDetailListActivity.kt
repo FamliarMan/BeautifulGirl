@@ -27,7 +27,8 @@ class PictureDetailListActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_recyclerview)
         detailUrl = intent.getStringExtra("detailUrl")
-        dataSource = intent.getSerializableExtra("dataSource") as WebDataSource?
+        val dataSourceId = intent.getStringExtra("dataSourceId")
+        dataSource = WebSourceCenter.getWebSource(dataSourceId)
         if (dataSource == null || detailUrl == null) {
             ToastUtils.showMsg(this, "Wrong action")
             return
