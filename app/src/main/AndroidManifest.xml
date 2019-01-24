@@ -19,8 +19,6 @@
         android:theme="@style/AppTheme"
         android:testOnly="false"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
-        </activity>
         <activity android:name=".BaseActivity">
         </activity>
         <activity android:name=".ContentActivity">
@@ -34,17 +32,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".video.VideoPlayActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".CategoryActivity">
         </activity>
         <activity android:name=".SearchActivity">
         </activity>
         <activity android:name=".SearchResultActivity">
-        </activity>
-        <activity android:name=".HomePageActivity">
         </activity>
     </application>
 

@@ -84,16 +84,14 @@ class VideoPlayActivity : AppCompatActivity() {
     }
 
     private fun updateVideo(landscape: Boolean) {
-        val margin = DensityUtils.dip2px(this, 2f)
         val layoutParams = playContent.layoutParams as ViewGroup.MarginLayoutParams
         if (landscape) {
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
             layoutParams.setMargins(0, 0, 0, 0)
         } else {
-            layoutParams.width = DensityUtils.getScreenWidth(this) - (margin * 2)
+            layoutParams.width = DensityUtils.getScreenWidth(this)
             layoutParams.height = layoutParams.width * 3 / 4
-            layoutParams.setMargins(margin, margin, margin, margin)
         }
         playContent.layoutParams = layoutParams
     }
