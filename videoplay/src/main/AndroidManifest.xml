@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.jianglei.videoplay">
     <application>
-        <activity android:name=".VideoPlayActivity"/>
+        <activity android:name=".VideoPlayActivity"
+                  android:configChanges="orientation|keyboardHidden|screenSize"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 </manifest>
