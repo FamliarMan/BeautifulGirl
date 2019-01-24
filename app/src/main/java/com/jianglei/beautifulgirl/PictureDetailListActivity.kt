@@ -1,6 +1,5 @@
 package com.jianglei.beautifulgirl
 
-import WebSourceCenter
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle

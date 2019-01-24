@@ -10,6 +10,6 @@ interface WebVideoSource :WebDataSource{
     /**
      * 获取视频地址
      */
-    fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayUrl>>) {
-    }
+    fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayUrl>>)
+
 }

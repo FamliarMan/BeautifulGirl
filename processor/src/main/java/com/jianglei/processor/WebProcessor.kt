@@ -37,6 +37,9 @@ class WebProcessor : AbstractProcessor() {
 
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
         val kaptKotlinGeneratedDir = processingEnv.options["kapt.kotlin.generated"]
+        val outputFile = File(kaptKotlinGeneratedDir).apply {
+            mkdirs()
+        }
         if (hasProcess) {
             return true
         }
@@ -52,8 +55,7 @@ class WebProcessor : AbstractProcessor() {
             }
 
         val file = createFile(allSources)
-        val filePath = File(kaptKotlinGeneratedDir)
-        file.writeTo(filePath)
+        file.writeTo(outputFile.toPath())
         return true
     }
 
@@ -76,7 +78,7 @@ class WebProcessor : AbstractProcessor() {
                 createGetWebSource()
             )
             .build()
-        return FileSpec.builder("", "WebSourceCenter")
+        return FileSpec.builder("com.jianglei.beautifulgirl", "WebSourceCenter")
             .addType(name)
             .build()
     }

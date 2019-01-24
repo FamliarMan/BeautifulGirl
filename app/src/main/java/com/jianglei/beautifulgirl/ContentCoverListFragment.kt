@@ -1,6 +1,5 @@
 package com.jianglei.beautifulgirl
 
-import WebSourceCenter
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +16,7 @@ import com.jianglei.beautifulgirl.vo.PlayUrl
 import com.jianglei.videoplay.VideoPlayActivity
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import utils.ToastUtils
+import java.lang.Exception
 
 /**
  * 所有封面内容的展示，包括视频的或图片的
@@ -78,7 +78,14 @@ class ContentCoverListFragment : BaseFragment() {
         titleAdapter.onItemClickListener = object : PictureTitleAdapter.OnItemClickListener {
             override fun onItemClick(title: ContentTitle, pos: Int) {
                 if (title.type == Category.TYPE_VIDEO) {
-                    getVideoPlayUrl(title.detailUrl)
+                    try {
+                        getVideoPlayUrl(title.detailUrl)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        if (activity != null) {
+                            ToastUtils.showMsg(activity!!, e.localizedMessage)
+                        }
+                    }
                 } else {
                     val intent = Intent(activity, PictureDetailListActivity::class.java)
                     intent.putExtra("detailUrl", title.detailUrl)
@@ -144,7 +151,6 @@ class ContentCoverListFragment : BaseFragment() {
         }
         webDataSource!!.fetchCoverContents(url!!, page, object : OnDataResultListener<MutableList<ContentTitle>> {
             override fun onSuccess(data: MutableList<ContentTitle>) {
-                rvContent.setPullLoadMoreCompleted()
                 if (data.size == 0) {
                     rvContent.pushRefreshEnable = false
                     Toast.makeText(activity, R.string.no_more_data, Toast.LENGTH_LONG).show()
@@ -163,6 +169,9 @@ class ContentCoverListFragment : BaseFragment() {
                 }
 
                 page++
+                rvContent.post {
+                    rvContent.setPullLoadMoreCompleted()
+                }
             }
 
             override fun onError(msg: String) {
