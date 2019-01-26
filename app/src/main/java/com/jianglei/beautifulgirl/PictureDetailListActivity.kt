@@ -1,9 +1,10 @@
 package com.jianglei.beautifulgirl
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -121,6 +122,11 @@ class PictureDetailListActivity : BaseActivity() {
                 .setAutoPlayAnimations(true)
                 .build()
             holder.ivContent.controller = (controller)
+            holder.ivContent.setOnClickListener{
+                val intent = Intent(context,PhotoViewActivity::class.java)
+                intent.putExtra("url",urls[position])
+                context.startActivity(intent)
+            }
 //            val options = RequestOptions()
 //                .placeholder(R.mipmap.holder_picture)
 //                .centerCrop()

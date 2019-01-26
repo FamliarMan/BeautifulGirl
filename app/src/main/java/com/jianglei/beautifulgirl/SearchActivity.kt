@@ -2,8 +2,8 @@ package com.jianglei.beautifulgirl
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.SearchView
 import com.classic.adapter.BaseAdapterHelper
 import com.classic.adapter.CommonRecyclerAdapter
 import com.jianglei.beautifulgirl.data.OnDataResultListener

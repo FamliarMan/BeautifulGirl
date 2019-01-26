@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,4 +16,4 @@
         app:placeholderImage="@mipmap/ic_loading"
         app:retryImage="@mipmap/ic_load_error"
     />
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

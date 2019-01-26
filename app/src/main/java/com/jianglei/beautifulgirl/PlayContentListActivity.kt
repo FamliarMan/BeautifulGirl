@@ -1,7 +1,7 @@
 package com.jianglei.beautifulgirl
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.classic.adapter.BaseAdapterHelper
@@ -20,6 +20,7 @@ class PlayContentListActivity : AppCompatActivity() {
         setContentView(R.layout.layout_recyclerview)
         val playContentStr = intent.getStringExtra("playContents")
         playContents = JsonUtils.parseJsonArrayWithGson(playContentStr, PlayContent::class.java)
+        rvContent.pullRefreshEnable = false
         rvContent.setLinearLayout()
         val adapter = object : CommonRecyclerAdapter<PlayContent>(
             this,

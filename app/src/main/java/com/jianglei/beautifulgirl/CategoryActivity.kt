@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
@@ -171,6 +171,6 @@ class CategoryActivity : BaseActivity() {
     class CategoryHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var ivCover: ImageView = itemView.findViewById(R.id.ivCover)
         var tvName: TextView = itemView.findViewById(R.id.tvName)
-        var layoutMain:CardView = itemView.findViewById(R.id.layout_main)
+        var layoutMain: CardView = itemView.findViewById(R.id.layout_main)
     }
 }
