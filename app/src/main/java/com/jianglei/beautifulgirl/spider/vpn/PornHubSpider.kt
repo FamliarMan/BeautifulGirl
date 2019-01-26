@@ -124,7 +124,7 @@ class PornHubSpider : WebVideoSource,SearchSource{
         })
     }
 
-    override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayUrl>>) {
+    override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayContent>>) {
         RetrofitManager.getWebsiteHtml(detailUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {
                 val matcher = playPattern.matcher(html)
@@ -134,7 +134,9 @@ class PornHubSpider : WebVideoSource,SearchSource{
                 }
                 val playPathVoStr = matcher.group(1)
                 val pathWrapper = Gson().fromJson(playPathVoStr, PathWrapper::class.java)
-                listener.onSuccess(pathWrapper.mediaDefinitions)
+
+                val playContent = PlayContent(pathWrapper.mediaDefinitions,"","")
+                listener.onSuccess(listOf(playContent) as MutableList<PlayContent>)
             }
 
             override fun onError(code: Int, msg: String) {

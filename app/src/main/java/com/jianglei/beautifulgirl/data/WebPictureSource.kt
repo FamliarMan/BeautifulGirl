@@ -7,5 +7,5 @@ interface WebPictureSource : WebDataSource {
     /**
      * 获取某个帖子的所有图片数据
      */
-    fun fetDetailPictures(url: String, page: Int, listener: OnDataResultListener<MutableList<String>>) {}
+    fun fetDetailPictures(url: String, page: Int, listener: OnDataResultListener<MutableList<String>>)
 }

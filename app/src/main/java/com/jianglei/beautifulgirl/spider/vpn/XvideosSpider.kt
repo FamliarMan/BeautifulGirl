@@ -180,7 +180,7 @@ class XvideosSpider : WebVideoSource, SearchSource {
     }
 
 
-    override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayUrl>>) {
+    override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayContent>>) {
         RetrofitManager.getWebsiteHtml(detailUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {
                 val realPlayUrl = getRealPlayUrl(html)
@@ -190,8 +190,9 @@ class XvideosSpider : WebVideoSource, SearchSource {
                 }
 
                 val playUrl = PlayUrl(true, "tls", "720", realPlayUrl)
-                val res = listOf(playUrl)
-                listener.onSuccess(res.toMutableList())
+                val playUrls = listOf(playUrl)
+                val playContent = PlayContent(playUrls,"","")
+                listener.onSuccess(listOf(playContent) as MutableList<PlayContent>)
 
             }
 

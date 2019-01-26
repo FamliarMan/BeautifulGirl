@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
@@ -154,8 +155,13 @@ class CategoryActivity : BaseActivity() {
         override fun onBindViewHolder(holder: CategoryHolder, position: Int) {
             val category = categories[position]
             holder.tvName.text = category.title
-            holder.ivCover.setImageURI(Uri.parse(category.coverUrl))
-            holder.ivCover.setOnClickListener {
+            if (category.coverUrl == null) {
+                holder.ivCover.visibility = View.GONE
+            } else {
+                holder.ivCover.visibility = View.VISIBLE
+                holder.ivCover.setImageURI(Uri.parse(category.coverUrl))
+            }
+            holder.layoutMain.setOnClickListener {
                 onItemClickListener?.onItemClick(category, position)
             }
         }
@@ -165,5 +171,6 @@ class CategoryActivity : BaseActivity() {
     class CategoryHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var ivCover: ImageView = itemView.findViewById(R.id.ivCover)
         var tvName: TextView = itemView.findViewById(R.id.tvName)
+        var layoutMain:CardView = itemView.findViewById(R.id.layout_main)
     }
 }

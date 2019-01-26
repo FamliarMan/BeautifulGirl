@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-apply plugin:'kotlin-kapt'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -25,10 +25,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
 
         }
-        compileOptions{
+        compileOptions {
             targetCompatibility JavaVersion.VERSION_1_8
         }
     }
@@ -36,8 +36,8 @@ android {
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs'];
-            java{
-                srcDir  "${buildDir.absolutePath}/generated/source/kaptKotlin/"
+            java {
+                srcDir "${buildDir.absolutePath}/generated/source/kaptKotlin/"
             }
         }
 

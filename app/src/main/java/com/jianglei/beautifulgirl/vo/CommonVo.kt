@@ -2,6 +2,7 @@ package com.jianglei.beautifulgirl.vo
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.io.Serializable
 
 /**
  * @author jianglei on 1/6/19.
@@ -88,3 +89,10 @@ data class SearchVideoKeyWord(var N:String, var R:String)
  * [videoUrl]: 当前视频地址
  */
 data class PlayUrl(var defaultQuality:Boolean,var format:String,var quality:String,var videoUrl:String )
+
+/**
+ * [file]视频播放的实际地址,有时候一个栏目可能会有多个视频，所以这里是一个列表
+ * [title] 视频名称
+ * [desc] 视屏的描述
+ */
+data class PlayContent(var file:List<PlayUrl>?,var title:String ,var desc:String?,var image:String=""):Serializable

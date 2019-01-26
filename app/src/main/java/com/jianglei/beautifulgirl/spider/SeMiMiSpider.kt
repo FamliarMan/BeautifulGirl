@@ -7,10 +7,7 @@ import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.OnWebResultListener
 import com.jianglei.beautifulgirl.data.RetrofitManager
 import com.jianglei.beautifulgirl.data.WebVideoSource
-import com.jianglei.beautifulgirl.vo.Category
-import com.jianglei.beautifulgirl.vo.ContentTitle
-import com.jianglei.beautifulgirl.vo.PlayUrl
-import com.jianglei.beautifulgirl.vo.WebsiteDescVo
+import com.jianglei.beautifulgirl.vo.*
 import org.jsoup.Jsoup
 import utils.UrlUtils
 import java.util.regex.Pattern
@@ -22,7 +19,7 @@ import java.util.regex.Pattern
 
 @WebSource(false)
 class SeMiMiSpider : WebVideoSource {
-    override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayUrl>>) {
+    override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayContent>>) {
         RetrofitManager.getWebsiteHtml(detailUrl,object:OnWebResultListener{
             override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)
@@ -31,7 +28,10 @@ class SeMiMiSpider : WebVideoSource {
                     .selectFirst("script")
                     .data()
                 val url = getPlayUrl(script)
-                listener.onSuccess(listOf(PlayUrl(true,"hls","480",url)) as MutableList<PlayUrl>)
+                //这里一般都只有一个视频，title和desc都不会展示，随便赋值即可
+                val playContent = PlayContent(listOf(PlayUrl(true,"hls","480",url)) as MutableList<PlayUrl>,
+                    "","")
+                listener.onSuccess(listOf(playContent) as MutableList<PlayContent>)
             }
 
             override fun onError(code: Int, msg: String) {

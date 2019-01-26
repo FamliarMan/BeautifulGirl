@@ -7,16 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.gson.Gson
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.data.WebVideoSource
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
-import com.jianglei.beautifulgirl.vo.PlayUrl
+import com.jianglei.beautifulgirl.vo.PlayContent
 import com.jianglei.videoplay.VideoPlayActivity
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import utils.ToastUtils
-import java.lang.Exception
 
 /**
  * 所有封面内容的展示，包括视频的或图片的
@@ -119,18 +119,28 @@ class ContentCoverListFragment : BaseFragment() {
         showProgress(true)
 
         val webVideoSource = webDataSource as WebVideoSource
-        webVideoSource.fetchVideoUrls(detailUrl, object : OnDataResultListener<MutableList<PlayUrl>> {
-            override fun onSuccess(data: MutableList<PlayUrl>) {
+        webVideoSource.fetchVideoUrls(detailUrl, object : OnDataResultListener<MutableList<PlayContent>> {
+            override fun onSuccess(data: MutableList<PlayContent>) {
                 showProgress(false)
-                var playUrl: String? = null
-                data.forEach {
-                    if (it.defaultQuality) {
-                        playUrl = it.videoUrl
+                if (data.size > 1) {
+                    //有多个播放地址，要进入播放列表选择页
+                    val intent = Intent(activity, PlayContentListActivity::class.java)
+                    intent.putExtra("playContents", Gson().toJson(data))
+                    startActivity(intent)
+                } else {
+                    //只有一个播放地址选择合适的播放地址
+                    val playContent = data[0]
+                    val playUrls = playContent.file
+                    var playUrl: String? = null
+                    playUrls!!.forEach {
+                        if (it.defaultQuality) {
+                            playUrl = it.videoUrl
+                        }
                     }
+                    val intent = Intent(activity, VideoPlayActivity::class.java)
+                    intent.putExtra("playUrl", playUrl)
+                    startActivity(intent)
                 }
-                val intent = Intent(activity, VideoPlayActivity::class.java)
-                intent.putExtra("playUrl", playUrl)
-                startActivity(intent)
             }
 
             override fun onError(msg: String) {

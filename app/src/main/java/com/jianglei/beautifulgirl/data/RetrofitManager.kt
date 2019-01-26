@@ -34,6 +34,7 @@ class RetrofitManager {
                     val request = chain.request().newBuilder()
                         .addHeader("X-Forwarded-For",IpUtils.getRandomIp())
                         .addHeader("Accept-Language"," zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
+                        .addHeader("User-Agent","Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36")
                         .build()
                     chain.proceed(request)
                 }
