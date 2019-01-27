@@ -6,14 +6,19 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+def buildType
 android {
+
+    applicationVariants.all { variant ->
+        buildType = variant.buildType.name // sets the current build type
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.jianglei.beautifulgirl"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 2
-        versionName "2.0"
+        versionCode 3
+        versionName "3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
@@ -26,21 +31,26 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-
-        }
-        compileOptions {
-            targetCompatibility JavaVersion.VERSION_1_8
         }
     }
-
+    productFlavors {
+    }
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
-            java {
-                srcDir "${buildDir.absolutePath}/generated/source/kaptKotlin/"
-            }
+        }
+        debug{
+            java.srcDirs "${buildDir.absolutePath}/generated/source/kaptKotlin/debug"
+        }
+        release{
+            java.srcDirs "${buildDir.absolutePath}/generated/source/kaptKotlin/release"
         }
 
+    }
+    buildToolsVersion '28.0.3'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 

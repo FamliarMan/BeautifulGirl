@@ -3,12 +3,11 @@ apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.squareup:kotlinpoet:1.0.1'
-    implementation project(":annotation")
-
-    implementation "com.google.auto.service:auto-service:1.0-rc4"
+    implementation project(':annotation')
+    implementation 'com.google.auto.service:auto-service:1.0-rc4'
     kapt "com.google.auto.service:auto-service:1.0-rc4"
 }
 

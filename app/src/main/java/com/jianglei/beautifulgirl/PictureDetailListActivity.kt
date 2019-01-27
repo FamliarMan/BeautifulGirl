@@ -16,6 +16,7 @@ import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.WebPictureSource
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import kotlinx.android.synthetic.main.layout_recyclerview.*
+
 import utils.ToastUtils
 
 class PictureDetailListActivity : BaseActivity() {
