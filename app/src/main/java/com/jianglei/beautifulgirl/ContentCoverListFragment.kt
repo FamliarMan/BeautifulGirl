@@ -164,6 +164,9 @@ class ContentCoverListFragment : BaseFragment() {
                 if (data.size == 0) {
                     rvContent.pushRefreshEnable = false
                     Toast.makeText(activity, R.string.no_more_data, Toast.LENGTH_LONG).show()
+                    rvContent.post {
+                        rvContent.setPullLoadMoreCompleted()
+                    }
                     return
                 }
                 data.forEach {
