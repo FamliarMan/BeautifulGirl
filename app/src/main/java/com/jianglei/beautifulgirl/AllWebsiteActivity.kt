@@ -69,7 +69,7 @@ class AllWebsiteActivity : BaseActivity() {
                     Log.d("jianglei", "获取分类:" + it.title + " " + it.url)
                 }
                 showProgress(false)
-                if (data.size > 15) {
+                if (data.size >= 8) {
                     //分类数量大于15，要专门前往分类页面
                     val intent = Intent(this@AllWebsiteActivity, CategoryActivity::class.java)
                     intent.putExtra("dataSourceId", vo.id)

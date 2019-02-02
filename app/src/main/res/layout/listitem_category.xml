@@ -30,7 +30,7 @@
             tool:text="man"
             android:textSize="20sp"
             android:layout_marginTop="10dp"
-            android:maxLines="1"
+            android:maxLines="3"
             android:gravity="center"
             android:layout_marginBottom="15dp"
             android:textColor="@color/colorPrimaryDark"
