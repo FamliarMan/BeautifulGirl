@@ -12,7 +12,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import utils.IpUtils
 import java.io.File
 import java.nio.charset.Charset
 
@@ -30,14 +29,6 @@ class RetrofitManager {
             val okhttpClient = OkHttpClient.Builder()
                 .cache(Cache(File(getCacheDir(context) + "/beautiful"), 1024 * 1024 * 5))
                 .addInterceptor(logInterceptor)
-                .addInterceptor { chain ->
-                    val request = chain.request().newBuilder()
-                        .addHeader("X-Forwarded-For",IpUtils.getRandomIp())
-                        .addHeader("Accept-Language"," zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
-                        .addHeader("User-Agent","Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36")
-                        .build()
-                    chain.proceed(request)
-                }
                 .build()
             retrofit = Retrofit.Builder()
                 .baseUrl("http://127.0.0.1/")
@@ -61,8 +52,13 @@ class RetrofitManager {
         }
 
         fun getWebsiteHtml(url: String, listener: OnWebResultListener, charset: String = "utf-8") {
+            getWebsiteHtml(url, emptyMap(),listener,charset)
+        }
+        fun getWebsiteHtml(url: String, headers:Map<String,String> ,listener: OnWebResultListener, charset: String = "utf-8") {
+            val allHeaders = hashMapOf("User-Agent" to "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36")
+            allHeaders.putAll(headers)
             currentCall = retrofit.create(WebService::class.java)
-                .fetchHtmlFromWebsite(url)
+                .fetchHtmlFromWebsite(url,allHeaders)
             currentCall!!.enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     listener.onError(-1, t.localizedMessage)
@@ -95,40 +91,6 @@ class RetrofitManager {
             })
         }
 
-        fun get91Html(url: String, listener: OnWebResultListener, charset: String = "utf-8") {
-            currentCall = retrofit.create(WebService::class.java)
-                .fetchHtmlFromWebsite(url,IpUtils.getRandomIp())
-            currentCall!!.enqueue(object : Callback<ResponseBody> {
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    listener.onError(-1, t.localizedMessage)
-                    currentCall = null
-
-                }
-
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    when {
-                        response.code() == 404 -> {
-                            listener.onError(404, "No data")
-                        }
-                        response.isSuccessful -> {
-                            if (response.body() == null) {
-                                listener.onError(-1, "Network Error")
-                            }
-                            val bytes = response.body()!!.bytes()
-                            val res = String(bytes, Charset.forName(charset))
-                            listener.onSuccess(res)
-                        }
-                        else -> {
-                            listener.onError(response.code(), "Network Error")
-                        }
-
-                    }
-                    response.body()?.close()
-                    currentCall = null
-                }
-
-            })
-        }
         fun cancelNet() {
             if (currentCall != null) {
                 currentCall!!.cancel()

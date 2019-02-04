@@ -40,7 +40,6 @@ class VideoPlayActivity : AppCompatActivity() {
         playContent.setReceiverGroup(mReceiverGroup)
         playContent.setEventHandler(object : OnVideoViewEventHandler() {
             override fun onAssistHandle(assist: BaseVideoView?, eventCode: Int, bundle: Bundle?) {
-                super.onAssistHandle(assist, eventCode, bundle)
                 when (eventCode) {
                     InterEvent.CODE_REQUEST_PAUSE -> {
                         userPause = true
@@ -62,6 +61,9 @@ class VideoPlayActivity : AppCompatActivity() {
                     }
                     DataInter.Event.EVENT_CODE_ERROR_SHOW -> {
                         playContent.stop()
+                    }
+                    else ->{
+                        super.onAssistHandle(assist, eventCode, bundle)
                     }
 
                 }

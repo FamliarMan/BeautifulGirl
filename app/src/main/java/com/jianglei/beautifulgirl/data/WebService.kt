@@ -17,6 +17,8 @@ interface WebService {
     @GET
     fun fetchHtmlFromWebsite(@Url url: String): Call<ResponseBody>
 
+    @GET
+    fun fetchHtmlFromWebsite(@Url url: String,@HeaderMap header:Map<String,String>): Call<ResponseBody>
     /**
      * 获取91播放页html
      */

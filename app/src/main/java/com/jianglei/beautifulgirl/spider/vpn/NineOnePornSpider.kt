@@ -6,6 +6,7 @@ import com.jianglei.beautifulgirl.R
 import com.jianglei.beautifulgirl.data.*
 import com.jianglei.beautifulgirl.vo.*
 import org.jsoup.Jsoup
+import utils.IpUtils
 import java.lang.StringBuilder
 
 
@@ -13,7 +14,12 @@ import java.lang.StringBuilder
  * @author jianglei on 1/9/19.
  */
 @WebSource(true, 3)
-class NineOnePornSpider : WebVideoSource{
+class NineOnePornSpider : WebVideoSource {
+    private val headers = hashMapOf(
+        "X-Forwarded-For" to IpUtils.getRandomIp(),
+        "Accept-Language" to " zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+    )
+
     override fun fetchWebsite(): WebsiteDescVo {
         return WebsiteDescVo(
             "91自拍",
@@ -25,7 +31,7 @@ class NineOnePornSpider : WebVideoSource{
 
     override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl = "$url&page=$page"
-        RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
+        RetrofitManager.getWebsiteHtml(realUrl, headers,object : OnWebResultListener {
             override fun onSuccess(html: String) {
                 try {
                     val doc = Jsoup.parse(html)
@@ -56,7 +62,7 @@ class NineOnePornSpider : WebVideoSource{
                         val info = allInfo.substring(start).replace("还未被评分", "")
                         sb.append(info)
                         val desc = sb.toString()
-                        val res = ContentTitle(title, desc, detailUrl, coverUrl,Category.TYPE_VIDEO)
+                        val res = ContentTitle(title, desc, detailUrl, coverUrl, Category.TYPE_VIDEO)
                         Log.d("jianglei", res.title + "  " + res.detailUrl)
                         res
 
@@ -83,7 +89,7 @@ class NineOnePornSpider : WebVideoSource{
         listener: OnDataResultListener<MutableList<Category>>,
         page: Int
     ) {
-        RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
+        RetrofitManager.getWebsiteHtml(homePageUrl, headers,object : OnWebResultListener {
             override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)
                 try {
@@ -91,7 +97,7 @@ class NineOnePornSpider : WebVideoSource{
                         .getElementsByTag("a")
                     val res = a.map {
 
-                        val category = Category(it.text(), it.attr("href"),Category.TYPE_VIDEO)
+                        val category = Category(it.text(), it.attr("href"), Category.TYPE_VIDEO)
                         category.type = Category.TYPE_VIDEO
                         category
                     }.filter {
@@ -115,7 +121,7 @@ class NineOnePornSpider : WebVideoSource{
 
     override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayContent>>) {
 
-        RetrofitManager.get91Html(detailUrl, object : OnWebResultListener {
+        RetrofitManager.getWebsiteHtml(detailUrl, headers, object : OnWebResultListener {
             override fun onSuccess(html: String) {
 
                 try {
@@ -125,7 +131,7 @@ class NineOnePornSpider : WebVideoSource{
                     Log.d("jianglei", "视频链接：$videoUrl")
                     val playUrl = PlayUrl(true, "mp4", "360", videoUrl)
                     val playList = listOf(playUrl)
-                    val playContent = PlayContent(playList,"","")
+                    val playContent = PlayContent(playList, "", "")
                     listener.onSuccess(listOf(playContent) as MutableList<PlayContent>)
                 } catch (e: Exception) {
                     e.printStackTrace()

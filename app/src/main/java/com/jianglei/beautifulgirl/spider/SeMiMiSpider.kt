@@ -17,7 +17,7 @@ import java.util.regex.Pattern
  * @author jianglei on 1/24/19.
  */
 
-@WebSource(false)
+@WebSource(true)
 class SeMiMiSpider : WebVideoSource {
     override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayContent>>) {
         RetrofitManager.getWebsiteHtml(detailUrl,object:OnWebResultListener{

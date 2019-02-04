@@ -8,6 +8,7 @@ import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.WebsiteDescVo
 import org.jsoup.Jsoup
+import utils.IpUtils
 import java.net.URL
 
 
@@ -87,7 +88,7 @@ class CaoliuSpider : WebPictureSource{
         listener: OnDataResultListener<MutableList<Category>>,
         page: Int
     ) {
-        RetrofitManager.getWebsiteHtml(homePageUrl, object : OnWebResultListener {
+        RetrofitManager.getWebsiteHtml(homePageUrl,object : OnWebResultListener {
             override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)
                 val trs = doc.getElementsByClass("tr3 f_one")

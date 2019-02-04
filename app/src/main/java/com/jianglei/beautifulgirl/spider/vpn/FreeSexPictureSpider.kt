@@ -32,7 +32,11 @@ class FreeSexPictureSpider : WebPictureSource {
             //page为1时
             supportPageContent = false
         }
-        RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
+        val header = hashMapOf(
+            ":authority" to "www.sepic.xyz",
+            "upgrade-insecure-requests" to "1"
+            )
+        RetrofitManager.getWebsiteHtml(realUrl, header,object : OnWebResultListener {
             override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)
                 val res = ArrayList<String>()
