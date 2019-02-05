@@ -19,12 +19,7 @@ interface WebService {
 
     @GET
     fun fetchHtmlFromWebsite(@Url url: String,@HeaderMap header:Map<String,String>): Call<ResponseBody>
-    /**
-     * 获取91播放页html
-     */
-    @Headers("Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
-    @GET
-    fun fetchHtmlFromWebsite(@Url url: String,@Header("X-Forwarded-For")ip:String): Call<ResponseBody>
+
 
     @GET("https://www.xvideos.com/search-suggest/{keyword}")
     fun xvideoSearch(@Path("keyword")keyWord: String):Call<XVideoKeyWordWrapper>

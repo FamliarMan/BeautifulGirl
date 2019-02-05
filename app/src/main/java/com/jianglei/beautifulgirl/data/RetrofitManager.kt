@@ -3,9 +3,7 @@ package com.jianglei.beautifulgirl.data
 import android.content.Context
 import android.os.Environment
 import android.util.Log
-import okhttp3.Cache
-import okhttp3.OkHttpClient
-import okhttp3.ResponseBody
+import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,6 +27,25 @@ class RetrofitManager {
             val okhttpClient = OkHttpClient.Builder()
                 .cache(Cache(File(getCacheDir(context) + "/beautiful"), 1024 * 1024 * 5))
                 .addInterceptor(logInterceptor)
+                .addInterceptor { chain ->
+                    val request = chain.request().newBuilder()
+                        .addHeader("User-Agent","Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36")
+                        .build()
+                    chain.proceed(request)
+                }.cookieJar(object:CookieJar {
+                    override fun saveFromResponse(url: HttpUrl, cookies: MutableList<Cookie>) {
+                        CookitCenter.put(url.host(),cookies)
+                    }
+
+                    override fun loadForRequest(url: HttpUrl): MutableList<Cookie> {
+                        val cookies = CookitCenter.get(url.host())
+                        if(cookies == null){
+                            return ArrayList()
+                        }else{
+                            return cookies.toMutableList()
+                        }
+                    }
+                })
                 .build()
             retrofit = Retrofit.Builder()
                 .baseUrl("http://127.0.0.1/")
@@ -55,10 +72,8 @@ class RetrofitManager {
             getWebsiteHtml(url, emptyMap(),listener,charset)
         }
         fun getWebsiteHtml(url: String, headers:Map<String,String> ,listener: OnWebResultListener, charset: String = "utf-8") {
-            val allHeaders = hashMapOf("User-Agent" to "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36")
-            allHeaders.putAll(headers)
             currentCall = retrofit.create(WebService::class.java)
-                .fetchHtmlFromWebsite(url,allHeaders)
+                .fetchHtmlFromWebsite(url,headers)
             currentCall!!.enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     listener.onError(-1, t.localizedMessage)

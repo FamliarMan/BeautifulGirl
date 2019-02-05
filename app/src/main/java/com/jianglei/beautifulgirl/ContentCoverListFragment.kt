@@ -15,6 +15,7 @@ import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.PlayContent
 import com.jianglei.videoplay.VideoPlayActivity
+import com.jianglei.videoplay.WebViewPlayActivity
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import utils.ToastUtils
 
@@ -78,6 +79,13 @@ class ContentCoverListFragment : BaseFragment() {
         titleAdapter.onItemClickListener = object : PictureTitleAdapter.OnItemClickListener {
             override fun onItemClick(title: ContentTitle, pos: Int) {
                 if (title.type == Category.TYPE_VIDEO) {
+                    if(title.isUseWeb){
+                        //只能使用web浏览
+                        val intent = Intent(activity, WebViewPlayActivity::class.java)
+                        intent.putExtra("playUrl", title.detailUrl)
+                        startActivity(intent)
+                        return
+                    }
                     try {
                         getVideoPlayUrl(title.detailUrl)
                     } catch (e: Exception) {

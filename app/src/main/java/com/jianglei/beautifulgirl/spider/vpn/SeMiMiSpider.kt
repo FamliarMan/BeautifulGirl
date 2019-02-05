@@ -1,4 +1,4 @@
-package com.jianglei.beautifulgirl.spider
+package com.jianglei.beautifulgirl.spider.vpn
 
 import android.net.Uri
 import com.jianglei.annotation.WebSource
