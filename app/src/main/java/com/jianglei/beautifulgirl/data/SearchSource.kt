@@ -14,7 +14,6 @@ interface SearchSource {
     /**
      * 获取一个网站搜索前往的页面地址
      */
-    fun getSearchUrl(searchTxt: String): String {
-        return ""
-    }
+    fun getSearchUrl(searchTxt: String): String
+
 }

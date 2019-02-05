@@ -10,20 +10,21 @@ import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.PlayContent
 import com.jianglei.beautifulgirl.vo.WebsiteDescVo
-import okhttp3.ResponseBody
 import org.jsoup.Jsoup
 import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Query
 import utils.UrlUtils
 
 /**
  * @author jianglei on 2/4/19.
  */
 @WebSource(true)
-class ImZoGSpider:WebVideoSource {
+class ImZoGSpider:WebVideoSource{
 
     companion object {
 
-        private var callHolder = ArrayList<Call<ResponseBody>>()
+        private var callHolder = ArrayList<Call<*>>()
 
         /**
          * 这个网站的播放地址url是加密过的，下面是解密算法
@@ -158,5 +159,10 @@ class ImZoGSpider:WebVideoSource {
 
 
 
+
+    interface ImZogService{
+        @GET("https://imzog.com/suggester/suggest.php")
+        fun getSearchSuggest(@Query("char") char:String): Call<List<String>>
+    }
 
 }
