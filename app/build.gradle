@@ -7,7 +7,37 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 def buildType
+allprojects {
+    repositories {
+
+        maven{url "https://oss.sonatype.org/content/repositories/snapshots"}
+        mavenCentral()
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build.jetifier:jetifier-processor:1.0.0-beta02'
+    }
+}
 android {
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
 
     applicationVariants.all { variant ->
         buildType = variant.buildType.name // sets the current build type
@@ -20,6 +50,7 @@ android {
         versionCode 3
         versionName "3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
         }
@@ -74,9 +105,16 @@ dependencies {
     //加载框
     implementation 'com.kaopiz:kprogresshud:1.0.2'
     implementation 'org.jsoup:jsoup:1.11.3'
+
+
+    implementation 'net.sourceforge.htmlunit:htmlunit:2.34-SNAPSHOT'
+
+//    implementation 'com.machinepublishers:'
     kapt project(":processor")
     implementation project(':annotation')
     implementation project(':videoplay')
+
+    implementation 'com.android.support:multidex:1.0.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
