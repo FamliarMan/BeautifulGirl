@@ -1,5 +1,6 @@
 package com.jianglei.beautifulgirl.spider
 
+import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
 import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.R
@@ -45,7 +46,12 @@ class XiuRenSpider : WebPictureSource, WebVideoSource {
         )
     }
 
-    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+    override fun fetchCoverContents(
+        activity: FragmentActivity,
+        url: String,
+        page: Int,
+        listener: OnDataResultListener<MutableList<ContentTitle>>
+    ) {
         val realUrl = url.replace(".html", "-$page.html")
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {

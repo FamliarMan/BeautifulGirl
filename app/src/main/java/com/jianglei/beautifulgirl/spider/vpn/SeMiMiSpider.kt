@@ -1,6 +1,7 @@
 package com.jianglei.beautifulgirl.spider.vpn
 
 import android.net.Uri
+import androidx.fragment.app.FragmentActivity
 import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.R
 import com.jianglei.beautifulgirl.data.OnDataResultListener
@@ -49,7 +50,7 @@ class SeMiMiSpider : WebVideoSource {
         )
     }
 
-    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+    override fun fetchCoverContents(activity: FragmentActivity, url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         if (url.equals("http://www.semm97.com/") && page > 1) {
             //首页没有翻页
             listener.onSuccess(ArrayList())

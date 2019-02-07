@@ -22,5 +22,6 @@ class MyApplication : MultiDexApplication() {
         //初始化库
         PlayerLibrary.init(this)
         ExoMediaPlayer.init(this)
+
     }
 }

@@ -1,6 +1,7 @@
 package com.jianglei.beautifulgirl.spider.vpn
 
-import android.util.Log
+
+import androidx.fragment.app.FragmentActivity
 import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.R
 import com.jianglei.beautifulgirl.data.*
@@ -17,67 +18,19 @@ import utils.UrlUtils
  * @author jianglei on 2/4/19.
  */
 @WebSource(true)
-class ImZoGSpider : WebVideoSource,SearchSource {
-
-    companion object {
-
-        private var callHolder = ArrayList<Call<*>>()
-
-        /**
-         * 这个网站的播放地址url是加密过的，下面是解密算法
-         * [url] 是加密后的url
-         */
-        private fun decodeUrl(url: String): String {
-            val secret = "АВСDЕFGHIJKLМNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,~"
-            val videoUrl = StringBuilder()
-            var k = 0
-            do {
-
-                var t1 = secret.indexOf(url[k++])
-                var t2 = secret.indexOf(url[k++])
-                val t3 = secret.indexOf(url[k++])
-                val t4 = secret.indexOf(url[k++])
-                t1 = (t1 shl 2) or (t2 shr 4)
-                t2 = (t2 and 15) shl 4 or (t3 shr 2)
-                val t5 = (t3 and 3) shl 6 or t4
-
-                videoUrl.append(fromCharCode(t1))
-                if (t3 != 64) {
-                    videoUrl.append(fromCharCode(t2))
-                }
-                if (t4 != 64) {
-                    videoUrl.append(fromCharCode(t5))
-                }
-
-            } while (k < url.length)
-            System.out.println(videoUrl)
-            return videoUrl.toString()
-        }
-
-        private fun fromCharCode(i: Int): String {
-            return "" + i.toChar()
-        }
-    }
+class ImZoGSpider : WebVideoSource, SearchSource {
 
 
-    override fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayContent>>) {
-        DynamicWebGetter.getWebHtml(
-            detailUrl, object : Condition<String> {
-                override fun isValid(t: String): Boolean {
-                    return t.contains("<video")
-                }
-            },
-            object : OnWebResultListener {
-                override fun onSuccess(html: String) {
-                    Log.d("longyi", html)
-                    listener.onError("no web")
-                }
+    private var dynamicWebGetter: DynamicWebGetter = DynamicWebGetter()
+    private val callHolder = ArrayList<Call<*>>()
+    private var isClicked = false
 
-                override fun onError(code: Int, msg: String) {
-                    listener.onError(msg)
-                }
-            }
-        )
+
+    override fun fetchVideoUrls(
+        activity: FragmentActivity,
+        detailUrl: String,
+        listener: OnDataResultListener<MutableList<PlayContent>>
+    ) {
 
     }
 
@@ -90,14 +43,25 @@ class ImZoGSpider : WebVideoSource,SearchSource {
         )
     }
 
-    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+    override fun fetchCoverContents(
+        activity: FragmentActivity,
+        url: String,
+        page: Int,
+        listener: OnDataResultListener<MutableList<ContentTitle>>
+    ) {
         val realUrl: String
-        if (page == 1) {
-            realUrl = url
+        realUrl = if (page == 1) {
+            url
         } else {
-            realUrl = "$url$page/"
+            "$url$page/"
         }
-        RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
+        dynamicWebGetter.getWebHtml(activity, realUrl, object : Condition<String> {
+            override fun isValid(t: String): Boolean {
+                val doc = Jsoup.parse(t)
+                val res = doc.select(".lithumbnail")
+                return res != null
+            }
+        }, object : OnWebViewResultListener {
             override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)
                 val res = doc.select(".lithumbnail")
@@ -109,10 +73,15 @@ class ImZoGSpider : WebVideoSource,SearchSource {
                         val a = it.selectFirst("a")
                         val targetUrl = a.attr("href")
                         val title = a.attr("title")
-                        val coverUrl = "https:" + a.selectFirst("img")
-                            .attr("data-src")
+                        val img = a.selectFirst("img")
+                        var partUrl = img.attr("data-src")
+                        if (partUrl == null || partUrl.isEmpty()) {
+                            //搜索页面会出现
+                            partUrl = img.attr("src")
+                        }
+                        val coverUrl = "https:$partUrl"
                         val contentTitle = ContentTitle(title, "", targetUrl, coverUrl, Category.TYPE_VIDEO)
-//                        contentTitle.isUseWeb = true
+                        contentTitle.isUseWeb = true
                         contentTitle
                     }.toMutableList()
                 listener.onSuccess(res)
@@ -167,41 +136,40 @@ class ImZoGSpider : WebVideoSource,SearchSource {
         val call = RetrofitManager.retrofit.create(ImZogService::class.java)
             .getSearchSuggest(keyword)
         callHolder.add(call)
-        call.enqueue(object: Callback<List<String>> {
+        call.enqueue(object : Callback<List<String>> {
             override fun onFailure(call: Call<List<String>>, t: Throwable) {
                 listener.onError(t.localizedMessage)
             }
 
             override fun onResponse(call: Call<List<String>>, response: Response<List<String>>) {
-                if(!response.isSuccessful){
-                    if(response.errorBody() != null){
+                if (!response.isSuccessful) {
+                    if (response.errorBody() != null) {
                         listener.onError(response.errorBody()!!.string())
-                    }else{
+                    } else {
                         listener.onError("搜索失败")
                     }
                     return
                 }
-                if(response.body() == null){
+                if (response.body() == null) {
                     listener.onError("搜索失败")
                     return
 
                 }
                 val res = response.body()!!.map {
-                    SearchVideoKeyWord(it,"")
+                    SearchVideoKeyWord(it, "")
                 }.toMutableList()
                 listener.onSuccess(res)
             }
         })
     }
+
     override fun getSearchUrl(searchTxt: String): String {
         return "https://imzog.com/en/search/$searchTxt/"
     }
 
     override fun cancelAllNet() {
         super.cancelAllNet()
-        callHolder.forEach {
-            it.cancel()
-        }
+        dynamicWebGetter.cancel()
     }
 
 

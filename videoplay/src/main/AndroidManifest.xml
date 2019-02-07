@@ -3,7 +3,9 @@
           package="com.jianglei.videoplay">
 
     <application>
-        <activity android:name=".WebViewPlayActivity">
+        <activity android:name=".WebViewPlayActivity"
+                  android:hardwareAccelerated="true"
+                  android:configChanges="orientation|screenSize|keyboardHidden">
         </activity>
         <activity
             android:name=".VideoPlayActivity"

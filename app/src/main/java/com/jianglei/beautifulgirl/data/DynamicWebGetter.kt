@@ -1,67 +1,55 @@
 package com.jianglei.beautifulgirl.data
 
-import android.os.Handler
-import android.os.Looper
-import com.gargoylesoftware.htmlunit.WebClient
-import com.gargoylesoftware.htmlunit.html.HtmlPage
-import java.util.concurrent.Executors
+import android.webkit.WebView
+import androidx.fragment.app.FragmentActivity
 
 /**
  * 动态网站获取工具
  * @author jianglei on 2/6/19.
  */
 class DynamicWebGetter {
-    companion object {
-        private val webClient = WebClient()
-        private val executorService = Executors.newFixedThreadPool(1)
-        private val handler = Handler(Looper.getMainLooper())
-        private var isInit = false
-        private var isCanceled = false
+    private var isCanceled = false
+    private var fragment:InVisibleWebViewFragment? = null
 
-        private fun initClient() {
-            if (isInit) {
-                return
-            }
-            webClient.options.isCssEnabled = false
-            webClient.options.isJavaScriptEnabled = true
-            webClient.webConnection = OkHttpWebConnection(webClient)
-            isInit = true
+    public fun reset(){
+        fragment?.reset()
+        isCanceled = false
+    }
+    public fun getWebHtml(
+        activity: FragmentActivity,
+        url: String,
+        condition: Condition<String>,
+        listener: OnWebViewResultListener
+    ) {
+        isCanceled = false
+        reset()
+        val fm = activity.supportFragmentManager
+        fragment = fm.findFragmentByTag("webview") as InVisibleWebViewFragment?
+        if (fragment == null) {
+            fragment = InVisibleWebViewFragment()
+            fm.beginTransaction().add(fragment!!, "webview").commit()
         }
-
-
-        public fun getWebHtml(url: String,condition: Condition<String>, listener: OnWebResultListener) {
-            initClient()
-            isCanceled = true
-            executorService.execute {
-                val page: HtmlPage = webClient.getPage(url)
-                var html:String? = null
-                for(i in 0..10){
-                    html = page.asText()
-                    if(condition.isValid(html)){
-                        break
-                    }else{
-                        Thread.sleep(2000)
-                    }
-                }
+        (fragment as InVisibleWebViewFragment).getHtml(url, condition,object : OnWebViewResultListener {
+            override fun onSuccess(html: String,webView: WebView) {
                 if (isCanceled) {
-                    webClient.close()
-                    return@execute
+                    return
                 }
-                handler.post {
-                    if (html == null || html.isEmpty() ) {
-                        listener.onError(404, "获取网页失败")
-                    } else {
-                        listener.onSuccess(html)
-                    }
-                }
-                webClient.close()
+                listener.onSuccess(html,webView)
             }
 
-        }
 
-        public fun cancel() {
-            isCanceled = false
-        }
+            override fun onError(code: Int, msg: String) {
+                if (isCanceled) {
+                    return
+                }
+                listener.onError(code, msg)
+            }
+        })
+    }
+
+    public fun cancel() {
+        isCanceled = true
+        fragment?.cancel()
     }
 
 }

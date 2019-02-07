@@ -10,7 +10,7 @@ def buildType
 allprojects {
     repositories {
 
-        maven{url "https://oss.sonatype.org/content/repositories/snapshots"}
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         mavenCentral()
         flatDir {
             dirs 'libs'
@@ -45,7 +45,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.jianglei.beautifulgirl"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 3
         versionName "3.0"
@@ -70,10 +70,10 @@ android {
         main {
             jniLibs.srcDirs = ['libs']
         }
-        debug{
+        debug {
             java.srcDirs "${buildDir.absolutePath}/generated/source/kaptKotlin/debug"
         }
-        release{
+        release {
             java.srcDirs "${buildDir.absolutePath}/generated/source/kaptKotlin/release"
         }
 
@@ -105,15 +105,10 @@ dependencies {
     //加载框
     implementation 'com.kaopiz:kprogresshud:1.0.2'
     implementation 'org.jsoup:jsoup:1.11.3'
-
-
-    implementation 'net.sourceforge.htmlunit:htmlunit:2.34-SNAPSHOT'
-
-//    implementation 'com.machinepublishers:'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
     kapt project(":processor")
     implementation project(':annotation')
     implementation project(':videoplay')
-
     implementation 'com.android.support:multidex:1.0.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'

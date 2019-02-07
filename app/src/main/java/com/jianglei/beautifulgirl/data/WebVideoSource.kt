@@ -1,5 +1,7 @@
 package com.jianglei.beautifulgirl.data
 
+import android.app.Activity
+import androidx.fragment.app.FragmentActivity
 import com.jianglei.beautifulgirl.vo.PlayContent
 import com.jianglei.beautifulgirl.vo.PlayUrl
 
@@ -12,6 +14,14 @@ interface WebVideoSource :WebDataSource{
      * 获取视频地址
      * 有时候一个图片封面进来可能会对应多个视频，所以这里是一个列表
      */
-    fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayContent>>)
+    fun fetchVideoUrls(detailUrl: String, listener: OnDataResultListener<MutableList<PlayContent>>){}
 
+
+    /**
+     * 获取视频地址
+     * 有时候一个图片封面进来可能会对应多个视频，所以这里是一个列表
+     */
+    fun fetchVideoUrls(activity:FragmentActivity,detailUrl: String, listener: OnDataResultListener<MutableList<PlayContent>>){
+        fetchVideoUrls(detailUrl,listener)
+    }
 }

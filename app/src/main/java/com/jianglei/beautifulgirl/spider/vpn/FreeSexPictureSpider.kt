@@ -2,6 +2,7 @@ package com.jianglei.beautifulgirl.spider.vpn
 
 import android.text.TextUtils
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.R
 import com.jianglei.beautifulgirl.data.OnDataResultListener
@@ -73,7 +74,7 @@ class FreeSexPictureSpider : WebPictureSource {
         )
     }
 
-    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+    override fun fetchCoverContents(activity: FragmentActivity, url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl = "$url?page=$page"
         RetrofitManager.getWebsiteHtml(realUrl, object : OnWebResultListener {
             override fun onSuccess(html: String) {

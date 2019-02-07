@@ -2,6 +2,7 @@ package com.jianglei.beautifulgirl.spider
 
 import android.accounts.NetworkErrorException
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.R
 import com.jianglei.beautifulgirl.data.*
@@ -79,7 +80,7 @@ class FanliSpider : WebPictureSource{
         })
     }
 
-    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+    override fun fetchCoverContents(activity: FragmentActivity, url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
 
         startClaw(url, page,
             object : SpiderResultListener<MutableList<ContentTitle>> {

@@ -127,7 +127,7 @@ class ContentCoverListFragment : BaseFragment() {
         showProgress(true)
 
         val webVideoSource = webDataSource as WebVideoSource
-        webVideoSource.fetchVideoUrls(detailUrl, object : OnDataResultListener<MutableList<PlayContent>> {
+        webVideoSource.fetchVideoUrls(activity!!,detailUrl, object : OnDataResultListener<MutableList<PlayContent>> {
             override fun onSuccess(data: MutableList<PlayContent>) {
                 showProgress(false)
                 if (data.size > 1) {
@@ -167,7 +167,7 @@ class ContentCoverListFragment : BaseFragment() {
         if (url == null) {
             return
         }
-        webDataSource!!.fetchCoverContents(url!!, page, object : OnDataResultListener<MutableList<ContentTitle>> {
+        webDataSource!!.fetchCoverContents(activity!!,url!!, page, object : OnDataResultListener<MutableList<ContentTitle>> {
             override fun onSuccess(data: MutableList<ContentTitle>) {
                 if (data.size == 0) {
                     rvContent.pushRefreshEnable = false
@@ -191,6 +191,7 @@ class ContentCoverListFragment : BaseFragment() {
 
                 page++
                 rvContent.post {
+                    Log.d("longyi","cloase loadiing")
                     rvContent.setPullLoadMoreCompleted()
                 }
             }

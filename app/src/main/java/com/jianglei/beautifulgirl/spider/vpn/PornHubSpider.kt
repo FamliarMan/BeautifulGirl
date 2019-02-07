@@ -1,5 +1,6 @@
 package com.jianglei.beautifulgirl.spider.vpn
 
+import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
 import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.R
@@ -33,7 +34,7 @@ class PornHubSpider : WebVideoSource,SearchSource{
             "视频"
         )
     }
-    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+    override fun fetchCoverContents(activity: FragmentActivity, url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
         val realUrl: String?
         if (url.contains("?")) {
             realUrl = "$url&page=$page"

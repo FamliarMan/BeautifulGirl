@@ -1,5 +1,6 @@
 package com.jianglei.beautifulgirl.spider.vpn
 
+import androidx.fragment.app.FragmentActivity
 import com.jianglei.annotation.WebSource
 import com.jianglei.beautifulgirl.R
 import com.jianglei.beautifulgirl.data.*
@@ -90,7 +91,12 @@ class XvideosSpider : WebVideoSource, SearchSource {
 
     }
 
-    override fun fetchCoverContents(url: String, page: Int, listener: OnDataResultListener<MutableList<ContentTitle>>) {
+    override fun fetchCoverContents(
+        activity: FragmentActivity,
+        url: String,
+        page: Int,
+        listener: OnDataResultListener<MutableList<ContentTitle>>
+    ) {
         titlePage = page
         val realUrl = getRealUrl(url)
         if (realUrl == null) {
@@ -110,7 +116,7 @@ class XvideosSpider : WebVideoSource, SearchSource {
                     val thumbUnder = it.selectFirst(".thumb-under")
                     val title = thumbUnder.selectFirst("a").text()
                     val desc = thumbUnder.selectFirst(".metadata").text()
-                    val contentTitle = ContentTitle(title, desc, detailUrl, coverUrl,Category.TYPE_VIDEO)
+                    val contentTitle = ContentTitle(title, desc, detailUrl, coverUrl, Category.TYPE_VIDEO)
                     contentTitle
                 }.toMutableList()
                 listener.onSuccess(res)
@@ -152,14 +158,14 @@ class XvideosSpider : WebVideoSource, SearchSource {
                         val detailUrl = "https://" + url.host + partUrl
                         val desc = it.selectFirst(".profile-counts")
                             .text()
-                        val category = Category(categoryName, detailUrl,Category.TYPE_VIDEO)
+                        val category = Category(categoryName, detailUrl, Category.TYPE_VIDEO)
                         category.coverUrl = coverUrl
                         category.desc = desc
                         category.type = Category.TYPE_VIDEO
                         category
 
                     }.toMutableList()
-                    val home = Category("Home", "https://www.xvideos.com/new",Category.TYPE_VIDEO)
+                    val home = Category("Home", "https://www.xvideos.com/new", Category.TYPE_VIDEO)
                     home.desc = "The newest videos"
                     home.type = Category.TYPE_VIDEO
                     //随便用一张图
@@ -191,7 +197,7 @@ class XvideosSpider : WebVideoSource, SearchSource {
 
                 val playUrl = PlayUrl(true, "tls", "720", realPlayUrl)
                 val playUrls = listOf(playUrl)
-                val playContent = PlayContent(playUrls,"","")
+                val playContent = PlayContent(playUrls, "", "")
                 listener.onSuccess(listOf(playContent) as MutableList<PlayContent>)
 
             }
