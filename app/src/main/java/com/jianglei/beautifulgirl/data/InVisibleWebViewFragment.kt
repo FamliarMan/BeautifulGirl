@@ -30,12 +30,19 @@ import java.net.URLDecoder
 class InVisibleWebViewFragment : Fragment() {
     private var listener: OnWebViewResultListener? = null
     private var invisibleWebView: WebView? = null
-    private var condition: Condition<String>? = null
     private var url: String? = null
     private val handler = Handler(Looper.getMainLooper())
     var loadingFinished = true
-    var redirect = false
-    var isCalled = false
+
+    private val notifyRunnable = Runnable {
+        if (loadingFinished) {
+            invisibleWebView?.evaluateJavascript(
+                "javascript:window.java_obj.showSource("
+                        + "document.getElementsByTagName('html')[0].innerHTML);"
+                , null
+            )
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +50,6 @@ class InVisibleWebViewFragment : Fragment() {
 
     public fun reset() {
         loadingFinished = true
-        redirect = false
-        isCalled = false
     }
 
     override fun onCreateView(
@@ -61,14 +66,13 @@ class InVisibleWebViewFragment : Fragment() {
         return view
     }
 
-    public fun getHtml(url: String, condition: Condition<String>, listener: OnWebViewResultListener) {
+    public fun getHtml(url: String,  listener: OnWebViewResultListener) {
         reset()
         if (invisibleWebView != null) {
             invisibleWebView!!.loadUrl(url)
         } else {
             this.url = url
         }
-        this.condition = condition
         this.listener = listener
     }
 
@@ -106,43 +110,28 @@ class InVisibleWebViewFragment : Fragment() {
             override fun onPageFinished(view: WebView?, url: String?) {
 
                 super.onPageFinished(view, url)
-                if (!redirect) {
-                    loadingFinished = true
-                }
+                loadingFinished = true
+                //延迟500ms回调，如果有重定向现象，500ms后会发现，将不会执行回调
+                handler.postDelayed(notifyRunnable, 500)
 
-                if (loadingFinished && !redirect) {
-                    // 获取页面内容
-                    view?.evaluateJavascript(
-                        "javascript:window.java_obj.showSource("
-                                + "document.getElementsByTagName('html')[0].innerHTML);"
-                        , null
-                    )
-                } else {
-                    redirect = false
-                }
             }
 
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 loadingFinished = false
+                handler.removeCallbacks(notifyRunnable)
 
             }
 
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                if (!loadingFinished) {
-                    redirect = true
-                }
                 loadingFinished = false
                 view?.loadUrl(request!!.url!!.toString())
                 return false
             }
 
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                if (!loadingFinished) {
-                    redirect = true
-                }
 
                 loadingFinished = false
                 view?.loadUrl(url)
@@ -214,6 +203,11 @@ class InVisibleWebViewFragment : Fragment() {
         listener = null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        cancel()
+    }
+
     public fun cancel() {
         invisibleWebView?.removeAllViews()
         invisibleWebView?.destroy()
@@ -223,11 +217,8 @@ class InVisibleWebViewFragment : Fragment() {
     inner class InJavaScriptLocalObj {
         @JavascriptInterface
         public fun showSource(html: String) {
-            if (condition!!.isValid(html) && !isCalled) {
-                handler.post {
-                    listener?.onSuccess(html, invisibleWebView!!)
-                    isCalled = true
-                }
+            handler.post {
+                listener?.onSuccess(html, invisibleWebView!!)
             }
         }
 

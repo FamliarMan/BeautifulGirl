@@ -18,7 +18,6 @@ class DynamicWebGetter {
     public fun getWebHtml(
         activity: FragmentActivity,
         url: String,
-        condition: Condition<String>,
         listener: OnWebViewResultListener
     ) {
         isCanceled = false
@@ -29,7 +28,7 @@ class DynamicWebGetter {
             fragment = InVisibleWebViewFragment()
             fm.beginTransaction().add(fragment!!, "webview").commit()
         }
-        (fragment as InVisibleWebViewFragment).getHtml(url, condition,object : OnWebViewResultListener {
+        (fragment as InVisibleWebViewFragment).getHtml(url, object : OnWebViewResultListener {
             override fun onSuccess(html: String,webView: WebView) {
                 if (isCanceled) {
                     return

@@ -18,3 +18,10 @@ data class RuleDesc(
      */
     val index:Int?
 )
+
+data class FilterRuleDesc(
+    /**
+     * 过滤的值
+     */
+    val values:List<String>
+)

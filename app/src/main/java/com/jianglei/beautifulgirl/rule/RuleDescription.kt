@@ -25,6 +25,11 @@ data class WebRule (
     var encoding :String = "UTF-8",
 
     /**
+     * 有些网站动态性太强，需要先执行js，如果需要为true
+     */
+    var dynamicRender:Boolean = false,
+
+    /**
      * 搜索规则
      */
     var searchRule:SearchRule?,
@@ -86,6 +91,10 @@ data class SearchRule(
  */
 data class CategoryRule(
     /**
+     * 分页页面的url
+     */
+    var url:String,
+    /**
      * 名称提取规则
      */
     var nameRule:String,
@@ -103,7 +112,14 @@ data class CategoryRule(
     /**
      * 类别结果url提取规则
      */
-    var urlRule:String
+    var urlRule:String,
+
+    /**
+     * 分页规则，为空说明不支持分页
+     */
+    var pageRule:PageRule?
+
+
 )
 
 /**
@@ -131,3 +147,19 @@ data class CoverRule(
      */
     var urlRule:String
 )
+
+/**
+ * 分页规则
+ */
+data class PageRule(
+    /**
+     * 支持分页时分页的占位符
+     */
+    var pageHolder:String?,
+
+    /**
+     * 支持分页时的其实分页
+     */
+    var startPage:Int = 1
+)
+
