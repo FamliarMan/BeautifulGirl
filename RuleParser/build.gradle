@@ -1,0 +1,23 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'org.jsoup:jsoup:1.11.3'
+    testImplementation 'org.jsoup:jsoup:1.11.3'
+    testImplementation 'junit:junit:4.12'
+}
+
+repositories {
+    mavenCentral()
+}
+sourceSets {
+    main.java.srcDirs = []
+    main.kotlin.srcDirs = ['src/main/java', 'src/main/kotlin']
+}
+//compileTestKotlin {
+//    kotlinOptions {
+//        jvmTarget = "1.8"
+//    }
+//}

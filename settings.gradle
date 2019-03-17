@@ -1,1 +1,1 @@
-include ':app', ':processor', ':annotation', ':videoplay'
+include ':app', ':processor', ':annotation', ':videoplay', ':RuleParser'
