@@ -36,5 +36,25 @@
 @class:<name> -> @id:<content> 查找所有class为name的元素下id为content的元素 
 @class:<name> -> @class:<content>[0]  所有class为name的元素下第一个class为content的元素，累加起来返回一个列表
 ```
+## 6. 结果过滤
+```
+@filter:<过滤规则,过滤规则>
+
+```
+具体规则如下：
+
+* @hasClass<className>  上个结果节点是有class为className的子节点的保留
+* @noClass<className> 上个结果节点不包含这个子class节点的保留
+* @hasId<id1,id2> 同事拥有两个id子节点保留
+* @noId<id1,id2> 上个结果节点不包含这些子节点的保留
+* @hasLabel<label1,label2> 上个结果节点包含这些标签子节点的保留
+* @noLabel<label1,label2> 上个结果节点不包含这些标签子节点的保留
+* @==<value1,value2,value3>  上个结果字符串等于这些value的保留
+* @!=<value1,value2,value3> 上个结果字符串不等于这些value的保留
+比如：
+```
+@label:<h>->@fileter:<@hasClass(content)>  找出所有不包含content节点的h节点
+```
+注意，@== 和@!= 是作用于字符串的，只能跟在@property或@text后面
 ## 注意事项
 由于"<",">"符号被用作了特殊括号，如果某个属性里面有相应字符需要写成"\<","\>"
