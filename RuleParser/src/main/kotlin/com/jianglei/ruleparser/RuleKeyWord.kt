@@ -6,12 +6,21 @@ package com.jianglei.ruleparser
 class RuleKeyWord {
     companion object {
 
-        val CLASS = "@class"
-        val ID = "@id"
-        val LABEL = "@label"
-        val REGX = "@regex"
-        val PROPERTY = "@property"
-        val TEXT = "@text"
+        const val CLASS = "@class"
+        const val ID = "@id"
+        const val LABEL = "@label"
+        const val REGX = "@regex"
+        const val PROPERTY = "@property"
+        const val TEXT = "@text"
+
+        const val HAS_CLASS = "@hasClass"
+        const val NO_CLASS = "@noClass"
+        const val HAS_ID = "@hasId"
+        const val NO_ID = "@noId"
+        const val HAS_LABEL = "@hasLabel"
+        const val NO_LABEL = "@noLabel"
+        const val EQUALS = "@=="
+        const val NOT_EQUAL = "@!="
 
     }
 }
