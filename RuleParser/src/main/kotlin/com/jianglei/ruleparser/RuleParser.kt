@@ -1,8 +1,8 @@
 package com.jianglei.ruleparser
 
-import com.jianglei.ruleparser.ruledescription.RuleDesc
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
 /**
@@ -15,170 +15,125 @@ class RuleParser(val document: Document) {
      */
     fun getStrings(rule: String): List<String> {
         val singleRules = rule.split("->")
-        var parentElements = Elements()
+        //上一个规则得到的元素结果
+        var preElements = Elements()
         var totalRule = ""
-        parentElements.add(document)
+        var preStrings: List<String>? = null
+        var preStringRule: String? = null
+        var preElementRule: String? = null
+        var preJsonArr: List<JsonArray>? = null
+        var preJsonObj: List<JsonObject>? = null
+        var preJsonValue: List<String>? = null
+        var preJsonRule: String? = null
+        preElements.add(document)
         try {
 
             for (singleRule in singleRules) {
-                if (totalRule.isEmpty()) {
-                    totalRule = totalRule.plus(singleRule.trim())
+                totalRule = if (totalRule.isEmpty()) {
+                    totalRule.plus(singleRule.trim())
                 } else {
-                    totalRule = totalRule.plus("->").plus(singleRule.trim())
+                    totalRule.plus("->").plus(singleRule.trim())
                 }
                 when {
-                    singleRule.trim().startsWith(RuleKeyWord.REGX) -> {
-                        return getRegexStrings(SingleRuleParser.getRegexRuleDesc(singleRule), parentElements)
+                    FilterRuleParser.isElementFilterRule(singleRule) -> {
+                        //当前进入过滤元素过程
+                        if (preElementRule == null) {
+                            ExceptionUtils.throwIllegalArgumentException("‘$singleRule’规则必须跟在元素提取规则后面")
+                        }
+                        if (preStrings != null) {
+                            ExceptionUtils.throwIllegalArgumentException("‘$singleRule’规则必须跟在元素提取规则后面")
+                        }
+                        preElements = FilterRuleParser.getFilterElements(preElements, singleRule)
+                        preElementRule = singleRule
                     }
-                    singleRule.trim().startsWith(RuleKeyWord.PROPERTY) -> {
-                        return getPropertyString(SingleRuleParser.getPropertyRuleDesc(singleRule), parentElements)
+                    FilterRuleParser.isStringFilterRule(singleRule) -> {
+                        //当前进入字符串过滤过程
+                        if (preStrings == null) {
+                            ExceptionUtils.throwIllegalArgumentException("字符串过滤规‘$singleRule’则必须跟在字符串提取规则后面")
+                        }
+                        preStrings = FilterRuleParser.getFilterStrings(preStrings, singleRule)
+                        preStringRule = singleRule
                     }
-                    singleRule.trim() == RuleKeyWord.TEXT -> {
-                        return getText(parentElements)
+                    SelectRuleParser.isElementSelectRule(singleRule) -> {
+                        //进入到元素提取过程
+                        if (preStringRule != null) {
+                            ExceptionUtils.throwIllegalArgumentException("$singleRule 不能跟在$preStringRule 后面")
+                        }
+                        if (elementsCache[totalRule] != null) {
+                            preElements = elementsCache.getValue(totalRule)
+                        } else {
+                            preElements = SelectRuleParser.getSelectElements(singleRule, preElements)
+                            elementsCache[totalRule] = preElements
+                        }
+                        preElementRule = singleRule
+                    }
+                    SelectRuleParser.isStringSelectRule(singleRule) -> {
+                        //进入到字符串提取过程
+                        if (preStringRule != null) {
+                            ExceptionUtils.throwIllegalArgumentException("$singleRule 不能跟在$preStringRule 后面")
+                        }
+                        preStrings = SelectRuleParser.getSelectStrings(singleRule, preElements)
+                        preStringRule = singleRule
+                    }
+                    JsonRuleParser.isJsonArrRule(singleRule) -> {
+                        //@jsonArr
+                        if (preJsonRule == null && preStringRule == null) {
+                            ExceptionUtils.throwIllegalArgumentException("$singleRule 不能跟在$preElementRule 后面")
+                        }
+                        when {
+                            preJsonRule == null -> preJsonArr =
+                                JsonRuleParser.getJsonArrFromString(singleRule, preStrings!!)
+                            JsonRuleParser.isJsonArrRule(preJsonRule) -> //上一个结果是数组
+                                preJsonArr = JsonRuleParser.getJsonArrFromArr(singleRule, preJsonArr!!)
+                            JsonRuleParser.isJsonObjRule(preJsonRule) -> preJsonArr =
+                                JsonRuleParser.getJsonArrFromObj(singleRule, preJsonObj!!)
+                        }
+                        preJsonRule = singleRule
+                    }
+                    JsonRuleParser.isJsonObjRule(singleRule) -> {
+                        //@jsonObj
+                        if (preJsonRule == null && preStringRule == null) {
+                            ExceptionUtils.throwIllegalArgumentException("$singleRule 不能跟在$preElementRule 后面")
+                        }
+                        when {
+                            preJsonRule == null -> preJsonObj =
+                                JsonRuleParser.getJsonObjFromString(singleRule, preStrings!!)
+                            JsonRuleParser.isJsonArrRule(preJsonRule) -> //上一个结果是数组
+                                preJsonObj = JsonRuleParser.getJsonObjFromArr(singleRule, preJsonArr!!)
+                            JsonRuleParser.isJsonObjRule(preJsonRule) -> preJsonObj =
+                                JsonRuleParser.getJsonObjFromObj(singleRule, preJsonObj!!)
+                        }
+                        preJsonRule = singleRule
+
+                    }
+                    JsonRuleParser.isJsonValueRule(singleRule) -> {
+                        //@jsonValue
+                        if (preJsonRule == null && preStringRule == null) {
+                            ExceptionUtils.throwIllegalArgumentException("$singleRule 不能跟在$preElementRule 后面")
+                        }
+                        when {
+                            preJsonRule == null -> preJsonValue =
+                                JsonRuleParser.getJsonValueFromString(singleRule, preStrings!!)
+                            JsonRuleParser.isJsonArrRule(preJsonRule) -> //上一个结果是数组
+                                preJsonValue = JsonRuleParser.getJsonValueFromArr(singleRule, preJsonArr!!)
+                            JsonRuleParser.isJsonObjRule(preJsonRule) -> preJsonValue =
+                                JsonRuleParser.getJsonValueFromObj(singleRule, preJsonObj!!)
+                        }
+                        preJsonRule = singleRule
                     }
                     else -> {
-                        if (elementsCache.get(totalRule) != null) {
-                            parentElements = elementsCache.getValue(totalRule)
-                        } else {
-                            parentElements = getElements(singleRule, parentElements)
-                            elementsCache.put(totalRule, parentElements)
-                        }
+                        ExceptionUtils.throwIllegalArgumentException("非法规则描述符：$singleRule")
                     }
                 }
             }
 
         } catch (e: Throwable) {
             e.printStackTrace()
-            throw IllegalArgumentException("非法规则描述")
+            ExceptionUtils.throwIllegalArgumentException("非法规则描述")
         }
-        throw IllegalArgumentException("应该以@property、@regex或@text规则结尾")
-
-    }
-
-    fun getElements(singleRule: String, parent: Elements): Elements {
-        when {
-            singleRule.trim().startsWith(RuleKeyWord.CLASS) -> {
-                val classRule = SingleRuleParser.getClassRuleDesc(singleRule)
-
-                return getClassElements(classRule, parent)
-
-
-            }
-            singleRule.trim().startsWith(RuleKeyWord.ID) -> {
-                val idRule = SingleRuleParser.getIdRuleDesc(singleRule)
-                return getIdlements(idRule, parent)
-
-            }
-            singleRule.trim().startsWith(RuleKeyWord.LABEL) -> {
-                val labelRule = SingleRuleParser.getLabelRuleDesc(singleRule)
-                return getLabellements(labelRule, parent)
-
-            }
-            else -> throw IllegalArgumentException("非法规则描述")
-        }
-    }
-
-    fun getClassElements(classRule: RuleDesc, parent: Elements): Elements {
-        val res = Elements()
-        for (e in parent) {
-            val elements: Elements
-            if (classRule.regx != null) {
-                elements = e.select("[class~=${classRule.regx}]")
-            } else {
-                elements = e.getElementsByClass(classRule.name)
-            }
-            if (elements == null || elements.size == 0) {
-                return res
-            }
-            if (classRule.index != null) {
-                res.add(elements[classRule.index])
-            } else {
-                res.addAll(elements)
-            }
-        }
-        return res
+        ExceptionUtils.throwIllegalArgumentException("应该以@property、@regex或@text规则结尾")
 
     }
 
 
-    fun getIdlements(idRule: RuleDesc, parent: Elements): Elements {
-        val res = Elements()
-        for (e in parent) {
-            val elements: Elements
-            if (idRule.regx != null) {
-                elements = e.select("[id~=${idRule.regx}]")
-            } else {
-                val element = e.getElementById(idRule.name)
-                elements = Elements()
-                elements.add(element)
-            }
-            if (elements.size == 0) {
-                return res
-            }
-            if (idRule.index != null) {
-                res.add(elements[idRule.index])
-            } else {
-                res.addAll(elements)
-            }
-        }
-        return res
-
-    }
-
-
-    fun getLabellements(labelRule: RuleDesc, parent: Elements): Elements {
-        val res = Elements()
-        for (e in parent) {
-            val elements = e.select(labelRule.name)
-            if (elements.size == 0) {
-                return res
-            }
-            if (labelRule.index != null) {
-                res.add(elements[labelRule.index])
-            } else {
-                res.addAll(elements)
-            }
-        }
-        return res
-
-    }
-
-    fun getRegexStrings(regexRule: RuleDesc, parent: Elements): List<String> {
-        if (regexRule.regx == null) {
-            throw IllegalArgumentException("Wrong regex rule")
-        }
-        val res = mutableListOf<String>()
-        val regex = Regex(regexRule.regx)
-        for (e in parent) {
-            val m = regex.find(e.toString())
-            if (m != null) {
-                if (regexRule.index == null) {
-                    res.add(m.groupValues[0])
-                } else if (regexRule.index >= m.groupValues.size) {
-                    throw IllegalArgumentException("正则表达式中的括号选取index越界")
-
-                } else {
-                    res.add(m.groupValues[regexRule.index])
-                }
-
-            }
-        }
-        return res
-    }
-
-    fun getPropertyString(propertyRule: RuleDesc, parent: Elements): List<String> {
-        val res = mutableListOf<String>()
-        for (e in parent) {
-            res.add(e.attr(propertyRule.name))
-        }
-        return res
-    }
-
-    fun getText(parent: Elements): List<String> {
-        val res = mutableListOf<String>()
-        for (e in parent) {
-            res.add(e.text())
-        }
-        return res
-    }
 }

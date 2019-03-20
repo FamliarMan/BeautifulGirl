@@ -6,21 +6,21 @@ import org.junit.Test
 /**
  * @author jianglei on 3/16/19.
  */
-class SingleRuleParserTest {
+class SelectRuleParserTest {
 
 
     @Test
     fun getClassRuleDesc(){
-        var classRule = SingleRuleParser.getClassRuleDesc("@class:<name>")
+        var classRule = SelectRuleParser.getClassRuleDesc("@class:<name>")
         Assert.assertEquals("name",classRule.name)
 
 
-        classRule = SingleRuleParser.getClassRuleDesc("@class:<name>[0]")
+        classRule = SelectRuleParser.getClassRuleDesc("@class:<name>[0]")
         Assert.assertEquals("name",classRule.name)
         Assert.assertEquals(0,classRule.index)
 
 
-        classRule = SingleRuleParser.getClassRuleDesc("@class:regx<name>[0]")
+        classRule = SelectRuleParser.getClassRuleDesc("@class:regx<name>[0]")
         Assert.assertEquals(null,classRule.name)
         Assert.assertEquals("name",classRule.regx)
         Assert.assertEquals(0,classRule.index)
@@ -28,16 +28,16 @@ class SingleRuleParserTest {
 
     @Test
     fun getIdRuleDesc(){
-        var classRule = SingleRuleParser.getIdRuleDesc("@id:<name>")
+        var classRule = SelectRuleParser.getIdRuleDesc("@id:<name>")
         Assert.assertEquals("name",classRule.name)
 
 
-        classRule = SingleRuleParser.getIdRuleDesc("@id:<name>[0]")
+        classRule = SelectRuleParser.getIdRuleDesc("@id:<name>[0]")
         Assert.assertEquals("name",classRule.name)
         Assert.assertEquals(0,classRule.index)
 
 
-        classRule = SingleRuleParser.getIdRuleDesc("@id:regx<name>[0]")
+        classRule = SelectRuleParser.getIdRuleDesc("@id:regx<name>[0]")
         Assert.assertEquals(null,classRule.name)
         Assert.assertEquals("name",classRule.regx)
         Assert.assertEquals(0,classRule.index)
@@ -46,13 +46,13 @@ class SingleRuleParserTest {
 
     @Test
     fun getLabelRuleDesc(){
-        var classRule = SingleRuleParser.getLabelRuleDesc("@label:<p>")
+        var classRule = SelectRuleParser.getLabelRuleDesc("@label:<p>")
         Assert.assertEquals("p",classRule.name)
         Assert.assertEquals(null,classRule.index)
 
 
 
-        classRule = SingleRuleParser.getLabelRuleDesc("@label:<p>[0]")
+        classRule = SelectRuleParser.getLabelRuleDesc("@label:<p>[0]")
         Assert.assertEquals("p",classRule.name)
         Assert.assertEquals(0,classRule.index)
 
@@ -61,13 +61,13 @@ class SingleRuleParserTest {
 
     @Test
     fun getRegexRuleDesc(){
-        var classRule = SingleRuleParser.getRegexRuleDesc("@regex:<p>")
+        var classRule = SelectRuleParser.getRegexRuleDesc("@regex:<p>")
         Assert.assertEquals("p",classRule.regx)
         Assert.assertEquals(null,classRule.index)
 
 
 
-        classRule = SingleRuleParser.getRegexRuleDesc("@regex:<p>[0]")
+        classRule = SelectRuleParser.getRegexRuleDesc("@regex:<p>[0]")
         Assert.assertEquals("p",classRule.name)
         Assert.assertEquals(0,classRule.index)
 
@@ -76,7 +76,7 @@ class SingleRuleParserTest {
 
     @Test
     fun getPropertyRuleDesc(){
-        val classRule = SingleRuleParser.getPropertyRuleDesc("@property:<href>")
+        val classRule = SelectRuleParser.getPropertyRuleDesc("@property:<href>")
         Assert.assertEquals("href",classRule.name)
         Assert.assertEquals(null,classRule.index)
 

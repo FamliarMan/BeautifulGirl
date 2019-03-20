@@ -5,6 +5,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     testImplementation 'org.jsoup:jsoup:1.11.3'
     testImplementation 'junit:junit:4.12'
 }
