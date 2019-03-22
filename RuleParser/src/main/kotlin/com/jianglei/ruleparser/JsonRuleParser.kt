@@ -53,7 +53,7 @@ class JsonRuleParser {
                     res.add(arr)
                 }
                 return res
-            } catch (e:Throwable) {
+            } catch (e: Throwable) {
                 e.printStackTrace()
                 ExceptionUtils.throwIllegalArgumentException("json转换时对象不是合法的json数据")
 
@@ -72,19 +72,6 @@ class JsonRuleParser {
             return res
         }
 
-        fun getJsonArrFromArr(jsonRule: String, preArrs: List<JsonArray>): List<JsonArray> {
-            val key = getKeyName(jsonRule)
-            val res = mutableListOf<JsonArray>()
-            for (preArr in preArrs) {
-                for (i in 0..preArr.size()) {
-                    val arr = preArr.get(i).asJsonObject.getAsJsonArray(key)
-                        ?: ExceptionUtils.throwIllegalArgumentException("错误的json key： $key")
-                    res.add(arr)
-                }
-            }
-            return res
-        }
-
         fun getJsonObjFromString(jsonRule: String, preStrings: List<String>): List<JsonObject> {
             val key = getKeyName(jsonRule)
             val res = mutableListOf<JsonObject>()
@@ -96,9 +83,9 @@ class JsonRuleParser {
                     res.add(arr)
                 }
                 return res
-            } catch (e: JsonSyntaxException) {
+            } catch (e: Throwable) {
                 e.printStackTrace()
-                ExceptionUtils.throwIllegalArgumentException("json转换时对象不是合法的json数据")
+                ExceptionUtils.throwIllegalArgumentException("错误的json规则或json数据")
 
             }
 
@@ -119,7 +106,7 @@ class JsonRuleParser {
             val key = getKeyName(jsonRule)
             val res = mutableListOf<JsonObject>()
             for (preArr in preArrs) {
-                for (i in 0..preArr.size()) {
+                for (i in 0 until preArr.size()) {
                     val arr = preArr.get(i).asJsonObject.getAsJsonObject(key)
                         ?: ExceptionUtils.throwIllegalArgumentException("错误的json key： $key")
                     res.add(arr)
@@ -139,9 +126,9 @@ class JsonRuleParser {
                     res.add(arr)
                 }
                 return res
-            } catch (e: JsonSyntaxException) {
+            } catch (e: Throwable) {
                 e.printStackTrace()
-                ExceptionUtils.throwIllegalArgumentException("json转换时对象不是合法的json数据")
+                ExceptionUtils.throwIllegalArgumentException("非法的json规则:$jsonRule")
 
             }
 
@@ -150,25 +137,35 @@ class JsonRuleParser {
         fun getJsonValueFromObj(jsonRule: String, preObjects: List<JsonObject>): List<String> {
             val key = getKeyName(jsonRule)
             val res = mutableListOf<String>()
-            for (preObj in preObjects) {
-                val arr = preObj.getAsJsonPrimitive(key).asString
-                    ?: ExceptionUtils.throwIllegalArgumentException("错误的json key： $key")
-                res.add(arr)
+            try {
+                for (preObj in preObjects) {
+                    val arr = preObj.getAsJsonPrimitive(key).asString
+                        ?: ExceptionUtils.throwIllegalArgumentException("错误的json key： $key")
+                    res.add(arr)
+                }
+                return res
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                ExceptionUtils.throwIllegalArgumentException("非法json规则:$jsonRule")
             }
-            return res
         }
 
         fun getJsonValueFromArr(jsonRule: String, preArrs: List<JsonArray>): List<String> {
             val key = getKeyName(jsonRule)
             val res = mutableListOf<String>()
-            for (preArr in preArrs) {
-                for (i in 0..preArr.size()) {
-                    val arr = preArr.get(i).asJsonObject.getAsJsonPrimitive(key).asString
-                        ?: ExceptionUtils.throwIllegalArgumentException("错误的json key： $key")
-                    res.add(arr)
+            try {
+                for (preArr in preArrs) {
+                    for (i in 0 until preArr.size()) {
+                        val arr = preArr.get(i).asJsonObject.getAsJsonPrimitive(key).asString
+                            ?: ExceptionUtils.throwIllegalArgumentException("错误的json key： $key")
+                        res.add(arr)
+                    }
                 }
+                return res
+            }catch (e:Throwable){
+                e.printStackTrace()
+                ExceptionUtils.throwIllegalArgumentException("非法的json规则：$jsonRule")
             }
-            return res
         }
     }
 }

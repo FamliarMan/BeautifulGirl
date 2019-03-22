@@ -92,9 +92,9 @@ class SelectRuleParser {
                 } else {
                     m.groupValues[3].toInt()
                 }
-                return RuleDesc(null, nameRegx, index)
+                return RuleDesc(nameRegx, nameRegx, index)
             }
-            ExceptionUtils.throwIllegalArgumentException("非法的正则规则")
+            ExceptionUtils.throwIllegalArgumentException("非法的正则规则:$rule")
         }
 
 
@@ -126,7 +126,7 @@ class SelectRuleParser {
                 return RuleDesc(name, null, index)
             }
 
-            ExceptionUtils.throwIllegalArgumentException("不合法的规则描述")
+            ExceptionUtils.throwIllegalArgumentException("不合法的规则描述:$rule")
         }
 
 
@@ -223,7 +223,13 @@ class SelectRuleParser {
                 ExceptionUtils.throwIllegalArgumentException("Wrong regex rule")
             }
             val res = mutableListOf<String>()
-            val regex = Regex(regexRule.regx)
+            val regex: Regex
+            try {
+                regex = Regex(regexRule.regx)
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                ExceptionUtils.throwIllegalArgumentException("错误的正则规则：${regexRule.regx}")
+            }
             for (e in parent) {
                 val m = regex.find(e.toString())
                 if (m != null) {
@@ -258,15 +264,17 @@ class SelectRuleParser {
         }
 
         fun getSelectStrings(selectRule: String, parent: Elements): List<String> {
-            val ruleDesc = SelectRuleParser.getRegexRuleDesc(selectRule)
+            var ruleDesc: RuleDesc
             val rule = selectRule.trim()
             when {
 
                 rule.startsWith(RuleKeyWord.REGX) -> {
+                    ruleDesc = SelectRuleParser.getRegexRuleDesc(rule)
                     return getRegexStrings(ruleDesc, parent)
                             as MutableList<String>
                 }
                 rule.startsWith(RuleKeyWord.PROPERTY) -> {
+                    ruleDesc = SelectRuleParser.getPropertyRuleDesc(rule)
                     return getPropertyString(ruleDesc, parent)
                             as MutableList<String>
                 }
@@ -274,7 +282,7 @@ class SelectRuleParser {
                     return getText(parent) as MutableList<String>
                 }
                 else -> {
-                    ExceptionUtils.throwIllegalArgumentException("非法的过滤规则")
+                    ExceptionUtils.throwIllegalArgumentException("非法的过滤规则$rule")
                 }
 
             }

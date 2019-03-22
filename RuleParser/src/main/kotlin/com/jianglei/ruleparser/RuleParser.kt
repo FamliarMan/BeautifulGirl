@@ -1,6 +1,7 @@
 package com.jianglei.ruleparser
 
 import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
@@ -10,6 +11,7 @@ import org.jsoup.select.Elements
  */
 class RuleParser(val document: Document) {
     private val elementsCache: MutableMap<String, Elements> = mutableMapOf()
+    private val jsonCache: MutableMap<String, List<Any>> = mutableMapOf()
     /**
      * 根据规则获取字符串结果，返回值统一为列表，便于抽象
      */
@@ -35,25 +37,7 @@ class RuleParser(val document: Document) {
                     totalRule.plus("->").plus(singleRule.trim())
                 }
                 when {
-                    FilterRuleParser.isElementFilterRule(singleRule) -> {
-                        //当前进入过滤元素过程
-                        if (preElementRule == null) {
-                            ExceptionUtils.throwIllegalArgumentException("‘$singleRule’规则必须跟在元素提取规则后面")
-                        }
-                        if (preStrings != null) {
-                            ExceptionUtils.throwIllegalArgumentException("‘$singleRule’规则必须跟在元素提取规则后面")
-                        }
-                        preElements = FilterRuleParser.getFilterElements(preElements, singleRule)
-                        preElementRule = singleRule
-                    }
-                    FilterRuleParser.isStringFilterRule(singleRule) -> {
-                        //当前进入字符串过滤过程
-                        if (preStrings == null) {
-                            ExceptionUtils.throwIllegalArgumentException("字符串过滤规‘$singleRule’则必须跟在字符串提取规则后面")
-                        }
-                        preStrings = FilterRuleParser.getFilterStrings(preStrings, singleRule)
-                        preStringRule = singleRule
-                    }
+
                     SelectRuleParser.isElementSelectRule(singleRule) -> {
                         //进入到元素提取过程
                         if (preStringRule != null) {
@@ -67,6 +51,26 @@ class RuleParser(val document: Document) {
                         }
                         preElementRule = singleRule
                     }
+                    FilterRuleParser.isElementFilterRule(singleRule) -> {
+                        //当前进入过滤元素过程
+                        if (preElementRule == null) {
+                            ExceptionUtils.throwIllegalArgumentException("‘$singleRule’必须跟在元素提取规则后面")
+                        }
+                        if (preStringRule != null) {
+                            ExceptionUtils.throwIllegalArgumentException("‘$singleRule’不能跟在$preStringRule 后面")
+                        }
+                        preElements = FilterRuleParser.getFilterElements(preElements, singleRule)
+                        preElementRule = singleRule
+                    }
+                    FilterRuleParser.isStringFilterRule(singleRule) -> {
+                        //当前进入字符串过滤过程
+                        if (preStrings == null) {
+                            //按照常理，这个分支不会被执行，这里只是保险
+                            ExceptionUtils.throwIllegalArgumentException("字符串过滤规‘$singleRule’则必须跟在字符串提取规则后面")
+                        }
+                        preStrings = FilterRuleParser.getFilterStrings(preStrings, singleRule)
+                        preStringRule = singleRule
+                    }
                     SelectRuleParser.isStringSelectRule(singleRule) -> {
                         //进入到字符串提取过程
                         if (preStringRule != null) {
@@ -78,32 +82,50 @@ class RuleParser(val document: Document) {
                     JsonRuleParser.isJsonArrRule(singleRule) -> {
                         //@jsonArr
                         if (preJsonRule == null && preStringRule == null) {
-                            ExceptionUtils.throwIllegalArgumentException("$singleRule 不能跟在$preElementRule 后面")
+                            ExceptionUtils.throwIllegalArgumentException(
+                                "$singleRule 必须跟在某个字符串规则后面"
+                            )
                         }
-                        when {
-                            preJsonRule == null -> preJsonArr =
-                                JsonRuleParser.getJsonArrFromString(singleRule, preStrings!!)
-                            JsonRuleParser.isJsonArrRule(preJsonRule) -> //上一个结果是数组
-                                preJsonArr = JsonRuleParser.getJsonArrFromArr(singleRule, preJsonArr!!)
-                            JsonRuleParser.isJsonObjRule(preJsonRule) -> preJsonArr =
-                                JsonRuleParser.getJsonArrFromObj(singleRule, preJsonObj!!)
+                        if (jsonCache.containsKey(totalRule)) {
+                            preJsonArr = jsonCache[totalRule] as List<JsonArray>?
+                        } else {
+                            when {
+                                preJsonRule == null -> preJsonArr =
+                                    JsonRuleParser.getJsonArrFromString(singleRule, preStrings!!)
+                                JsonRuleParser.isJsonArrRule(preJsonRule) -> //上一个结果是数组
+                                    ExceptionUtils.throwIllegalArgumentException("$singleRule 不能跟在$preJsonRule 后面")
+                                JsonRuleParser.isJsonObjRule(preJsonRule) -> preJsonArr =
+                                    JsonRuleParser.getJsonArrFromObj(singleRule, preJsonObj!!)
+                            }
+                            jsonCache[totalRule] = preJsonArr as List<JsonElement>
                         }
+
                         preJsonRule = singleRule
+                        //经过json转换后preStrings应该清空
+                        preStrings = null
                     }
                     JsonRuleParser.isJsonObjRule(singleRule) -> {
                         //@jsonObj
                         if (preJsonRule == null && preStringRule == null) {
                             ExceptionUtils.throwIllegalArgumentException("$singleRule 不能跟在$preElementRule 后面")
                         }
-                        when {
-                            preJsonRule == null -> preJsonObj =
-                                JsonRuleParser.getJsonObjFromString(singleRule, preStrings!!)
-                            JsonRuleParser.isJsonArrRule(preJsonRule) -> //上一个结果是数组
-                                preJsonObj = JsonRuleParser.getJsonObjFromArr(singleRule, preJsonArr!!)
-                            JsonRuleParser.isJsonObjRule(preJsonRule) -> preJsonObj =
-                                JsonRuleParser.getJsonObjFromObj(singleRule, preJsonObj!!)
+
+                        if (jsonCache.containsKey(totalRule)) {
+                            preJsonObj = jsonCache[totalRule] as List<JsonObject>?
+                        } else {
+                            when {
+                                preJsonRule == null -> preJsonObj =
+                                    JsonRuleParser.getJsonObjFromString(singleRule, preStrings!!)
+                                JsonRuleParser.isJsonArrRule(preJsonRule) -> //上一个结果是数组
+                                    preJsonObj = JsonRuleParser.getJsonObjFromArr(singleRule, preJsonArr!!)
+                                JsonRuleParser.isJsonObjRule(preJsonRule) -> preJsonObj =
+                                    JsonRuleParser.getJsonObjFromObj(singleRule, preJsonObj!!)
+                            }
+                            jsonCache[totalRule] = preJsonObj as List<JsonObject>
                         }
                         preJsonRule = singleRule
+                        //经过json转换后preStrings应该清空
+                        preStrings = null
 
                     }
                     JsonRuleParser.isJsonValueRule(singleRule) -> {
@@ -111,14 +133,26 @@ class RuleParser(val document: Document) {
                         if (preJsonRule == null && preStringRule == null) {
                             ExceptionUtils.throwIllegalArgumentException("$singleRule 不能跟在$preElementRule 后面")
                         }
-                        when {
-                            preJsonRule == null -> preJsonValue =
-                                JsonRuleParser.getJsonValueFromString(singleRule, preStrings!!)
-                            JsonRuleParser.isJsonArrRule(preJsonRule) -> //上一个结果是数组
-                                preJsonValue = JsonRuleParser.getJsonValueFromArr(singleRule, preJsonArr!!)
-                            JsonRuleParser.isJsonObjRule(preJsonRule) -> preJsonValue =
-                                JsonRuleParser.getJsonValueFromObj(singleRule, preJsonObj!!)
+
+                        if (jsonCache.containsKey(totalRule)) {
+                            preJsonValue = jsonCache[totalRule] as List<String>?
+                        } else {
+                            when {
+                                preJsonRule == null -> {
+                                    preJsonValue =
+                                        JsonRuleParser.getJsonValueFromString(singleRule, preStrings!!)
+                                }
+                                JsonRuleParser.isJsonArrRule(preJsonRule) -> {//上一个结果是数组
+                                    preJsonValue = JsonRuleParser.getJsonValueFromArr(singleRule, preJsonArr!!)
+                                }
+                                JsonRuleParser.isJsonObjRule(preJsonRule) -> {
+                                    preJsonValue =
+                                        JsonRuleParser.getJsonValueFromObj(singleRule, preJsonObj!!)
+                                }
+                            }
+                            jsonCache[totalRule] = preJsonValue as List<String>
                         }
+                        preStrings = preJsonValue
                         preJsonRule = singleRule
                     }
                     else -> {
@@ -127,11 +161,19 @@ class RuleParser(val document: Document) {
                 }
             }
 
+            if (preStrings == null) {
+                ExceptionUtils.throwIllegalArgumentException("不合适的规则组合：$rule,规则必须要能得出字符串结果")
+            }
+            return preStrings
+
         } catch (e: Throwable) {
             e.printStackTrace()
-            ExceptionUtils.throwIllegalArgumentException("非法规则描述")
+            if (e is IllegalArgumentException) {
+                ExceptionUtils.throwIllegalArgumentException(e.toString())
+            } else {
+                ExceptionUtils.throwIllegalArgumentException("非法规则:$rule")
+            }
         }
-        ExceptionUtils.throwIllegalArgumentException("应该以@property、@regex或@text规则结尾")
 
     }
 

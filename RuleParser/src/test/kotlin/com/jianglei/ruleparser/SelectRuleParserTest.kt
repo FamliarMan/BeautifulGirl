@@ -20,7 +20,7 @@ class SelectRuleParserTest {
         Assert.assertEquals(0,classRule.index)
 
 
-        classRule = SelectRuleParser.getClassRuleDesc("@class:regx<name>[0]")
+        classRule = SelectRuleParser.getClassRuleDesc("@class:regex<name>[0]")
         Assert.assertEquals(null,classRule.name)
         Assert.assertEquals("name",classRule.regx)
         Assert.assertEquals(0,classRule.index)
@@ -37,7 +37,7 @@ class SelectRuleParserTest {
         Assert.assertEquals(0,classRule.index)
 
 
-        classRule = SelectRuleParser.getIdRuleDesc("@id:regx<name>[0]")
+        classRule = SelectRuleParser.getIdRuleDesc("@id:regex<name>[0]")
         Assert.assertEquals(null,classRule.name)
         Assert.assertEquals("name",classRule.regx)
         Assert.assertEquals(0,classRule.index)
@@ -69,6 +69,7 @@ class SelectRuleParserTest {
 
         classRule = SelectRuleParser.getRegexRuleDesc("@regex:<p>[0]")
         Assert.assertEquals("p",classRule.name)
+        Assert.assertEquals("p",classRule.regx)
         Assert.assertEquals(0,classRule.index)
 
     }
