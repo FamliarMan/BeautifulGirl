@@ -2,19 +2,13 @@ package com.jianglei.beautifulgirl
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.google.gson.Gson
 import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.WebDataSource
-import com.jianglei.beautifulgirl.data.WebVideoSource
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
-import com.jianglei.beautifulgirl.vo.PlayContent
-import com.jianglei.videoplay.VideoPlayActivity
 import com.jianglei.videoplay.WebViewPlayActivity
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import utils.ToastUtils
@@ -26,7 +20,7 @@ import utils.ToastUtils
  */
 class ContentCoverListFragment : BaseFragment() {
     private var contentTitles: MutableList<ContentTitle> = ArrayList()
-    private var webDataSource: WebDataSource? = null
+    //    private var webDataSource: WebDataSource? = null
     private var page = 1
     private var visible: Boolean = false
     private var isPrepared: Boolean = false
@@ -40,14 +34,12 @@ class ContentCoverListFragment : BaseFragment() {
         fun newInstance(
             title: String,
             url: String,
-            dataSource: WebDataSource,
             isFromActivity: Boolean = false
         ): ContentCoverListFragment {
             val fragment = ContentCoverListFragment()
             val bundle = Bundle()
             bundle.putString("title", title)
             bundle.putString("url", url)
-            bundle.putSerializable("dataSourceId", dataSource.id)
             bundle.putBoolean("isFromActivity", isFromActivity)
             fragment.arguments = bundle
             return fragment
@@ -59,10 +51,10 @@ class ContentCoverListFragment : BaseFragment() {
         url = arguments?.getString("url")
         val view = inflater.inflate(R.layout.fragment_picture_list, container, false)
         val dataSourceId = arguments?.getString("dataSourceId")
-        webDataSource = WebSourceCenter.getWebSource(dataSourceId!!)
-        if (webDataSource == null) {
-            return view
-        }
+//        webDataSource = WebSourceCenter.getWebSource(dataSourceId!!)
+//        if (webDataSource == null) {
+//            return view
+//        }
         rvContent = view.findViewById(R.id.rvContent)
         initRecyclerview()
         isPrepared = true
@@ -79,7 +71,7 @@ class ContentCoverListFragment : BaseFragment() {
         titleAdapter.onItemClickListener = object : PictureTitleAdapter.OnItemClickListener {
             override fun onItemClick(title: ContentTitle, pos: Int) {
                 if (title.type == Category.TYPE_VIDEO) {
-                    if(title.isUseWeb){
+                    if (title.isUseWeb) {
                         //只能使用web浏览
                         val intent = Intent(activity, WebViewPlayActivity::class.java)
                         intent.putExtra("playUrl", title.detailUrl)
@@ -97,7 +89,7 @@ class ContentCoverListFragment : BaseFragment() {
                 } else {
                     val intent = Intent(activity, PictureDetailListActivity::class.java)
                     intent.putExtra("detailUrl", title.detailUrl)
-                    intent.putExtra("dataSourceId", webDataSource!!.id)
+//                    intent.putExtra("dataSourceId", webDataSource!!.id)
                     startActivity(intent)
                 }
 
@@ -109,14 +101,23 @@ class ContentCoverListFragment : BaseFragment() {
 
         rvContent.setOnPullLoadMoreListener(object : PullLoadMoreRecyclerView.PullLoadMoreListener {
             override fun onLoadMore() {
-                fetchData()
+                try {
+                    fetchData()
+                }catch (e :Throwable){
+                    ToastUtils.showMsg(activity!!,e.toString())
+                }
             }
 
             override fun onRefresh() {
                 page = 1
                 contentTitles.clear()
                 rvContent.pullRefreshEnable = true
-                fetchData()
+
+                try {
+                    fetchData()
+                }catch (e :Throwable){
+                    ToastUtils.showMsg(activity!!,e.toString())
+                }
             }
 
         })
@@ -126,39 +127,39 @@ class ContentCoverListFragment : BaseFragment() {
     private fun getVideoPlayUrl(detailUrl: String) {
         showProgress(true)
 
-        val webVideoSource = webDataSource as WebVideoSource
-        webVideoSource.fetchVideoUrls(activity!!,detailUrl, object : OnDataResultListener<MutableList<PlayContent>> {
-            override fun onSuccess(data: MutableList<PlayContent>) {
-                showProgress(false)
-                if (data.size > 1) {
-                    //有多个播放地址，要进入播放列表选择页
-                    val intent = Intent(activity, PlayContentListActivity::class.java)
-                    intent.putExtra("playContents", Gson().toJson(data))
-                    startActivity(intent)
-                } else {
-                    //只有一个播放地址选择合适的播放地址
-                    val playContent = data[0]
-                    val playUrls = playContent.file
-                    var playUrl: String? = null
-                    playUrls!!.forEach {
-                        if (it.defaultQuality) {
-                            playUrl = it.videoUrl
-                        }
-                    }
-                    val intent = Intent(activity, VideoPlayActivity::class.java)
-                    intent.putExtra("playUrl", playUrl)
-                    startActivity(intent)
-                }
-            }
-
-            override fun onError(msg: String) {
-                if (activity == null) {
-                    return
-                }
-                showProgress(false)
-                ToastUtils.showMsg(activity!!.applicationContext, getString(R.string.get_video_play_url_error))
-            }
-        })
+//        val webVideoSource = webDataSource as WebVideoSource
+//        webVideoSource.fetchVideoUrls(activity!!, detailUrl, object : OnDataResultListener<MutableList<PlayContent>> {
+//            override fun onSuccess(data: MutableList<PlayContent>) {
+//                showProgress(false)
+//                if (data.size > 1) {
+//                    //有多个播放地址，要进入播放列表选择页
+//                    val intent = Intent(activity, PlayContentListActivity::class.java)
+//                    intent.putExtra("playContents", Gson().toJson(data))
+//                    startActivity(intent)
+//                } else {
+//                    //只有一个播放地址选择合适的播放地址
+//                    val playContent = data[0]
+//                    val playUrls = playContent.file
+//                    var playUrl: String? = null
+//                    playUrls!!.forEach {
+//                        if (it.defaultQuality) {
+//                            playUrl = it.videoUrl
+//                        }
+//                    }
+//                    val intent = Intent(activity, VideoPlayActivity::class.java)
+//                    intent.putExtra("playUrl", playUrl)
+//                    startActivity(intent)
+//                }
+//            }
+//
+//            override fun onError(msg: String) {
+//                if (activity == null) {
+//                    return
+//                }
+//                showProgress(false)
+//                ToastUtils.showMsg(activity!!.applicationContext, getString(R.string.get_video_play_url_error))
+//            }
+//        })
 
 
     }
@@ -167,44 +168,42 @@ class ContentCoverListFragment : BaseFragment() {
         if (url == null) {
             return
         }
-        webDataSource!!.fetchCoverContents(activity!!,url!!, page, object : OnDataResultListener<MutableList<ContentTitle>> {
-            override fun onSuccess(data: MutableList<ContentTitle>) {
-                if (data.size == 0) {
-                    rvContent.pushRefreshEnable = false
-                    Toast.makeText(activity, R.string.no_more_data, Toast.LENGTH_LONG).show()
+
+        StrategyProvider.getCurStrategy()!!
+            .fetchAllCover(activity!!,page, url!!, object : OnDataResultListener<List<ContentTitle>> {
+                override fun onSuccess(data: List<ContentTitle>) {
+                    if (data.size == 0) {
+                        rvContent.pushRefreshEnable = false
+                        Toast.makeText(activity, R.string.no_more_data, Toast.LENGTH_LONG).show()
+                        rvContent.post {
+                            rvContent.setPullLoadMoreCompleted()
+                        }
+                        return
+                    }
+
+                    contentTitles.addAll(data)
+                    if (page == 1) {
+                        titleAdapter.notifyDataSetChanged()
+                    } else {
+                        titleAdapter.notifyItemInserted(contentTitles.size - data.size)
+
+                    }
+
+                    page++
                     rvContent.post {
                         rvContent.setPullLoadMoreCompleted()
                     }
-                    return
-                }
-                data.forEach {
-                    Log.d("jianglei", it.title + "  " + it.coverUrl)
                 }
 
-                contentTitles.addAll(data)
-                if (page == 1) {
-                    titleAdapter.notifyDataSetChanged()
-                } else {
-                    titleAdapter.notifyItemInserted(contentTitles.size - data.size)
+                override fun onError(msg: String) {
 
-                }
-
-                page++
-                rvContent.post {
-                    Log.d("longyi","cloase loadiing")
                     rvContent.setPullLoadMoreCompleted()
+                    if (context == null) {
+                        return
+                    }
+                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
                 }
-            }
-
-            override fun onError(msg: String) {
-                rvContent.setPullLoadMoreCompleted()
-                if (context == null) {
-                    return
-                }
-                Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
-            }
-
-        })
+            })
     }
 
     private fun lazyLoad() {
@@ -227,7 +226,8 @@ class ContentCoverListFragment : BaseFragment() {
     override fun onPause() {
         super.onPause()
         if (isRemoving) {
-            webDataSource?.cancelAllNet()
+//            webDataSource?.cancelAllNet()
+            StrategyProvider.getCurStrategy()!!.cancel()
         }
     }
 }

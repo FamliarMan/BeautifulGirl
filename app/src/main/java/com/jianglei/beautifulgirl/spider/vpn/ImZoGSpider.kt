@@ -55,13 +55,7 @@ class ImZoGSpider : WebVideoSource, SearchSource {
         } else {
             "$url$page/"
         }
-        dynamicWebGetter.getWebHtml(activity, realUrl, object : Condition<String> {
-            override fun isValid(t: String): Boolean {
-                val doc = Jsoup.parse(t)
-                val res = doc.select(".lithumbnail")
-                return res != null
-            }
-        }, object : OnWebViewResultListener {
+        dynamicWebGetter.getWebHtml(activity, realUrl,  object : OnWebViewResultListener {
             override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)
                 val res = doc.select(".lithumbnail")

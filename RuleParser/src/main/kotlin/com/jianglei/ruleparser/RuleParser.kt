@@ -9,7 +9,7 @@ import org.jsoup.select.Elements
 /**
  * @author jianglei on 3/16/19.
  */
-class RuleParser(val document: Document) {
+class RuleParser(private val document: Document) {
     private val elementsCache: MutableMap<String, Elements> = mutableMapOf()
     private val jsonCache: MutableMap<String, List<Any>> = mutableMapOf()
     /**

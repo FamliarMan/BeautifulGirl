@@ -11,10 +11,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import com.facebook.drawee.view.SimpleDraweeView
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.data.WebDataSource
+import com.jianglei.beautifulgirl.rule.RuleCenter
+import com.jianglei.beautifulgirl.rule.WebRule
+import com.jianglei.beautifulgirl.rule.WebStrategy
 import com.jianglei.beautifulgirl.vo.Category
 import kotlinx.android.synthetic.main.activity_all_website.*
 import utils.ToastUtils
@@ -22,15 +25,17 @@ import utils.ToastUtils
 class AllWebsiteActivity : BaseActivity() {
     private var allWebsites: ArrayList<WebDataSource>? = null
     private var webDataSource: WebDataSource? = null
+    private var webRules = RuleCenter.getWebRules()
+    private var curWebStrategy: WebStrategy? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_website)
         rvWebsites.layoutManager = GridLayoutManager(this, 2)
         allWebsites = WebSourceCenter.normalWebSources
-        val adapter = WebsiteAdapter(this, allWebsites!!)
-        adapter.onItemClickListener = object : OnItemClickListener<WebDataSource> {
-            override fun onItemClick(vo: WebDataSource, pos: Int) {
-                getPictureTypes(vo)
+        val adapter = WebsiteAdapter(this, webRules as MutableList<WebRule>)
+        adapter.onItemClickListener = object : OnItemClickListener<WebRule> {
+            override fun onItemClick(vo: WebRule, pos: Int) {
+                    getCategory(vo)
             }
 
         }
@@ -40,11 +45,11 @@ class AllWebsiteActivity : BaseActivity() {
             when {
                 it.itemId == R.id.action_in_wall -> {
                     allWebsites = WebSourceCenter.normalWebSources
-                    adapter.updateData(allWebsites!!)
+//                    adapter.updateData(allWebsites!!)
                 }
                 else -> {
                     allWebsites = WebSourceCenter.vpnWebSources
-                    adapter.updateData(allWebsites!!)
+//                    adapter.updateData(allWebsites!!)
                 }
             }
             true
@@ -59,45 +64,39 @@ class AllWebsiteActivity : BaseActivity() {
         }
     }
 
-    private fun getPictureTypes(vo: WebDataSource) {
-        val websiteDesc = vo.fetchWebsite()
-        webDataSource = vo
+    private fun getCategory(vo: WebRule) {
         showProgress(true)
-        webDataSource?.fetchAllCategory(websiteDesc.homePageUrl, object : OnDataResultListener<MutableList<Category>> {
-            override fun onSuccess(data: MutableList<Category>) {
-                data.forEach {
-                    Log.d("jianglei", "获取分类:" + it.title + " " + it.url)
+        curWebStrategy = WebStrategy(vo)
+        StrategyProvider.updateCurStrategy(curWebStrategy!!)
+        curWebStrategy!!.fetchAllCategory(this,
+            object : OnDataResultListener<List<Category>> {
+                override fun onSuccess(data: List<Category>) {
+                    showProgress(false)
+                    if (data.size >= 8) {
+                        //分类数量大于15，要专门前往分类页面
+                        val intent = Intent(this@AllWebsiteActivity, CategoryActivity::class.java)
+//                        intent.putExtra("dataSourceId", vo.id)
+//                        startActivity(intent)
+                    } else {
+                        ContentActivity.start(this@AllWebsiteActivity,data)
+                    }
                 }
-                showProgress(false)
-                if (data.size >= 8) {
-                    //分类数量大于15，要专门前往分类页面
-                    val intent = Intent(this@AllWebsiteActivity, CategoryActivity::class.java)
-                    intent.putExtra("dataSourceId", vo.id)
-                    startActivity(intent)
-                } else {
-                    val intent = Intent(this@AllWebsiteActivity, ContentActivity::class.java)
-                    intent.putParcelableArrayListExtra("types", data as java.util.ArrayList<out Parcelable>)
-                    intent.putExtra("dataSourceId", vo.id)
-                    startActivity(intent)
+
+                override fun onError(msg: String) {
+                    showProgress(false)
+                    ToastUtils.showMsg(this@AllWebsiteActivity, msg)
                 }
-            }
-
-            override fun onError(msg: String) {
-                showProgress(false)
-                ToastUtils.showMsg(this@AllWebsiteActivity, msg)
-            }
-
-        })
+            })
 
     }
 
 
-    private inner class WebsiteAdapter(private var context: Context, private var websites: MutableList<WebDataSource>) :
+    private inner class WebsiteAdapter(private var context: Context, private var webRules: MutableList<WebRule>) :
         RecyclerView.Adapter<WebsiteHolder>() {
-        var onItemClickListener: OnItemClickListener<WebDataSource>? = null
+        var onItemClickListener: OnItemClickListener<WebRule>? = null
 
-        fun updateData(websites: MutableList<WebDataSource>) {
-            this.websites = websites
+        fun updateData(webRules: MutableList<WebRule>) {
+            this.webRules = webRules
             notifyDataSetChanged()
         }
 
@@ -107,16 +106,15 @@ class AllWebsiteActivity : BaseActivity() {
         }
 
         override fun getItemCount(): Int {
-            return websites.size
+            return webRules.size
         }
 
         override fun onBindViewHolder(holder: WebsiteHolder, position: Int) {
-            val websiteDesc = websites[position].fetchWebsite()
-            holder.ivContent.setImageResource(websiteDesc.icon)
-            holder.tvName.text = websiteDesc.name
-            holder.tvType.text = websiteDesc.type
+            holder.ivContent.setImageURI(webRules[position].icon)
+            holder.tvName.text = webRules[position].name
+            holder.tvType.text = webRules[position].type
             holder.mainItem.setOnClickListener {
-                onItemClickListener?.onItemClick(websites[position], position)
+                onItemClickListener?.onItemClick(webRules[position], position)
             }
         }
 
@@ -124,9 +122,9 @@ class AllWebsiteActivity : BaseActivity() {
     }
 
     private class WebsiteHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var ivContent: ImageView = view.findViewById(R.id.iv_icon)
+        var ivContent: SimpleDraweeView = view.findViewById(R.id.iv_icon)
         var tvName: TextView = view.findViewById(R.id.name)
         var mainItem: CardView = view.findViewById(R.id.main_item)
-        var tvType:TextView = view.findViewById(R.id.tv_type)
+        var tvType: TextView = view.findViewById(R.id.tv_type)
     }
 }

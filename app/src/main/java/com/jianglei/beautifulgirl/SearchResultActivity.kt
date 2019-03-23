@@ -21,7 +21,6 @@ class SearchResultActivity : BaseActivity() {
             val fragment = ContentCoverListFragment.newInstance(
                 category!!.title,
                 category!!.url,
-                dataSource!!,
                 true
             )
             supportFragmentManager.beginTransaction().add(R.id.container, fragment)

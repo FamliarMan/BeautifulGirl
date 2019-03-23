@@ -1,5 +1,6 @@
 package com.jianglei.beautifulgirl.data
 
+import android.util.Log
 import android.webkit.WebView
 import androidx.fragment.app.FragmentActivity
 
@@ -33,6 +34,7 @@ class DynamicWebGetter {
                 if (isCanceled) {
                     return
                 }
+                Log.d("longyi",html)
                 listener.onSuccess(html,webView)
             }
 

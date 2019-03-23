@@ -3,11 +3,11 @@ package com.jianglei.beautifulgirl.rule
 /**
  * @author jianglei on 3/16/19.
  */
-data class WebRule (
+data class WebRule(
     /**
      *默认为视频，可选项有 "video","image"
      */
-    var type:String = "video",
+    var type: String = "video",
 
     /**
      * 网站名称
@@ -22,21 +22,21 @@ data class WebRule (
     /**
      * 网站编码，默认UTF-8
      */
-    var encoding :String = "UTF-8",
+    var encoding: String = "UTF-8",
 
     /**
      * 有些网站动态性太强，需要先执行js，如果需要为true
      */
-    var dynamicRender:Boolean = false,
+    var dynamicRender: Boolean = false,
 
     /**
      * 搜索规则
      */
-    var searchRule:SearchRule?,
+    var searchRule: SearchRule?,
     /**
      * 类别提取规则
      */
-    var categoryRule:CategoryRule,
+    var categoryRule: CategoryRule,
 
     /**
      * 某个类别下面的封面内容提取规则
@@ -46,7 +46,7 @@ data class WebRule (
     /**
      * 内容提取规则
      */
-    var contentRule:String
+    var contentRule: ContentRule
 
 )
 
@@ -61,26 +61,26 @@ data class SearchRule(
     /**
      * 搜索关键词占位
      */
-    var searchKeyHolder:String,
+    var searchKeyHolder: String,
 
     /**
      * 结果名称提取规则
      */
-    var resultNameRule:String,
+    var resultNameRule: String,
 
     /**
      * 结果url提取规则
      */
-    var resultImgeUrlRule:String,
+    var resultImgeUrlRule: String,
 
     /**
      * 结果描述提取规则
      */
-    var resultDescRule:String?,
+    var resultDescRule: String?,
     /**
      * 搜索跳转提取规则
      */
-    var resultUrlRule:String
+    var resultUrlRule: String
 
 
 )
@@ -93,31 +93,31 @@ data class CategoryRule(
     /**
      * 分页页面的url
      */
-    var url:String,
+    var url: String,
     /**
      * 名称提取规则
      */
-    var nameRule:String,
+    var nameRule: String,
 
     /**
      * 类别描述提取规则
      */
-    var descRule:String?,
+    var descRule: String?,
 
     /**
      * 类别图片提取规则
      */
-    var imageUrlRule:String?,
+    var imageUrlRule: String?,
 
     /**
      * 类别结果url提取规则
      */
-    var urlRule:String,
+    var urlRule: String,
 
     /**
      * 分页规则，为空说明不支持分页
      */
-    var pageRule:PageRule?
+    var pageRule: PageRule?
 
 
 )
@@ -128,24 +128,33 @@ data class CategoryRule(
 data class CoverRule(
 
     /**
+     * 该页面是否需要动态渲染
+     */
+    var dynamicRender: Boolean=false,
+
+    /**
      * 名称提取规则
      */
-    var nameRule:String,
+    var nameRule: String,
 
     /**
      * 描述提取规则
      */
-    var descRule:String?,
+    var descRule: String?,
 
     /**
      * 封面图片提取规则
      */
-    var imageUrlRule:String?,
+    var imageUrlRule: String?,
 
     /**
-     * 封面结果url提取规则
+     * 跳转url提取规则
      */
-    var urlRule:String
+    var targetUrlRule: String,
+    /**
+     * 分页规则
+     */
+    var pageRule: PageRule?
 )
 
 /**
@@ -153,13 +162,41 @@ data class CoverRule(
  */
 data class PageRule(
     /**
-     * 支持分页时分页的占位符
+     * 下一个分页地址是否从上一个html页面直接获取
+     * 某些网址可能会通过js计算出下一个分页的地址
      */
-    var pageHolder:String?,
+    var isFromHtml:Boolean = true,
 
     /**
-     * 支持分页时的其实分页
+     * [isFromHtml] 为true时，用来抓取下一页的地址
      */
-    var startPage:Int = 1
+    var nextUrlRule:String?,
+
+
+    /**
+     * {baseUrl}/{page}
+     * url和分页参数的组合形式,其中{baseUrl}代表该页面除分页参数外的url
+     * {page}代表当前分页具体参数
+     *
+     */
+    var combinedUrl:String?,
+
+    /**
+     * 有些网址分页不是利用数字，而是利用html页面中返回的某个值决定的
+     * 这个规则用来提取那个值
+     */
+    var paramRule:String?
+
+
 )
 
+data class ContentRule(
+    /**
+     * 比如图片地址或视频地址的获取规则
+     */
+    var detailRule: String,
+    /**
+     * 翻页规则
+     */
+    var pageRule: PageRule?
+)

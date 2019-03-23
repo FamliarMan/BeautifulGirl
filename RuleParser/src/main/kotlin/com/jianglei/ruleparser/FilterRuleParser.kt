@@ -7,17 +7,18 @@ import org.jsoup.select.Elements
  */
 class FilterRuleParser {
     companion object {
-        private val hasClassRegex = Regex("@hasClass:<(.*)>")
-        private val noClassRegex = Regex("@noClass:<(.*)>")
-        private val hasIdRegex = Regex("@hasId:<(.*)>")
-        private val noIdRegex = Regex("@noId:<(.*)>")
-        private val hasLabelRegex = Regex("@hasLabel:<(.*)>")
-        private val noLabelRegex = Regex("@noLabel:<(.*)>")
-        private val equalsRegex = Regex("@==:<(.*)>")
-        private val notEqualsRegex = Regex("@!=:<(.*)>")
+        private val hasClassRegex = Regex("^@hasClass:<(.*)>$")
+        private val noClassRegex = Regex("^@noClass:<(.*)>$")
+        private val hasIdRegex = Regex("^@hasId:<(.*)>$")
+        private val noIdRegex = Regex("^@noId:<(.*)>$")
+        private val hasLabelRegex = Regex("^@hasLabel:<(.*)>$")
+        private val noLabelRegex = Regex("^@noLabel:<(.*)>$")
+        private val equalsRegex = Regex("^@==:<(.*)>$")
+        private val hasTextRegex = Regex("^@hasText:<(.*)>$")
+        private val notEqualsRegex = Regex("^@!=:<(.*)>$")
         private val regexArray = listOf(
             hasClassRegex, noClassRegex, hasIdRegex,
-            noIdRegex, hasLabelRegex, noLabelRegex, equalsRegex, notEqualsRegex
+            noIdRegex, hasLabelRegex, noLabelRegex, equalsRegex, notEqualsRegex, hasTextRegex
         )
 
 
@@ -33,6 +34,7 @@ class FilterRuleParser {
                     || rule.startsWith(RuleKeyWord.NO_LABEL)
                     || rule.startsWith(RuleKeyWord.NO_CLASS)
                     || rule.startsWith(RuleKeyWord.NO_ID)
+                    || rule.startsWith(RuleKeyWord.HAS_TEXT)
         }
 
         /**
@@ -72,8 +74,8 @@ class FilterRuleParser {
          * 返回过滤后的结果
          */
         fun getFilterElements(preElements: Elements, filterRule: String): Elements {
-            val filterCondition = FilterRuleParser.getConditionValue(filterRule)
             val rule = filterRule.trim()
+            val filterCondition = FilterRuleParser.getConditionValue(rule)
             when {
                 rule.startsWith(RuleKeyWord.HAS_CLASS) -> {
                     val res = preElements.filter {
@@ -154,6 +156,20 @@ class FilterRuleParser {
                     }.toList()
                     return Elements(res)
                 }
+
+                rule.startsWith(RuleKeyWord.HAS_TEXT) -> {
+                    val res = preElements.filter {
+                        var hasText = false
+                        for (text in filterCondition) {
+                            if (it.text() == text) {
+                                hasText = true
+                                break
+                            }
+                        }
+                        hasText
+                    }.toList()
+                    return Elements(res)
+                }
                 else -> {
                     ExceptionUtils.throwIllegalArgumentException("非法的过滤规则")
                 }
@@ -161,9 +177,9 @@ class FilterRuleParser {
         }
 
         fun getFilterStrings(preStrings: List<String>, filterRule: String): List<String> {
-            val filterCondition = FilterRuleParser.getConditionValue(filterRule)
-
             val rule = filterRule.trim()
+            val filterCondition = FilterRuleParser.getConditionValue(rule)
+
             when {
                 rule.startsWith(RuleKeyWord.EQUALS) -> {
                     return preStrings.filter {
