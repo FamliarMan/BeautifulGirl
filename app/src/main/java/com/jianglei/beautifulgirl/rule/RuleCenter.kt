@@ -44,6 +44,39 @@ class RuleCenter {
                     "  }\n" +
                     "}\n"
             webRules.add(JsonUtils.parseJsonWithGson(caoliu, WebRule::class.java)!!)
+
+            val fanli = "{\n" +
+                    "  \"type\": \"image\",\n" +
+                    "  \"name\": \"饭粒邪恶网\",\n" +
+                    "  \"icon\": \"https://www.8mfh.com/wp-content/themes/xiu/images/logo.png\",\n" +
+                    "  \"encoding\": \"GBK\",\n" +
+                    "  \"categoryRule\": {\n" +
+                    "    \"dynamicRender\":true,\n" +
+                    "    \"url\": \"https://www.8mfh.com/\",\n" +
+                    "    \"nameRule\": \"@class:<nav>[0]->@label:<li>->@label:<a> -> @hasText:<动态图出处,剧情动态图,动态图片,美女图集> -> @text\",\n" +
+                    "    \"urlRule\": \"@class:<nav>[0]->@label:<li>->@label:<a> -> @hasText:<动态图出处,剧情动态图,动态图片,美女图集> -> @property:<href>\"\n" +
+                    "  },\n" +
+                    "  \"coverRule\": {\n" +
+                    "    \"dynamicRender\":true,\n" +
+                    "    \"nameRule\": \"@label:<article>->@label:<h2>[0]->@label:<a>->@text\",\n" +
+                    "    \"descRule\": \"@label:<article> -> @class:<note>[0]->@text\",\n" +
+                    "    \"imageUrlRule\":\"@label:<article>->@class:<focus>[0]->@label:<a>[0]->@label:<img>->@property:<data-original>\",\n" +
+                    "    \"targetUrlRule\": \"@label:<article>->@class:<focus>[0]->@label:<a>[0]->@property:<href>\",\n" +
+                    "    \"pageRule\":{\n" +
+                    "      \"isFromHtml\":true,\n" +
+                    "      \"nextUrlRule\":\"@class:<pagination pagination-multi>->@label:<li>->@label:<a>[0]->@hasText:<{page}>->@property:<href>\"\n" +
+                    "    }\n" +
+                    "  },\n" +
+                    "  \"contentRule\": {\n" +
+                    "    \"dynamicRender\":true,\n" +
+                    "    \"detailRule\": \"@class:<article-content>[0]->@label:<img>->@property:<src>\",\n" +
+                    "    \"pageRule\":{\n" +
+                    "      \"isFromHtml\":true,\n" +
+                    "      \"nextUrlRule\":\"@class:<article-paging>->@label:<a>->@hasText:<{page}>->@property:<href>\"\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}\n"
+            webRules.add(JsonUtils.parseJsonWithGson(fanli, WebRule::class.java)!!)
             isInit = true
 
         }

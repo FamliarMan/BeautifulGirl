@@ -90,6 +90,8 @@ data class SearchRule(
  * 类别规则描述
  */
 data class CategoryRule(
+
+    var dynamicRender: Boolean,
     /**
      * 分页页面的url
      */

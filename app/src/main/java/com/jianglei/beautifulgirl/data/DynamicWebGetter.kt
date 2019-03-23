@@ -3,6 +3,7 @@ package com.jianglei.beautifulgirl.data
 import android.util.Log
 import android.webkit.WebView
 import androidx.fragment.app.FragmentActivity
+import com.elvishew.xlog.XLog
 
 /**
  * 动态网站获取工具
@@ -34,7 +35,7 @@ class DynamicWebGetter {
                 if (isCanceled) {
                     return
                 }
-                Log.d("longyi",html)
+                XLog.d(html)
                 listener.onSuccess(html,webView)
             }
 

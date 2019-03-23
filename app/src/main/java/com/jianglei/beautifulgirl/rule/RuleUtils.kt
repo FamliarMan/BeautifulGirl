@@ -13,12 +13,20 @@ import java.lang.IllegalArgumentException
  * [parser] 是当前页面的解析器
  * [baseUrl] 是当前页面除掉分页参数外的其他url
  */
-fun PageRule.getNextUrl(parser: RuleParser, baseUrl: String): String? {
+fun PageRule.getNextUrl(parser: RuleParser, baseUrl: String, nextPage: Int?): String? {
     if (this.isFromHtml) {
         if (nextUrlRule == null) {
             throw IllegalArgumentException("当直接从网页抓取下一页的url时，nextUrlRule不能为空")
         }
-        val res = parser.getStrings(nextUrlRule!!)
+        var newUrlRule = nextUrlRule!!
+        if (this.nextUrlRule!!.contains("{page}")) {
+            if (nextPage == null) {
+                throw IllegalArgumentException("规则中使用了{page}占位符后，必须传入nextPage")
+            }
+            newUrlRule = nextUrlRule!!.replace("{page}", nextPage.toString())
+
+        }
+        val res = parser.getStrings(newUrlRule)
         if (res.isEmpty()) {
             return null
         }

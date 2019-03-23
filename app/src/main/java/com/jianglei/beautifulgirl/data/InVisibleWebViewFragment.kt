@@ -209,8 +209,8 @@ class InVisibleWebViewFragment : Fragment() {
     }
 
     public fun cancel() {
-        invisibleWebView?.removeAllViews()
-        invisibleWebView?.destroy()
+//        invisibleWebView?.removeAllViews()
+//        invisibleWebView?.destroy()
     }
 
 

@@ -33,6 +33,7 @@ class WebStrategy(private val webRule: WebRule) {
      */
     fun fetchAllCategory(
         activity: FragmentActivity,
+        page:Int,
         listener: OnDataResultListener<List<Category>>
     ) {
         if (nextCategoryUrl == null) {
@@ -40,7 +41,7 @@ class WebStrategy(private val webRule: WebRule) {
             return
         }
         webGetter.getWebsiteHtml(
-            activity, webRule.dynamicRender, nextCategoryUrl!!,
+            activity, webRule.categoryRule.dynamicRender, nextCategoryUrl!!,
             emptyMap(), object : OnWebViewResultListener {
                 override fun onSuccess(html: String) {
                     try {
@@ -54,7 +55,7 @@ class WebStrategy(private val webRule: WebRule) {
                         //准备下一页的地址
                         if (webRule.categoryRule.pageRule != null) {
                             nextCategoryUrl = webRule.categoryRule.pageRule!!
-                                .getNextUrl(curParser, webRule.categoryRule.url)
+                                .getNextUrl(curParser, webRule.categoryRule.url,page+1)
                         }
                         listener.onSuccess(res)
                     } catch (e: Throwable) {
@@ -154,7 +155,7 @@ class WebStrategy(private val webRule: WebRule) {
                         //获取下一页的地址
                         if (webRule.coverRule.pageRule != null) {
                             nextCoverUrl = webRule.coverRule.pageRule!!
-                                .getNextUrl(curParser, baseCoverUrl)
+                                .getNextUrl(curParser, baseCoverUrl,page+1)
 
                         }
                         listener.onSuccess(res)
@@ -250,7 +251,7 @@ class WebStrategy(private val webRule: WebRule) {
                         //获取下一页的地址
                         if (webRule.contentRule.pageRule != null) {
                             nextContentUrl = webRule.contentRule.pageRule!!
-                                .getNextUrl(curParser, baseContentUrl)
+                                .getNextUrl(curParser, baseContentUrl,page+1)
 
                         }
                         listener.onSuccess(res)

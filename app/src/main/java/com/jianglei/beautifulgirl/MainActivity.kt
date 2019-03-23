@@ -38,14 +38,16 @@ class MainActivity : BaseActivity() {
         val webRule = JsonUtils.parseJsonWithGson(caoliu, WebRule::class.java)
         btnStart.setOnClickListener {
             val webStrategy = WebStrategy(webRule!!)
-            webStrategy.fetchAllCategory(this@MainActivity, object : OnDataResultListener<List<Category>> {
-                override fun onSuccess(data: List<Category>) {
-                }
+            webStrategy.fetchAllCategory(this@MainActivity,
+                1,
+                object : OnDataResultListener<List<Category>> {
+                    override fun onSuccess(data: List<Category>) {
+                    }
 
-                override fun onError(msg: String) {
-                    ToastUtils.showMsg(this@MainActivity, msg)
-                }
-            })
+                    override fun onError(msg: String) {
+                        ToastUtils.showMsg(this@MainActivity, msg)
+                    }
+                })
         }
     }
 }

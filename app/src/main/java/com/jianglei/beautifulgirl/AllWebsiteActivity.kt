@@ -69,6 +69,7 @@ class AllWebsiteActivity : BaseActivity() {
         curWebStrategy = WebStrategy(vo)
         StrategyProvider.updateCurStrategy(curWebStrategy!!)
         curWebStrategy!!.fetchAllCategory(this,
+            1,
             object : OnDataResultListener<List<Category>> {
                 override fun onSuccess(data: List<Category>) {
                     showProgress(false)

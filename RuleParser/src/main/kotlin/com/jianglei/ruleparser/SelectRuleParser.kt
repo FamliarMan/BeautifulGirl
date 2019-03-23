@@ -146,7 +146,7 @@ class SelectRuleParser {
                 }
                 singleRule.trim().startsWith(RuleKeyWord.LABEL) -> {
                     val labelRule = SelectRuleParser.getLabelRuleDesc(singleRule)
-                    return getLabellements(labelRule, parent)
+                    return getLabelElements(labelRule, parent)
 
                 }
                 else -> ExceptionUtils.throwIllegalArgumentException("非法规则描述")
@@ -163,7 +163,7 @@ class SelectRuleParser {
                     elements = e.getElementsByClass(classRule.name)
                 }
                 if (elements == null || elements.size == 0) {
-                    return res
+                    continue
                 }
                 if (classRule.index != null) {
                     res.add(elements[classRule.index])
@@ -188,8 +188,9 @@ class SelectRuleParser {
                     elements.add(element)
                 }
                 if (elements.size == 0) {
-                    return res
+                    continue
                 }
+
                 if (idRule.index != null) {
                     res.add(elements[idRule.index])
                 } else {
@@ -201,12 +202,12 @@ class SelectRuleParser {
         }
 
 
-        fun getLabellements(labelRule: RuleDesc, parent: Elements): Elements {
+        fun getLabelElements(labelRule: RuleDesc, parent: Elements): Elements {
             val res = Elements()
             for (e in parent) {
                 val elements = e.select(labelRule.name)
                 if (elements.size == 0) {
-                    return res
+                    continue
                 }
                 if (labelRule.index != null) {
                     res.add(elements[labelRule.index])
