@@ -96,7 +96,7 @@ class FanliSpider : WebPictureSource{
 
     private fun analyzeDetail(html: String?): MutableList<String> {
         val document = Jsoup.parse(html)
-        val articleContent = document.getElementsByClass("article-content")[0]
+        val articleContent = document.getElementsByClass("article-contentRule")[0]
         val images = articleContent.getElementsByTag("img")
         val res = ArrayList<String>()
         for (image in images) {

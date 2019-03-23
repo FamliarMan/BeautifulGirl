@@ -87,10 +87,7 @@ class ContentCoverListFragment : BaseFragment() {
                         }
                     }
                 } else {
-                    val intent = Intent(activity, PictureDetailListActivity::class.java)
-                    intent.putExtra("detailUrl", title.detailUrl)
-//                    intent.putExtra("dataSourceId", webDataSource!!.id)
-                    startActivity(intent)
+                    PictureDetailListActivity.start(activity!!,title.detailUrl)
                 }
 
             }

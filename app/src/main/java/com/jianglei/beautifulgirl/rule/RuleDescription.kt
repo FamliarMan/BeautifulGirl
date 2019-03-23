@@ -195,8 +195,19 @@ data class ContentRule(
      * 比如图片地址或视频地址的获取规则
      */
     var detailRule: String,
+
+    var dynamicRender: Boolean,
+    /**
+     * 名称的获取方式，可以为空
+     */
+    var nameRule:String?,
     /**
      * 翻页规则
      */
-    var pageRule: PageRule?
+    var pageRule: PageRule?,
+    /**
+     * 是否使用webveiw加载页面，
+     * 有些网站对真实地址加密，获取太过困难，可以直接使用webview加载那个网页
+     */
+    var useWebView:Boolean = false
 )

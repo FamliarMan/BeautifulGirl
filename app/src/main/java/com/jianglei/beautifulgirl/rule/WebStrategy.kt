@@ -7,6 +7,7 @@ import com.jianglei.beautifulgirl.data.OnWebViewResultListener
 import com.jianglei.beautifulgirl.data.WebGetter
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
+import com.jianglei.beautifulgirl.vo.ContentVo
 import com.jianglei.ruleparser.RuleParser
 import org.jsoup.Jsoup
 import utils.UrlUtils
@@ -20,10 +21,12 @@ class WebStrategy(private val webRule: WebRule) {
     private var webGetter: WebGetter = WebGetter()
     private var nextCategoryUrl: String? = webRule.categoryRule.url
     private var nextCoverUrl: String? = null
+    private var nextContentUrl: String? = null
     /**
      * 封面的基本url（出去分页参数的url）
      */
     private lateinit var baseCoverUrl: String
+    private lateinit var baseContentUrl: String
     private lateinit var curParser: RuleParser
     /**
      * 获取某个网站的所有分类栏目
@@ -172,10 +175,13 @@ class WebStrategy(private val webRule: WebRule) {
     private fun getContentTitle(html: String): List<ContentTitle> {
         val parser = RuleParser(Jsoup.parse(html))
         val names = parser.getStrings(webRule.coverRule.nameRule)
-        val urls = parser.getStrings(webRule.coverRule.targetUrlRule)
+        var urls = parser.getStrings(webRule.coverRule.targetUrlRule)
         if (names.size != urls.size) {
             throw IllegalArgumentException("获取到的封面的名称和url数量不匹配")
         }
+        urls = urls.map {
+            UrlUtils.getFullUrl(baseCoverUrl, it)
+        }.toList()
         var descs: List<String>? = null
         var coverUrls: List<String>? = null
         if (webRule.coverRule.descRule != null) {
@@ -203,6 +209,84 @@ class WebStrategy(private val webRule: WebRule) {
             }
             val contentTitle = ContentTitle(names[i], desc, urls[i], coverImgUrl, type)
             res.add(contentTitle)
+        }
+        curParser = parser
+        return res
+    }
+
+
+    fun fetchAllContents(
+        activity: FragmentActivity,
+        page: Int,
+        startUrl: String?,
+        listener: OnDataResultListener<List<ContentVo>>
+    ) {
+        if (nextContentUrl == null && page != 1) {
+            listener.onSuccess(emptyList())
+            return
+        }
+        if (page == 1) {
+            nextContentUrl = startUrl
+            baseContentUrl = startUrl!!
+        }else if(
+            webRule.contentRule.pageRule == null){
+            listener.onSuccess(emptyList())
+            return
+        }
+
+
+        webGetter.getWebsiteHtml(
+            activity,
+            webRule.contentRule.dynamicRender,
+            nextContentUrl!!,
+            emptyMap(),
+            object : OnWebViewResultListener {
+                override fun onSuccess(html: String) {
+                    try {
+                        val res = getContents(html)
+                        res.forEach {
+                            Log.d("longyi", "name:" + it.name + " url:" + it.url)
+                        }
+                        //获取下一页的地址
+                        if (webRule.contentRule.pageRule != null) {
+                            nextContentUrl = webRule.contentRule.pageRule!!
+                                .getNextUrl(curParser, baseContentUrl)
+
+                        }
+                        listener.onSuccess(res)
+                    } catch (e: Throwable) {
+                        e.printStackTrace()
+                        listener.onError(e.toString())
+                    }
+                }
+
+                override fun onError(code: Int, msg: String) {
+                    listener.onError(msg)
+                }
+            }, webRule.encoding
+        )
+
+    }
+
+    private fun getContents(html: String): List<ContentVo> {
+        val parser = RuleParser(Jsoup.parse(html))
+        var urls = parser.getStrings(webRule.contentRule.detailRule)
+        urls = urls.map {
+            UrlUtils.getFullUrl(baseContentUrl,it)
+        }
+        var names: List<String>? = null
+        if (webRule.contentRule.nameRule != null) {
+            names = parser.getStrings(webRule.contentRule.nameRule!!)
+        }
+        val res = mutableListOf<ContentVo>()
+        for (i in 0 until urls.size) {
+            val name = if (names == null || i >= names.size) {
+                null
+            } else {
+                names[i]
+            }
+            res.add(ContentVo(name, urls[i]))
+
         }
         curParser = parser
         return res

@@ -96,3 +96,11 @@ data class PlayUrl(var defaultQuality:Boolean,var format:String,var quality:Stri
  * [desc] 视屏的描述
  */
 data class PlayContent(var file:List<PlayUrl>?,var title:String ,var desc:String?,var image:String=""):Serializable
+
+/**
+ * 视频或图片的地址
+ */
+data class ContentVo(
+    var name: String?,
+    var url:String
+)

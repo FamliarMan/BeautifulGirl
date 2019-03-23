@@ -98,7 +98,7 @@ class NineFourPicture : WebPictureSource{
             override fun onSuccess(html: String) {
                 val doc = Jsoup.parse(html)
                 try {
-                    val a = doc.selectFirst(".m-list-content")
+                    val a = doc.selectFirst(".m-list-contentRule")
                         .select("a")
                     val res = a.map {
                         it.attr("href")

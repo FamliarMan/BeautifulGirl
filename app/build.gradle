@@ -10,7 +10,7 @@ def buildType
 allprojects {
     repositories {
 
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url "https://oss.sonatype.org/contentRule/repositories/snapshots" }
         mavenCentral()
         flatDir {
             dirs 'libs'

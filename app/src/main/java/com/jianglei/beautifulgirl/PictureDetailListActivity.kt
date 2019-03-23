@@ -4,37 +4,37 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.recyclerview.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
 import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.WebPictureSource
+import com.jianglei.beautifulgirl.vo.ContentVo
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import kotlinx.android.synthetic.main.layout_recyclerview.*
-
 import utils.ToastUtils
 
 class PictureDetailListActivity : BaseActivity() {
-    private var dataSource: WebPictureSource? = null
     private var detailUrl: String? = null
     private var page = 1
-    private var urls: MutableList<String> = ArrayList()
+    private var urls: MutableList<ContentVo> = ArrayList()
     private lateinit var adapter: PictureAdapter
+
+    companion object {
+        fun start(context: Context, detailUrl: String) {
+            val intent = Intent(context, PictureDetailListActivity::class.java)
+            intent.putExtra("detailUrl", detailUrl)
+            context.startActivity(intent)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_recyclerview)
         detailUrl = intent.getStringExtra("detailUrl")
-        val dataSourceId = intent.getStringExtra("dataSourceId")
-        dataSource = WebSourceCenter.getWebSource(dataSourceId) as WebPictureSource
-        if (dataSource == null || detailUrl == null) {
-            ToastUtils.showMsg(this, "Wrong action")
-            return
-        }
         initRecyclerview()
         rvContent.setRefreshing(true)
         getData()
@@ -66,47 +66,48 @@ class PictureDetailListActivity : BaseActivity() {
         if (detailUrl == null) {
             return
         }
-        dataSource!!.fetDetailPictures(detailUrl!!, page, object : OnDataResultListener<MutableList<String>> {
-            override fun onError(msg: String) {
-                Toast.makeText(this@PictureDetailListActivity, msg, Toast.LENGTH_LONG).show()
-                rvContent.setPullLoadMoreCompleted()
-            }
+        StrategyProvider.getCurStrategy()!!
+            .fetchAllContents(this, page, detailUrl,
+                object : OnDataResultListener<List<ContentVo>> {
+                    override fun onSuccess(data: List<ContentVo>) {
 
-            override fun onSuccess(data: MutableList<String>) {
-                rvContent.post {
-                    rvContent.setPullLoadMoreCompleted()
-                }
-                if (page == 1 && data.size == 0) {
-                    ToastUtils.showMsg(this@PictureDetailListActivity, getString(R.string.no_picture))
-                    return
-                } else if (data.size == 0) {
-                    rvContent.pushRefreshEnable = false
-                    Toast.makeText(this@PictureDetailListActivity, R.string.no_more_data, Toast.LENGTH_LONG).show()
-                    return
-                }
-                data.forEach {
-                    Log.d("jianglei", it)
-                }
-                urls.addAll(data)
-                if (page == 1) {
-                    adapter.notifyDataSetChanged()
-                } else {
-                    adapter.notifyItemInserted(urls.size - data.size)
+                        rvContent.post {
+                            rvContent.setPullLoadMoreCompleted()
+                        }
+                        if (page == 1 && data.size == 0) {
+                            ToastUtils.showMsg(this@PictureDetailListActivity, getString(R.string.no_picture))
+                            return
+                        } else if (data.size == 0) {
+                            rvContent.pushRefreshEnable = false
+                            Toast.makeText(this@PictureDetailListActivity, R.string.no_more_data, Toast.LENGTH_LONG)
+                                .show()
+                            return
+                        }
+                        urls.addAll(data)
+                        if (page == 1) {
+                            adapter.notifyDataSetChanged()
+                        } else {
+                            adapter.notifyItemInserted(urls.size - data.size)
 
-                }
-                page++
+                        }
+                        page++
 
-                //第一次只加载了一张图片，无法出发上拉加载功能，因此这里静默多加载一次
-                if (page == 2 && urls.size == 1) {
-                    getData()
-                }
+                        //第一次只加载了一张图片，无法出发上拉加载功能，因此这里静默多加载一次
+                        if (page == 2 && urls.size == 1) {
+                            getData()
+                        }
+                    }
 
-            }
+                    override fun onError(msg: String) {
 
-        })
+                        Toast.makeText(this@PictureDetailListActivity, msg, Toast.LENGTH_LONG).show()
+                        rvContent.setPullLoadMoreCompleted()
+                    }
+                })
     }
 
-    private class PictureAdapter(private var context: Context, private var urls: MutableList<String>) :
+    private class PictureAdapter(private var context: Context,
+                                 private var urls: MutableList<ContentVo>) :
         RecyclerView.Adapter<PictureHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureHolder {
             val view = LayoutInflater.from(context).inflate(R.layout.listitem_picture_detail, parent, false)
@@ -119,13 +120,13 @@ class PictureDetailListActivity : BaseActivity() {
 
         override fun onBindViewHolder(holder: PictureHolder, position: Int) {
             val controller = Fresco.newDraweeControllerBuilder()
-                .setUri(Uri.parse(urls[position]))
+                .setUri(Uri.parse(urls[position].url))
                 .setAutoPlayAnimations(true)
                 .build()
             holder.ivContent.controller = (controller)
-            holder.ivContent.setOnClickListener{
-                val intent = Intent(context,PhotoViewActivity::class.java)
-                intent.putExtra("url",urls[position])
+            holder.ivContent.setOnClickListener {
+                val intent = Intent(context, PhotoViewActivity::class.java)
+                intent.putExtra("url", urls[position].url)
                 context.startActivity(intent)
             }
 //            val options = RequestOptions()
@@ -148,9 +149,6 @@ class PictureDetailListActivity : BaseActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (isFinishing) {
-            dataSource?.cancelAllNet()
-        }
     }
 }
 

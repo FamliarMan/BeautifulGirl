@@ -67,7 +67,7 @@ class ZhuangxiuSpider : WebPictureSource{
 
                     val doc = Jsoup.parse(html)
 
-                    val contentPic = doc.select("div[class~=content-pic$]")
+                    val contentPic = doc.select("div[class~=contentRule-pic$]")
                     if (contentPic.size == 0) {
                         listener.onSuccess(ArrayList())
                         return

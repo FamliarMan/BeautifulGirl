@@ -58,7 +58,7 @@ class XiuRenSpider : WebPictureSource, WebVideoSource {
                 val doc = Jsoup.parse(html)
                 val res = doc.select(".loop")
                     .map {
-                        val divContent = it.selectFirst(".content")
+                        val divContent = it.selectFirst(".contentRule")
                         val a = divContent.selectFirst("a")
                         val detailUrl = a.attr("href")
                         val title = a.attr("title")

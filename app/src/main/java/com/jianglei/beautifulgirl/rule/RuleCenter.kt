@@ -20,7 +20,7 @@ class RuleCenter {
                 return
             }
             val caoliu = "{\n" +
-                    "  \"type\": \"video\",\n" +
+                    "  \"type\": \"image\",\n" +
                     "  \"name\": \"草榴\",\n" +
                     "  \"icon\": \"\",\n" +
                     "  \"encoding\": \"GBK\",\n" +
@@ -40,10 +40,11 @@ class RuleCenter {
                     "    }\n" +
                     "  },\n" +
                     "  \"contentRule\": {\n" +
-                    "    \"detailRule:\": \"@label:<input>->@property:<data-src>\"\n" +
+                    "    \"detailRule\": \"@label:<input>->@property:<data-src>\"\n" +
                     "  }\n" +
                     "}\n"
             webRules.add(JsonUtils.parseJsonWithGson(caoliu, WebRule::class.java)!!)
+            isInit = true
 
         }
     }

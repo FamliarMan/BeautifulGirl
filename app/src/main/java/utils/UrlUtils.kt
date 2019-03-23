@@ -31,6 +31,16 @@ class UrlUtils {
             }
         }
 
+        fun getFullUrl(baseUrl: String,  url: String): String {
+            val protocol = getWebProtocol(baseUrl)
+            val host = getWebHost(baseUrl)
+            return when {
+                url.startsWith("http") -> url
+                url.startsWith("//") -> protocol + url
+                url.startsWith("/") -> host+url
+                else -> "$host/$url"
+            }
+        }
         fun getFullUrl(host: String, protocol: String, url: String): String {
             return when {
                 url.startsWith("http") -> url
