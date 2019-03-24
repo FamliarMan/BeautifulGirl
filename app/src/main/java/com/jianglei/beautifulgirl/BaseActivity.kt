@@ -37,4 +37,11 @@ open class BaseActivity : AppCompatActivity() {
             progress?.dismiss()
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (StrategyProvider.getCurStrategy()!=null){
+            StrategyProvider.getCurStrategy()!!.cancel()
+        }
+    }
 }

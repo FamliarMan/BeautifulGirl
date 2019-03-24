@@ -27,5 +27,12 @@ class RuleKeyWord {
         const val JSON_OBJ = "@jsonObj"
         const val JSON_VALUE = "@jsonValue"
 
+        //代表当前页面
+        const val BASE_URL = "{baseUrl}"
+        //页码占位
+        const val PAGE = "{page}"
+        //搜索占位
+        const val SEARCH_TXT = "{searchTxt}"
+
     }
 }

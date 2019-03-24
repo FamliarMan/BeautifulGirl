@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -16,7 +15,6 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.vo.Category
-import com.jianglei.beautifulgirl.vo.WebsiteDescVo
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_category.*
@@ -25,9 +23,6 @@ import utils.ToastUtils
 class CategoryActivity : BaseActivity() {
 
     private var categories: MutableList<Category> = ArrayList()
-//    private var webDataSource: WebDataSource? = null
-//    private var webDataSourceId: String? = null
-    private var websiteVo: WebsiteDescVo? = null
     private var page = 1
     private lateinit var adapter: CategoryAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +48,8 @@ class CategoryActivity : BaseActivity() {
             override fun onLoadMore() {
                 try {
                     fetchData()
-                }catch (e:Throwable){
-                    ToastUtils.showMsg(this@CategoryActivity,e.toString())
+                } catch (e: Throwable) {
+                    ToastUtils.showMsg(this@CategoryActivity, e.toString())
                 }
 
             }
@@ -63,8 +58,8 @@ class CategoryActivity : BaseActivity() {
                 page = 1
                 try {
                     fetchData()
-                }catch (e:Throwable){
-                    ToastUtils.showMsg(this@CategoryActivity,e.toString())
+                } catch (e: Throwable) {
+                    ToastUtils.showMsg(this@CategoryActivity, e.toString())
                 }
 
             }
@@ -72,8 +67,8 @@ class CategoryActivity : BaseActivity() {
         rvCategory.setRefreshing(true)
         try {
             fetchData()
-        }catch (e:Throwable){
-            ToastUtils.showMsg(this@CategoryActivity,e.toString())
+        } catch (e: Throwable) {
+            ToastUtils.showMsg(this@CategoryActivity, e.toString())
         }
 
     }
@@ -83,8 +78,7 @@ class CategoryActivity : BaseActivity() {
             when {
                 item?.itemId == R.id.action_search -> {
                     val intent = Intent(this@CategoryActivity, SearchActivity::class.java)
-//                    intent.putExtra("dataSourceId", webDataSource!!.id)
-//                    startActivity(intent)
+                    startActivity(intent)
 
                 }
                 else -> {
@@ -101,11 +95,11 @@ class CategoryActivity : BaseActivity() {
             .fetchAllCategory(
                 this,
                 page,
-                object:OnDataResultListener<List<Category>>{
+                object : OnDataResultListener<List<Category>> {
                     override fun onSuccess(data: List<Category>) {
 
                         page++
-                        if (data.size == 0) {
+                        if (data.isEmpty()) {
                             ToastUtils.showMsg(
                                 this@CategoryActivity,
                                 getString(R.string.no_more_data)
@@ -133,15 +127,13 @@ class CategoryActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return super.onCreateOptionsMenu(menu)
-//        return if (webDataSource is SearchSource) {
-//            menuInflater.inflate(R.menu.search, menu)
-//            true
-//        } else {
-//            super.onCreateOptionsMenu(menu)
-//        }
+        return if (StrategyProvider.getCurStrategy()!!.webRule.searchRule != null) {
+            menuInflater.inflate(R.menu.search, menu)
+            true
+        } else {
+            super.onCreateOptionsMenu(menu)
+        }
     }
-
 
     class CategoryAdapter(var context: Context, var categories: MutableList<Category>) :
         RecyclerView.Adapter<CategoryHolder>() {

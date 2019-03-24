@@ -1,5 +1,6 @@
 package com.jianglei.ruleparser
 
+import com.elvishew.xlog.XLog
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import org.junit.Assert
@@ -9,7 +10,12 @@ import org.junit.Test
 /**
  * @author jianglei on 3/16/19.
  */
-class RuleParserTest {
+class HtmlParserTest {
+
+    @Before
+    fun setUp(){
+        XLog.init()
+    }
     val commonHtml = "<html lang=\"en\">\n" +
             "<head>\n" +
             "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
@@ -75,16 +81,16 @@ class RuleParserTest {
      */
     @Test
     fun getString_selectElement_2() {
-        val parser = RuleParser(commonDocument)
+        val parser = HtmlParser(commonDocument)
         val res = parser.getStrings("@label:<a> -> @property:<href>")
         Assert.assertEquals("//www.txxx.com/", res[1])
 
     }
 
 
-    @Test
+    @Test(expected = java.lang.IllegalArgumentException::class)
     fun getString_selectElement_1() {
-        val parser = RuleParser(commonDocument)
+        val parser = HtmlParser(commonDocument)
         parser.getStrings("@label:<a> -> @property:<href> ->@label:<a>")
     }
 
@@ -93,7 +99,7 @@ class RuleParserTest {
      */
     @Test(expected = IllegalArgumentException::class)
     fun getStrings_filterElement_1() {
-        val parser = RuleParser(commonDocument)
+        val parser = HtmlParser(commonDocument)
         parser.getStrings("@hasClass:<body>")
     }
 
@@ -102,7 +108,7 @@ class RuleParserTest {
      */
     @Test(expected = IllegalArgumentException::class)
     fun getStrings_filterElement_2() {
-        val parser = RuleParser(commonDocument)
+        val parser = HtmlParser(commonDocument)
         parser.getStrings("@label:<a> -> @property:<href> -> @hasClass:<name>")
     }
 
@@ -112,7 +118,7 @@ class RuleParserTest {
      */
     @Test
     fun getStrings_filterElement_3() {
-        val parser = RuleParser(commonDocument)
+        val parser = HtmlParser(commonDocument)
         val res = parser.getStrings(
             "@label:<div> -> @hasLabel:<li> -> @label:<a> -> @property:<href>"
         )
@@ -124,7 +130,7 @@ class RuleParserTest {
      */
     @Test
     fun getString_filterString(){
-        val parser = RuleParser(commonDocument)
+        val parser = HtmlParser(commonDocument)
         val res = parser.getStrings("@label:<a> -> @property:<href>-> @==:<//www.txxx.com/>")
         Assert.assertEquals("//www.txxx.com/",res[0])
 
@@ -135,7 +141,7 @@ class RuleParserTest {
      */
     @Test(expected = IllegalArgumentException::class)
     fun getString_json_1(){
-        val parse = RuleParser(jsonDocument)
+        val parse = HtmlParser(jsonDocument)
         parse.getStrings("@regex:<var arrs = (\\{(.*)\\})>[1] -> @jsonArr:<arr>")
     }
 
@@ -144,7 +150,7 @@ class RuleParserTest {
      */
     @Test
     fun getString_json_2(){
-        val parse = RuleParser(jsonDocument)
+        val parse = HtmlParser(jsonDocument)
         val res = parse.getStrings(
             "@regex:<var arrs = (\\{(.*)\\})>[1] -> @jsonArr:<arr> -> @jsonValue:<gender>"
         )

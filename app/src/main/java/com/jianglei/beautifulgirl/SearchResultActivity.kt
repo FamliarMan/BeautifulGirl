@@ -1,26 +1,31 @@
 package com.jianglei.beautifulgirl
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.vo.Category
 
 class SearchResultActivity : BaseActivity() {
 
-    private var category: Category? = null
-    private var dataSource: WebDataSource? = null
+    companion object {
+
+        fun start(context: Context, url: String) {
+            val intent = Intent(context, SearchResultActivity::class.java)
+            intent.putExtra("url", url)
+            context.startActivity(intent)
+
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_result)
-        val dataSourceId = intent.getStringExtra("dataSourceId")
-        dataSource = WebSourceCenter.getWebSource(dataSourceId)
-        category = intent.getParcelableExtra("category")
-        if (dataSource== null || category == null) {
-            return
-        }
+        val url = intent.getStringExtra("url")
         if (savedInstanceState == null) {
             val fragment = ContentCoverListFragment.newInstance(
-                category!!.title,
-                category!!.url,
+                "搜索结果",
+                url,
                 true
             )
             supportFragmentManager.beginTransaction().add(R.id.container, fragment)

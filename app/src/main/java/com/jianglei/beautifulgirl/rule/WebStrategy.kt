@@ -1,16 +1,17 @@
 package com.jianglei.beautifulgirl.rule
 
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
-import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.OnWebViewResultListener
-import com.jianglei.beautifulgirl.data.WebGetter
+import com.jianglei.beautifulgirl.data.*
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
-import com.jianglei.ruleparser.LogUtil
-import com.jianglei.ruleparser.RuleParser
+import com.jianglei.beautifulgirl.vo.SearchVideoKeyWord
+import com.jianglei.ruleparser.*
 import com.jianglei.videoplay.ContentVo
+import okhttp3.ResponseBody
 import org.jsoup.Jsoup
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import utils.UrlUtils
 import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
@@ -18,17 +19,18 @@ import java.lang.IllegalStateException
 /**
  * @author jianglei on 3/17/19.
  */
-class WebStrategy(private val webRule: WebRule) {
+class WebStrategy(val webRule: WebRule) {
     private var webGetter: WebGetter = WebGetter()
     private var nextCategoryUrl: String? = webRule.categoryRule.url
     private var nextCoverUrl: String? = null
     private var nextContentUrl: String? = null
+    private var call: Call<ResponseBody>? = null
     /**
      * 封面的基本url（出去分页参数的url）
      */
     private lateinit var baseCoverUrl: String
     private lateinit var baseContentUrl: String
-    private lateinit var curParser: RuleParser
+    private lateinit var curParser: HtmlParser
     /**
      * 获取某个网站的所有分类栏目
      */
@@ -88,7 +90,7 @@ class WebStrategy(private val webRule: WebRule) {
 
     private fun getCategory(html: String): MutableList<Category> {
         val document = Jsoup.parse(html)
-        val ruleParser = RuleParser(document)
+        val ruleParser = HtmlParser(document)
         val titles = ruleParser.getStrings(webRule.categoryRule.nameRule)
 
         val host = UrlUtils.getWebHost(webRule.categoryRule.url)
@@ -144,16 +146,23 @@ class WebStrategy(private val webRule: WebRule) {
         activity: FragmentActivity,
         page: Int,
         startUrl: String?,
+        isSearch:Boolean,
         listener: OnDataResultListener<List<ContentTitle>>
     ) {
         if (nextCoverUrl == null && page != 1) {
             listener.onSuccess(emptyList())
             return
         }
+        val curRule:CategoryRule
+        if(isSearch){
+            curRule = webRule.searchRule!!.resultRule
+        }else{
+            curRule = webRule.coverRule
+        }
 
         if (page == 1) {
-            if (webRule.coverRule.realRequestUrlRule != null) {
-                nextCoverUrl = webRule.coverRule.realRequestUrlRule!!
+            if (curRule.realRequestUrlRule != null) {
+                nextCoverUrl = curRule.realRequestUrlRule!!
                     .replace("{baseUrl}", startUrl!!)
                 baseCoverUrl = nextCoverUrl!!
             } else {
@@ -162,28 +171,28 @@ class WebStrategy(private val webRule: WebRule) {
             }
         }
         var newPage = page
-        if (webRule.coverRule.pageRule != null &&
-            webRule.coverRule.pageRule!!.startPage != null
+        if (curRule.pageRule != null &&
+            curRule.pageRule!!.startPage != null
         ) {
-            newPage = webRule.coverRule.pageRule!!.startPage!! + page - 1
+            newPage = curRule.pageRule!!.startPage!! + page - 1
         }
         LogUtil.d("开始获取分类下级封面页面：$nextCoverUrl")
         webGetter.getWebsiteHtml(
             activity,
-            webRule.coverRule.dynamicRender,
+            curRule.dynamicRender,
             nextCoverUrl!!,
             emptyMap(),
             object : OnWebViewResultListener {
                 override fun onSuccess(html: String) {
                     try {
-                        val res = getContentTitle(html)
+                        val res = getContentTitle(html,curRule)
                         LogUtil.d("----------------获取封面结果如下,数量：${res.size} ---------------------")
                         res.forEach {
                             LogUtil.d("name:" + it.title + " url:" + it.detailUrl + " img:" + it.coverUrl)
                         }
                         //获取下一页的地址
-                        if (webRule.coverRule.pageRule != null) {
-                            nextCoverUrl = webRule.coverRule.pageRule!!
+                        if (curRule.pageRule != null) {
+                            nextCoverUrl = curRule.pageRule!!
                                 .getNextUrl(curParser, baseCoverUrl, newPage + 1)
                             LogUtil.d("获取封面下一页请求地址：$nextCoverUrl")
                         }
@@ -202,10 +211,10 @@ class WebStrategy(private val webRule: WebRule) {
 
     }
 
-    private fun getContentTitle(html: String): List<ContentTitle> {
-        val parser = RuleParser(Jsoup.parse(html))
-        val names = parser.getStrings(webRule.coverRule.nameRule)
-        var urls = parser.getStrings(webRule.coverRule.urlRule)
+    private fun getContentTitle(html: String,curRule: CategoryRule): List<ContentTitle> {
+        val parser = HtmlParser(Jsoup.parse(html))
+        val names = parser.getStrings(curRule.nameRule)
+        var urls = parser.getStrings(curRule.urlRule)
         if (names.size != urls.size) {
             throw IllegalArgumentException("获取到的封面的名称和url数量不匹配")
         }
@@ -214,11 +223,11 @@ class WebStrategy(private val webRule: WebRule) {
         }.toList()
         var descs: List<String>? = null
         var coverUrls: List<String>? = null
-        if (webRule.coverRule.descRule != null) {
-            descs = parser.getStrings(webRule.coverRule.descRule!!)
+        if (curRule.descRule != null) {
+            descs = parser.getStrings(curRule.descRule!!)
         }
-        if (webRule.coverRule.imageUrlRule != null) {
-            coverUrls = parser.getStrings(webRule.coverRule.imageUrlRule!!)
+        if (curRule.imageUrlRule != null) {
+            coverUrls = parser.getStrings(curRule.imageUrlRule!!)
         }
         val res = mutableListOf<ContentTitle>()
         for (i in 0 until names.size) {
@@ -277,7 +286,7 @@ class WebStrategy(private val webRule: WebRule) {
         if (webRule.contentRule.pageRule != null &&
             webRule.contentRule.pageRule!!.startPage != null
         ) {
-            newPage = webRule.coverRule.pageRule!!.startPage!! + page - 1
+            newPage = webRule.contentRule.pageRule!!.startPage!! + page - 1
         }
         webGetter.getWebsiteHtml(
             activity,
@@ -316,7 +325,7 @@ class WebStrategy(private val webRule: WebRule) {
     }
 
     private fun getContents(html: String): List<ContentVo> {
-        val parser = RuleParser(Jsoup.parse(html))
+        val parser = HtmlParser(Jsoup.parse(html))
         var urls = parser.getStrings(webRule.contentRule.detailRule)
         urls = urls.map {
             UrlUtils.getFullUrl(baseContentUrl, it)
@@ -339,7 +348,77 @@ class WebStrategy(private val webRule: WebRule) {
         return res
     }
 
-    public fun cancel() {
+    fun fetchSearchSuggest(searchTxt: String, listener: OnDataResultListener<List<SearchVideoKeyWord>>) {
+        if (webRule.searchRule == null) {
+            throw IllegalArgumentException("当前网站不支持搜索")
+        }
+        if (webRule.searchRule!!.suggestUrl == null) {
+            //当前网页不支持搜索建议
+            listener.onSuccess(emptyList())
+            return
+        }
+        val url = webRule.searchRule!!.suggestUrl!!.replace(RuleKeyWord.SEARCH_TXT, searchTxt)
+        call = RetrofitManager.retrofit.create(WebService::class.java)
+            .searchSuggest(url)
+        call!!.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                listener.onError(t.toString())
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                try {
+                    val body = response.body()
+                    if(body == null){
+                        listener.onError("获取搜索建议失败")
+                        return
+                    }
+                    val res = getSuggest(body.string())
+                    LogUtil.d("--------------------获取搜索建议如下：-------------------")
+                    res.forEach {
+                        LogUtil.d("key:${it.N} time:${it.R}")
+                    }
+                    listener.onSuccess(res)
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                    listener.onError(e.toString())
+
+                }
+            }
+        })
+
+    }
+
+    private fun getSuggest(json: String): List<SearchVideoKeyWord> {
+        if (webRule.searchRule!!.suggestKeyRule == null) {
+            throw IllegalArgumentException("搜索建议的suggestKeyRule不能为空")
+        }
+        val jsonParser = JsonParser(json)
+        val keyRes = jsonParser.getStrings(
+            webRule.searchRule!!.suggestKeyRule!!,
+            json
+        )
+        var countsRes = emptyList<String>()
+        if (webRule.searchRule!!.suggestTimeRule != null) {
+            countsRes = jsonParser.getStrings(
+                webRule.searchRule!!.suggestTimeRule!!,
+                json
+            )
+        }
+
+        val res = mutableListOf<SearchVideoKeyWord>()
+        for (i in 0 until keyRes.size) {
+            val count = if (countsRes.isEmpty() || i >= countsRes.size) {
+                ""
+            } else {
+                countsRes[i]
+            }
+            res.add(SearchVideoKeyWord(keyRes[i], count))
+        }
+        return res
+    }
+
+    fun cancel() {
         webGetter.cancel()
+        call?.cancel()
     }
 }

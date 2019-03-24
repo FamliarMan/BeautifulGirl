@@ -82,7 +82,7 @@ class RuleCenter {
                     "  \"type\": \"video\",\n" +
                     "  \"name\": \"XVideos\",\n" +
                     "  \"icon\": \"https://www.xvideos.com/favicon.ico\",\n" +
-                    "  \"encoding\":\"utf-8\",\n" +
+                    "  \"encoding\": \"utf-8\",\n" +
                     "  \"categoryRule\": {\n" +
                     "    \"dynamicRender\": true,\n" +
                     "    \"url\": \"https://www.xvideos.com/channels-index\",\n" +
@@ -92,7 +92,7 @@ class RuleCenter {
                     "    \"descRule\": \"@class:<thumb-block >-> @class:<profile-counts>[0]->@text\",\n" +
                     "    \"pageRule\": {\n" +
                     "      \"isFromHtml\": \"true\",\n" +
-                    "      \"startPage\":\"0\",\n" +
+                    "      \"startPage\": \"0\",\n" +
                     "      \"nextUrlRule\": \"@class:<pagination>[0]->@label:<li>->@hasClass:<no-page next-page>->@label:<a>[0]->@property:<href>\"\n" +
                     "    }\n" +
                     "  },\n" +
@@ -102,12 +102,31 @@ class RuleCenter {
                     "    \"descRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@class:<metadata>[0]->@text\",\n" +
                     "    \"imageUrlRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-inside>[0]->@class:<thumb>->@label:<img>[0]->@property:<data-src>\",\n" +
                     "    \"urlRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@property:<href>\",\n" +
-                    "    \"realRequestUrlRule\":\"{baseUrl}/activity\",\n" +
+                    "    \"realRequestUrlRule\": \"{baseUrl}/activity\",\n" +
                     "    \"pageRule\": {\n" +
                     "      \"isFromHtml\": false,\n" +
                     "      \"combinedUrl\": \"{baseUrl}/{page}\",\n" +
                     "      \"paramRule\": \"@regex:<<!--[\\\\s*]([\\\\d]{10})[\\\\s*][-]{2}>[1]\"\n" +
                     "    }\n" +
+                    "  },\n" +
+                    "  \"searchRule\": {\n" +
+                    "    \"searchUrl\": \"https://www.xvideos.com/?k={searchTxt}&top\",\n" +
+                    "    \"resultRule\": {\n" +
+                    "      \"dynamicRender\": false,\n" +
+                    "      \"nameRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@text\",\n" +
+                    "      \"descRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@class:<metadata>[0]->@text\",\n" +
+                    "      \"imageUrlRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-inside>[0]->@class:<thumb>->@label:<img>[0]->@property:<data-src>\",\n" +
+                    "      \"urlRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@property:<href>\",\n" +
+                    "      \"realRequestUrlRule\": \"{baseUrl}/activity\",\n" +
+                    "      \"pageRule\": {\n" +
+                    "        \"isFromHtml\": \"true\",\n" +
+                    "        \"startPage\": \"1\",\n" +
+                    "        \"nextUrlRule\": \"@class:<pagination>[0]->@label:<li>->@label:<a>[0]->@hasText:<{page}>->@property:<href>\"\n" +
+                    "      }\n" +
+                    "    },\n" +
+                    "    \"suggestUrl\": \"https://www.xvideos.com/search-suggest/{searchTxt}\",\n" +
+                    "    \"suggestKeyRule\": \"@jsonArr:<KEYWORDS>->@jsonValue:<N>\",\n" +
+                    "    \"suggestTimeRule\": \"@jsonArr:<KEYWORDS>->@jsonValue:<R>\"\n" +
                     "  },\n" +
                     "  \"contentRule\": {\n" +
                     "    \"dynamicRender\": true,\n" +

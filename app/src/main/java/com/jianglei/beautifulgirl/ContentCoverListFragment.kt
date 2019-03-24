@@ -23,7 +23,6 @@ import utils.ToastUtils
  */
 class ContentCoverListFragment : BaseFragment() {
     private var contentTitles: MutableList<ContentTitle> = ArrayList()
-    //    private var webDataSource: WebDataSource? = null
     private var page = 1
     private var visible: Boolean = false
     private var isPrepared: Boolean = false
@@ -32,6 +31,7 @@ class ContentCoverListFragment : BaseFragment() {
     private lateinit var rvContent: PullLoadMoreRecyclerView
     private var title: String? = null
     private var url: String? = null
+    private var isSearch:Boolean = false
 
     companion object {
         fun newInstance(
@@ -52,6 +52,9 @@ class ContentCoverListFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         title = arguments?.getString("title")
         url = arguments?.getString("url")
+        if(title=="搜索结果"){
+            isSearch = true
+        }
         val view = inflater.inflate(R.layout.fragment_picture_list, container, false)
         rvContent = view.findViewById(R.id.rvContent)
         initRecyclerview()
@@ -153,7 +156,7 @@ class ContentCoverListFragment : BaseFragment() {
         }
 
         StrategyProvider.getCurStrategy()!!
-            .fetchAllCover(activity!!, page, url!!, object : OnDataResultListener<List<ContentTitle>> {
+            .fetchAllCover(activity!!, page, url!!, isSearch,object : OnDataResultListener<List<ContentTitle>> {
                 override fun onSuccess(data: List<ContentTitle>) {
                     if (data.isEmpty()) {
                         rvContent.pushRefreshEnable = false

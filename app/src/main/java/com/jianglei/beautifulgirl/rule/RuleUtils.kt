@@ -1,6 +1,6 @@
 package com.jianglei.beautifulgirl.rule
 
-import com.jianglei.ruleparser.RuleParser
+import com.jianglei.ruleparser.HtmlParser
 import utils.UrlUtils
 import java.lang.IllegalArgumentException
 
@@ -13,7 +13,7 @@ import java.lang.IllegalArgumentException
  * [parser] 是当前页面的解析器
  * [baseUrl] 是当前页面除掉分页参数外的其他url
  */
-fun PageRule.getNextUrl(parser: RuleParser, baseUrl: String, nextPage: Int?): String? {
+fun PageRule.getNextUrl(parser: HtmlParser, baseUrl: String, nextPage: Int?): String? {
     if (this.isFromHtml) {
         if (nextUrlRule == null) {
             throw IllegalArgumentException("当直接从网页抓取下一页的url时，nextUrlRule不能为空")
