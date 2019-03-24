@@ -1,5 +1,6 @@
 package com.jianglei.beautifulgirl
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -19,6 +20,9 @@ import com.jianglei.beautifulgirl.rule.RuleCenter
 import com.jianglei.beautifulgirl.rule.WebRule
 import com.jianglei.beautifulgirl.rule.WebStrategy
 import com.jianglei.beautifulgirl.vo.Category
+import com.jianglei.permission.JlPermission
+import com.jianglei.permission.OnPermissionResultListener
+import com.jianglei.ruleparser.LogUtil
 import kotlinx.android.synthetic.main.activity_all_website.*
 import utils.ToastUtils
 
@@ -30,12 +34,13 @@ class AllWebsiteActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_website)
+        initLog()
         rvWebsites.layoutManager = GridLayoutManager(this, 2)
         allWebsites = WebSourceCenter.normalWebSources
         val adapter = WebsiteAdapter(this, webRules as MutableList<WebRule>)
         adapter.onItemClickListener = object : OnItemClickListener<WebRule> {
             override fun onItemClick(vo: WebRule, pos: Int) {
-                    getCategory(vo)
+                getCategory(vo)
             }
 
         }
@@ -56,6 +61,21 @@ class AllWebsiteActivity : BaseActivity() {
         }
     }
 
+
+    private fun initLog() {
+        JlPermission.start(this)
+            .permission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .build()
+            .request(object : OnPermissionResultListener {
+                override fun onGranted(permissions: Array<out String>?) {
+                    LogUtil.init(true, true, true)
+                }
+
+                override fun onDenied(permissions: Array<out String>?) {
+                    LogUtil.init(true, false, false)
+                }
+            })
+    }
 
     override fun onPause() {
         super.onPause()
@@ -79,7 +99,7 @@ class AllWebsiteActivity : BaseActivity() {
 //                        intent.putExtra("dataSourceId", vo.id)
                         startActivity(intent)
                     } else {
-                        ContentActivity.start(this@AllWebsiteActivity,data)
+                        ContentActivity.start(this@AllWebsiteActivity, data)
                     }
                 }
 

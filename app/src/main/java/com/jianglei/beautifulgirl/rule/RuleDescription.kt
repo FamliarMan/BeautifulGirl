@@ -135,6 +135,12 @@ data class CoverRule(
     var dynamicRender: Boolean=false,
 
     /**
+     * 请求封面时真正的请求地址，某些网站虽然点击分类页面获取的
+     * 地址跳转到这个页面，但页面动态性很强，真正的内容是通过另外的地址拿到的，
+     * 所以这里需要单独定义一个真实地址组合规则,其中{baseUrl}代表分类中获取的地址
+     */
+    var realRequestUrlRule:String?,
+    /**
      * 名称提取规则
      */
     var nameRule: String,
@@ -216,5 +222,12 @@ data class ContentRule(
      * 是否使用webveiw加载页面，
      * 有些网站对真实地址加密，获取太过困难，可以直接使用webview加载那个网页
      */
-    var useWebView:Boolean = false
+    var useWebView:Boolean = false,
+
+    /**
+     * 请求封面时真正的请求地址，某些网站虽然点击分类页面获取的
+     * 地址跳转到这个页面，但页面动态性很强，真正的内容是通过另外的地址拿到的，
+     * 所以这里需要单独定义一个真实地址组合规则,其中{baseUrl}代表分类中获取的地址
+     */
+    var realRequestUrlRule:String?
 )

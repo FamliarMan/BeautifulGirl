@@ -7,6 +7,7 @@ import com.jianglei.beautifulgirl.data.OnWebViewResultListener
 import com.jianglei.beautifulgirl.data.WebGetter
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
+import com.jianglei.ruleparser.LogUtil
 import com.jianglei.ruleparser.RuleParser
 import com.jianglei.videoplay.ContentVo
 import org.jsoup.Jsoup
@@ -50,15 +51,17 @@ class WebStrategy(private val webRule: WebRule) {
             listener.onSuccess(emptyList())
             return
         }
+        LogUtil.d("开始获取分类页面：$nextCategoryUrl")
         webGetter.getWebsiteHtml(
             activity, webRule.categoryRule.dynamicRender, nextCategoryUrl!!,
             emptyMap(), object : OnWebViewResultListener {
                 override fun onSuccess(html: String) {
                     try {
                         val res = getCategory(html)
+                        LogUtil.d("----------------获取分类结果如下,数量：${res.size}---------------------")
                         for (category in res) {
-                            Log.d(
-                                "longyi", category.title + " "
+                            LogUtil.d(
+                                category.title + " "
                                         + category.url + " " + category.coverUrl
                             )
                         }
@@ -66,6 +69,7 @@ class WebStrategy(private val webRule: WebRule) {
                         if (webRule.categoryRule.pageRule != null) {
                             nextCategoryUrl = webRule.categoryRule.pageRule!!
                                 .getNextUrl(curParser, webRule.categoryRule.url, newPage + 1)
+                            LogUtil.d("获取分类下一页请求地址：$nextCategoryUrl")
                         }
                         listener.onSuccess(res)
                     } catch (e: Throwable) {
@@ -148,8 +152,14 @@ class WebStrategy(private val webRule: WebRule) {
         }
 
         if (page == 1) {
-            nextCoverUrl = startUrl
-            baseCoverUrl = startUrl!!
+            if (webRule.coverRule.realRequestUrlRule != null) {
+                nextCoverUrl = webRule.coverRule.realRequestUrlRule!!
+                    .replace("{baseUrl}", startUrl!!)
+                baseCoverUrl = nextCoverUrl!!
+            } else {
+                nextCoverUrl = startUrl
+                baseCoverUrl = startUrl!!
+            }
         }
         var newPage = page
         if (webRule.coverRule.pageRule != null &&
@@ -157,6 +167,7 @@ class WebStrategy(private val webRule: WebRule) {
         ) {
             newPage = webRule.coverRule.pageRule!!.startPage!! + page - 1
         }
+        LogUtil.d("开始获取分类下级封面页面：$nextCoverUrl")
         webGetter.getWebsiteHtml(
             activity,
             webRule.coverRule.dynamicRender,
@@ -166,14 +177,15 @@ class WebStrategy(private val webRule: WebRule) {
                 override fun onSuccess(html: String) {
                     try {
                         val res = getContentTitle(html)
+                        LogUtil.d("----------------获取封面结果如下,数量：${res.size} ---------------------")
                         res.forEach {
-                            Log.d("longyi", "name:" + it.title + " url:" + it.detailUrl + " img:" + it.coverUrl)
+                            LogUtil.d("name:" + it.title + " url:" + it.detailUrl + " img:" + it.coverUrl)
                         }
                         //获取下一页的地址
                         if (webRule.coverRule.pageRule != null) {
                             nextCoverUrl = webRule.coverRule.pageRule!!
                                 .getNextUrl(curParser, baseCoverUrl, newPage + 1)
-
+                            LogUtil.d("获取封面下一页请求地址：$nextCoverUrl")
                         }
                         listener.onSuccess(res)
                     } catch (e: Throwable) {
@@ -245,13 +257,21 @@ class WebStrategy(private val webRule: WebRule) {
         }
 
         if (page == 1) {
-            nextContentUrl = startUrl
-            baseContentUrl = startUrl!!
+
+            if (webRule.contentRule.realRequestUrlRule != null) {
+                nextContentUrl = webRule.contentRule.realRequestUrlRule!!
+                    .replace("{baseUrl}", startUrl!!)
+                baseContentUrl = nextContentUrl!!
+            } else {
+                nextContentUrl = startUrl
+                baseContentUrl = startUrl!!
+            }
         } else if (
             webRule.contentRule.pageRule == null) {
             listener.onSuccess(emptyList())
             return
         }
+        LogUtil.d("开始获取具体内容:$nextContentUrl")
 
         var newPage = page
         if (webRule.contentRule.pageRule != null &&
@@ -268,13 +288,16 @@ class WebStrategy(private val webRule: WebRule) {
                 override fun onSuccess(html: String) {
                     try {
                         val res = getContents(html)
+
+                        LogUtil.d("----------------获取具体地址如下:数量：${res.size}---------------------")
                         res.forEach {
-                            Log.d("longyi", "name:" + it.name + " url:" + it.url)
+                            LogUtil.d("name:" + it.name + " url:" + it.url)
                         }
                         //获取下一页的地址
                         if (webRule.contentRule.pageRule != null) {
                             nextContentUrl = webRule.contentRule.pageRule!!
                                 .getNextUrl(curParser, baseContentUrl, newPage + 1)
+                            LogUtil.d("获取具体内容的下一页地址成功：$nextContentUrl")
 
                         }
                         listener.onSuccess(res)

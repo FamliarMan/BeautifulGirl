@@ -66,7 +66,7 @@ class InVisibleWebViewFragment : Fragment() {
         return view
     }
 
-    public fun getHtml(url: String,  listener: OnWebViewResultListener) {
+    public fun getHtml(url: String, listener: OnWebViewResultListener) {
         reset()
         if (invisibleWebView != null) {
             invisibleWebView!!.loadUrl(url)

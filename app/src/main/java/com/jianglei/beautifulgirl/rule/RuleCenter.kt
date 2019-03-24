@@ -97,20 +97,21 @@ class RuleCenter {
                     "    }\n" +
                     "  },\n" +
                     "  \"coverRule\": {\n" +
-                    "    \"dynamicRender\": true,\n" +
-                    "    \"nameRule\": \"@class:<mozaique>->@class:<thumb-under>[0]->@label:<a>[0]->@text\",\n" +
-                    "    \"descRule\": \"@class:<mozaique>->@class:<thumb-under>[0]->@class:<metadata>[0]->@text\",\n" +
-                    "    \"imageUrlRule\": \"@class:<mozaique>->@class:<thumb-inside>[0]->@class:<thumb>->@label:<img>[0]->@property:<src>\",\n" +
-                    "    \"urlRule\": \"@class:<mozaique>->@class:<thumb-under>[0]->@label:<a>[0]->@property:<href>\",\n" +
+                    "    \"dynamicRender\": false,\n" +
+                    "    \"nameRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@text\",\n" +
+                    "    \"descRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@class:<metadata>[0]->@text\",\n" +
+                    "    \"imageUrlRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-inside>[0]->@class:<thumb>->@label:<img>[0]->@property:<data-src>\",\n" +
+                    "    \"urlRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@property:<href>\",\n" +
+                    "    \"realRequestUrlRule\":\"{baseUrl}/activity\",\n" +
                     "    \"pageRule\": {\n" +
                     "      \"isFromHtml\": false,\n" +
-                    "      \"combinedUrl\": \"{baseUrl}/activity/{page}\",\n" +
-                    "      \"paramRule\": \"@regex:<<!--[\\\\s*]([\\\\d]{10})[\\\\s*]-- >[1]\"\n" +
+                    "      \"combinedUrl\": \"{baseUrl}/{page}\",\n" +
+                    "      \"paramRule\": \"@regex:<<!--[\\\\s*]([\\\\d]{10})[\\\\s*][-]{2}>[1]\"\n" +
                     "    }\n" +
                     "  },\n" +
                     "  \"contentRule\": {\n" +
                     "    \"dynamicRender\": true,\n" +
-                    "    \"detailRule\": \"@regex:<setVideoUrlHigh\\\\('(.*?)'\\\\)>[2]\"\n" +
+                    "    \"detailRule\": \"@regex:<setVideoUrlHigh\\\\('(.*?)'\\\\)>[1]\"\n" +
                     "  }\n" +
                     "}\n"
             webRules.add(JsonUtils.parseJsonWithGson(xvideos, WebRule::class.java)!!)

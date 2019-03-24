@@ -81,7 +81,7 @@ class ContentCoverListFragment : BaseFragment() {
                     } catch (e: Exception) {
                         e.printStackTrace()
                         if (activity != null) {
-                            ToastUtils.showMsg(activity!!, e.localizedMessage)
+                            ToastUtils.showMsg(activity!!, e.toString())
                         }
                     }
                 } else {
@@ -128,6 +128,7 @@ class ContentCoverListFragment : BaseFragment() {
                 detailUrl,
                 object : OnDataResultListener<List<ContentVo>> {
                     override fun onSuccess(data: List<ContentVo>) {
+                        showProgress(false)
                         val intent = Intent(activity, VideoPlayActivity::class.java)
                         intent.putParcelableArrayListExtra("playUrl", data as java.util.ArrayList<out Parcelable>)
                         startActivity(intent)
@@ -142,7 +143,6 @@ class ContentCoverListFragment : BaseFragment() {
                     }
                 }
             )
-
 
 
     }

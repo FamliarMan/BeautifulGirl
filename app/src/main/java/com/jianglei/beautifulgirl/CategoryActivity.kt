@@ -51,18 +51,30 @@ class CategoryActivity : BaseActivity() {
 
         rvCategory.setOnPullLoadMoreListener(object : PullLoadMoreRecyclerView.PullLoadMoreListener {
             override fun onLoadMore() {
-                fetchData()
+                try {
+                    fetchData()
+                }catch (e:Throwable){
+                    ToastUtils.showMsg(this@CategoryActivity,e.toString())
+                }
 
             }
 
             override fun onRefresh() {
                 page = 1
-                fetchData()
+                try {
+                    fetchData()
+                }catch (e:Throwable){
+                    ToastUtils.showMsg(this@CategoryActivity,e.toString())
+                }
 
             }
         })
         rvCategory.setRefreshing(true)
-        fetchData()
+        try {
+            fetchData()
+        }catch (e:Throwable){
+            ToastUtils.showMsg(this@CategoryActivity,e.toString())
+        }
 
     }
 

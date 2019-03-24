@@ -50,6 +50,7 @@ class RuleParser(private val document: Document) {
                             elementsCache[totalRule] = preElements
                         }
                         preElementRule = singleRule
+                        LogUtil.d("$totalRule 规则解析结果数量:${preElements.size}")
                     }
                     FilterRuleParser.isElementFilterRule(singleRule) -> {
                         //当前进入过滤元素过程
@@ -61,6 +62,7 @@ class RuleParser(private val document: Document) {
                         }
                         preElements = FilterRuleParser.getFilterElements(preElements, singleRule)
                         preElementRule = singleRule
+                        LogUtil.d("$totalRule 规则解析结果数量:${preElements.size}")
                     }
                     FilterRuleParser.isStringFilterRule(singleRule) -> {
                         //当前进入字符串过滤过程
@@ -70,6 +72,7 @@ class RuleParser(private val document: Document) {
                         }
                         preStrings = FilterRuleParser.getFilterStrings(preStrings, singleRule)
                         preStringRule = singleRule
+                        LogUtil.d("$totalRule 规则解析结果数量:${preStrings.size}")
                     }
                     SelectRuleParser.isStringSelectRule(singleRule) -> {
                         //进入到字符串提取过程
@@ -78,6 +81,7 @@ class RuleParser(private val document: Document) {
                         }
                         preStrings = SelectRuleParser.getSelectStrings(singleRule, preElements)
                         preStringRule = singleRule
+                        LogUtil.d("$totalRule 规则解析结果数量:${preStrings.size}")
                     }
                     JsonRuleParser.isJsonArrRule(singleRule) -> {
                         //@jsonArr
@@ -103,6 +107,7 @@ class RuleParser(private val document: Document) {
                         preJsonRule = singleRule
                         //经过json转换后preStrings应该清空
                         preStrings = null
+                        LogUtil.d("$totalRule 规则解析结果数量:${preJsonArr!!.size}")
                     }
                     JsonRuleParser.isJsonObjRule(singleRule) -> {
                         //@jsonObj
@@ -126,6 +131,7 @@ class RuleParser(private val document: Document) {
                         preJsonRule = singleRule
                         //经过json转换后preStrings应该清空
                         preStrings = null
+                        LogUtil.d("$totalRule 规则解析结果数量:${preJsonObj!!.size}")
 
                     }
                     JsonRuleParser.isJsonValueRule(singleRule) -> {
@@ -154,6 +160,7 @@ class RuleParser(private val document: Document) {
                         }
                         preStrings = preJsonValue
                         preJsonRule = singleRule
+                        LogUtil.d("$totalRule 规则解析结果数量:${preJsonValue!!.size}")
                     }
                     else -> {
                         ExceptionUtils.throwIllegalArgumentException("非法规则描述符：$singleRule")

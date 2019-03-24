@@ -4,6 +4,7 @@ import androidx.multidex.MultiDexApplication
 import com.elvishew.xlog.XLog
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.jianglei.beautifulgirl.data.RetrofitManager
+import com.jianglei.ruleparser.LogUtil
 import com.kk.taurus.exoplayer.ExoMediaPlayer
 import com.kk.taurus.playerbase.config.PlayerConfig
 import com.kk.taurus.playerbase.config.PlayerLibrary
@@ -23,7 +24,6 @@ class MyApplication : MultiDexApplication() {
         //初始化库
         PlayerLibrary.init(this)
         ExoMediaPlayer.init(this)
-        XLog.init()
 
     }
 }

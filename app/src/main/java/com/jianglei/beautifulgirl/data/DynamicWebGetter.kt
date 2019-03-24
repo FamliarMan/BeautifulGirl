@@ -3,7 +3,9 @@ package com.jianglei.beautifulgirl.data
 import android.util.Log
 import android.webkit.WebView
 import androidx.fragment.app.FragmentActivity
+import com.elvishew.xlog.LogUtils
 import com.elvishew.xlog.XLog
+import com.jianglei.ruleparser.LogUtil
 
 /**
  * 动态网站获取工具
@@ -35,7 +37,9 @@ class DynamicWebGetter {
                 if (isCanceled) {
                     return
                 }
-                XLog.d(html)
+                if(LogUtil.logHtml){
+                    LogUtil.d(html)
+                }
                 listener.onSuccess(html,webView)
             }
 

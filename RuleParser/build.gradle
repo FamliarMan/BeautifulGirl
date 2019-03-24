@@ -1,25 +1,47 @@
-apply plugin: 'java-library'
+apply plugin: 'com.android.library'
 
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+
+        }
+    }
+    buildToolsVersion '28.0.3'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     testImplementation 'org.jsoup:jsoup:1.11.3'
     //日志库
     api 'com.elvishew:xlog:1.6.1'
+    api 'com.jianglei:jlpermission:1.0'
+
     testImplementation 'junit:junit:4.12'
 }
 
 repositories {
     mavenCentral()
 }
-//sourceSets {
-//    main.java.srcDirs = []
-//    main.kotlin.srcDirs = ['src/main/java', 'src/main/kotlin']
-//}
-//compileTestKotlin {
-//    kotlinOptions {
-//        jvmTarget = "1.8"
-//    }
-//}
