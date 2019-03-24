@@ -4,16 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.Toolbar
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.SearchSource
-import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.WebsiteDescVo
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
@@ -24,25 +25,15 @@ import utils.ToastUtils
 class CategoryActivity : BaseActivity() {
 
     private var categories: MutableList<Category> = ArrayList()
-    private var webDataSource: WebDataSource? = null
-    private var webDataSourceId: String? = null
+//    private var webDataSource: WebDataSource? = null
+//    private var webDataSourceId: String? = null
     private var websiteVo: WebsiteDescVo? = null
     private var page = 1
     private lateinit var adapter: CategoryAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
-        webDataSourceId = intent.getStringExtra("dataSourceId")
-        if (webDataSourceId == null) {
-            return
-        }
-        webDataSource = WebSourceCenter.getWebSource(webDataSourceId!!)
-        if (webDataSource == null) {
-            return
-        }
         initToolbar()
-        websiteVo = webDataSource!!.fetchWebsite()
-        websiteVo = webDataSource!!.fetchWebsite()
         rvCategory.setGridLayout(2)
         adapter = CategoryAdapter(this, categories)
         rvCategory.setAdapter(adapter)
@@ -52,7 +43,7 @@ class CategoryActivity : BaseActivity() {
                 val types = java.util.ArrayList<Category>()
                 types.add(vo)
                 intent.putParcelableArrayListExtra("types", types)
-                intent.putExtra("dataSourceId", webDataSource!!.id)
+//                intent.putExtra("dataSourceId", webDataSource!!.id)
                 startActivity(intent)
             }
         })
@@ -80,8 +71,8 @@ class CategoryActivity : BaseActivity() {
             when {
                 item?.itemId == R.id.action_search -> {
                     val intent = Intent(this@CategoryActivity, SearchActivity::class.java)
-                    intent.putExtra("dataSourceId", webDataSource!!.id)
-                    startActivity(intent)
+//                    intent.putExtra("dataSourceId", webDataSource!!.id)
+//                    startActivity(intent)
 
                 }
                 else -> {
@@ -94,46 +85,49 @@ class CategoryActivity : BaseActivity() {
 
 
     private fun fetchData() {
-        webDataSource!!.fetchAllCategory(websiteVo!!.homePageUrl, object : OnDataResultListener<MutableList<Category>> {
-            override fun onSuccess(data: MutableList<Category>) {
-                page++
-                if (data.size == 0) {
-                    ToastUtils.showMsg(
-                        this@CategoryActivity,
-                        getString(R.string.no_more_data)
-                    )
-                    rvCategory.pushRefreshEnable = false
-                } else {
-                    data.forEach {
-                        Log.d("longyi", it.title + " " + it.coverUrl)
+        StrategyProvider.getCurStrategy()!!
+            .fetchAllCategory(
+                this,
+                page,
+                object:OnDataResultListener<List<Category>>{
+                    override fun onSuccess(data: List<Category>) {
+
+                        page++
+                        if (data.size == 0) {
+                            ToastUtils.showMsg(
+                                this@CategoryActivity,
+                                getString(R.string.no_more_data)
+                            )
+                            rvCategory.pushRefreshEnable = false
+                        } else {
+                            categories.addAll(data)
+                            adapter.notifyItemInserted(categories.size - data.size)
+                        }
+                        rvCategory.post {
+                            rvCategory.setPullLoadMoreCompleted()
+                        }
+
                     }
-                    categories.addAll(data)
-                    adapter.notifyItemInserted(categories.size - data.size)
-                }
-                rvCategory.post {
-                    rvCategory.setPullLoadMoreCompleted()
-                }
 
-            }
-
-            override fun onError(msg: String) {
-                rvCategory.post {
-                    rvCategory.setPullLoadMoreCompleted()
+                    override fun onError(msg: String) {
+                        rvCategory.post {
+                            rvCategory.setPullLoadMoreCompleted()
+                        }
+                        ToastUtils.showMsg(this@CategoryActivity, msg)
+                    }
                 }
-                ToastUtils.showMsg(this@CategoryActivity, msg)
-            }
-
-        }, page)
+            )
 
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return if (webDataSource is SearchSource) {
-            menuInflater.inflate(R.menu.search, menu)
-            true
-        } else {
-            super.onCreateOptionsMenu(menu)
-        }
+        return super.onCreateOptionsMenu(menu)
+//        return if (webDataSource is SearchSource) {
+//            menuInflater.inflate(R.menu.search, menu)
+//            true
+//        } else {
+//            super.onCreateOptionsMenu(menu)
+//        }
     }
 
 

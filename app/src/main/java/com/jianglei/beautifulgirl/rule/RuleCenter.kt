@@ -33,7 +33,7 @@ class RuleCenter {
                     "    \"dynamicRender\":true,\n" +
                     "    \"nameRule\": \"@class:<tr3 t_one tac> -> @class:<tal>[0]->@label:<h3>[0]->@label:<a>[0]->@text\",\n" +
                     "    \"descRule\": \"@class:<tr3 t_one tac>->@class:<tal>[0]->@text\",\n" +
-                    "    \"targetUrlRule\": \"@class:<tr3 t_one tac>->@class:<tal>[0]->@label:<h3>[0]->@label:<a>[0]->@property:<href>\",\n" +
+                    "    \"urlRule\": \"@class:<tr3 t_one tac>->@class:<tal>[0]->@label:<h3>[0]->@label:<a>[0]->@property:<href>\",\n" +
                     "    \"pageRule\":{\n" +
                     "      \"isFromHtml\":true,\n" +
                     "      \"nextUrlRule\":\"@class:<pages>[0] -> @label:<a> ->@hasText:<下一頁> -> @property:<href>\"\n" +
@@ -61,7 +61,7 @@ class RuleCenter {
                     "    \"nameRule\": \"@label:<article>->@label:<h2>[0]->@label:<a>->@text\",\n" +
                     "    \"descRule\": \"@label:<article> -> @class:<note>[0]->@text\",\n" +
                     "    \"imageUrlRule\":\"@label:<article>->@class:<focus>[0]->@label:<a>[0]->@label:<img>->@property:<data-original>\",\n" +
-                    "    \"targetUrlRule\": \"@label:<article>->@class:<focus>[0]->@label:<a>[0]->@property:<href>\",\n" +
+                    "    \"urlRule\": \"@label:<article>->@class:<focus>[0]->@label:<a>[0]->@property:<href>\",\n" +
                     "    \"pageRule\":{\n" +
                     "      \"isFromHtml\":true,\n" +
                     "      \"nextUrlRule\":\"@class:<pagination pagination-multi>->@label:<li>->@label:<a>[0]->@hasText:<{page}>->@property:<href>\"\n" +
@@ -77,6 +77,43 @@ class RuleCenter {
                     "  }\n" +
                     "}\n"
             webRules.add(JsonUtils.parseJsonWithGson(fanli, WebRule::class.java)!!)
+
+            val xvideos = "{\n" +
+                    "  \"type\": \"video\",\n" +
+                    "  \"name\": \"XVideos\",\n" +
+                    "  \"icon\": \"https://www.xvideos.com/favicon.ico\",\n" +
+                    "  \"encoding\":\"utf-8\",\n" +
+                    "  \"categoryRule\": {\n" +
+                    "    \"dynamicRender\": true,\n" +
+                    "    \"url\": \"https://www.xvideos.com/channels-index\",\n" +
+                    "    \"nameRule\": \"@class:<thumb-block > -> @class:<profile-name>[0] ->@label:<a>[0]->@text\",\n" +
+                    "    \"urlRule\": \"@class:<thumb-block >->@class:<thumb>[0]->  @label:<a>[0]->@property:<href>\",\n" +
+                    "    \"imageUrlRule\": \"@class:<thumb-block >->@class:<thumb>[0]->@label:<a>[0]->@label:<img>[0]->@property:<src> \",\n" +
+                    "    \"descRule\": \"@class:<thumb-block >-> @class:<profile-counts>[0]->@text\",\n" +
+                    "    \"pageRule\": {\n" +
+                    "      \"isFromHtml\": \"true\",\n" +
+                    "      \"startPage\":\"0\",\n" +
+                    "      \"nextUrlRule\": \"@class:<pagination>[0]->@label:<li>->@hasClass:<no-page next-page>->@label:<a>[0]->@property:<href>\"\n" +
+                    "    }\n" +
+                    "  },\n" +
+                    "  \"coverRule\": {\n" +
+                    "    \"dynamicRender\": true,\n" +
+                    "    \"nameRule\": \"@class:<mozaique>->@class:<thumb-under>[0]->@label:<a>[0]->@text\",\n" +
+                    "    \"descRule\": \"@class:<mozaique>->@class:<thumb-under>[0]->@class:<metadata>[0]->@text\",\n" +
+                    "    \"imageUrlRule\": \"@class:<mozaique>->@class:<thumb-inside>[0]->@class:<thumb>->@label:<img>[0]->@property:<src>\",\n" +
+                    "    \"urlRule\": \"@class:<mozaique>->@class:<thumb-under>[0]->@label:<a>[0]->@property:<href>\",\n" +
+                    "    \"pageRule\": {\n" +
+                    "      \"isFromHtml\": false,\n" +
+                    "      \"combinedUrl\": \"{baseUrl}/activity/{page}\",\n" +
+                    "      \"paramRule\": \"@regex:<<!--[\\\\s*]([\\\\d]{10})[\\\\s*]-- >[1]\"\n" +
+                    "    }\n" +
+                    "  },\n" +
+                    "  \"contentRule\": {\n" +
+                    "    \"dynamicRender\": true,\n" +
+                    "    \"detailRule\": \"@regex:<setVideoUrlHigh\\\\('(.*?)'\\\\)>[2]\"\n" +
+                    "  }\n" +
+                    "}\n"
+            webRules.add(JsonUtils.parseJsonWithGson(xvideos, WebRule::class.java)!!)
             isInit = true
 
         }

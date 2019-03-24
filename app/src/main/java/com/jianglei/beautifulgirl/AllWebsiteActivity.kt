@@ -77,7 +77,7 @@ class AllWebsiteActivity : BaseActivity() {
                         //分类数量大于15，要专门前往分类页面
                         val intent = Intent(this@AllWebsiteActivity, CategoryActivity::class.java)
 //                        intent.putExtra("dataSourceId", vo.id)
-//                        startActivity(intent)
+                        startActivity(intent)
                     } else {
                         ContentActivity.start(this@AllWebsiteActivity,data)
                     }

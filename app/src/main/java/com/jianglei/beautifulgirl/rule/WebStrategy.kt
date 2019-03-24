@@ -7,8 +7,8 @@ import com.jianglei.beautifulgirl.data.OnWebViewResultListener
 import com.jianglei.beautifulgirl.data.WebGetter
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
-import com.jianglei.beautifulgirl.vo.ContentVo
 import com.jianglei.ruleparser.RuleParser
+import com.jianglei.videoplay.ContentVo
 import org.jsoup.Jsoup
 import utils.UrlUtils
 import java.lang.IllegalArgumentException
@@ -33,9 +33,19 @@ class WebStrategy(private val webRule: WebRule) {
      */
     fun fetchAllCategory(
         activity: FragmentActivity,
-        page:Int,
+        page: Int,
         listener: OnDataResultListener<List<Category>>
     ) {
+
+        if (page == 1) {
+            nextCategoryUrl = webRule.categoryRule.url
+        }
+        var newPage = page
+        if (webRule.categoryRule.pageRule != null &&
+            webRule.categoryRule.pageRule!!.startPage != null
+        ) {
+            newPage = webRule.categoryRule.pageRule!!.startPage!! + page - 1
+        }
         if (nextCategoryUrl == null) {
             listener.onSuccess(emptyList())
             return
@@ -55,7 +65,7 @@ class WebStrategy(private val webRule: WebRule) {
                         //准备下一页的地址
                         if (webRule.categoryRule.pageRule != null) {
                             nextCategoryUrl = webRule.categoryRule.pageRule!!
-                                .getNextUrl(curParser, webRule.categoryRule.url,page+1)
+                                .getNextUrl(curParser, webRule.categoryRule.url, newPage + 1)
                         }
                         listener.onSuccess(res)
                     } catch (e: Throwable) {
@@ -136,9 +146,16 @@ class WebStrategy(private val webRule: WebRule) {
             listener.onSuccess(emptyList())
             return
         }
+
         if (page == 1) {
             nextCoverUrl = startUrl
             baseCoverUrl = startUrl!!
+        }
+        var newPage = page
+        if (webRule.coverRule.pageRule != null &&
+            webRule.coverRule.pageRule!!.startPage != null
+        ) {
+            newPage = webRule.coverRule.pageRule!!.startPage!! + page - 1
         }
         webGetter.getWebsiteHtml(
             activity,
@@ -155,7 +172,7 @@ class WebStrategy(private val webRule: WebRule) {
                         //获取下一页的地址
                         if (webRule.coverRule.pageRule != null) {
                             nextCoverUrl = webRule.coverRule.pageRule!!
-                                .getNextUrl(curParser, baseCoverUrl,page+1)
+                                .getNextUrl(curParser, baseCoverUrl, newPage + 1)
 
                         }
                         listener.onSuccess(res)
@@ -176,7 +193,7 @@ class WebStrategy(private val webRule: WebRule) {
     private fun getContentTitle(html: String): List<ContentTitle> {
         val parser = RuleParser(Jsoup.parse(html))
         val names = parser.getStrings(webRule.coverRule.nameRule)
-        var urls = parser.getStrings(webRule.coverRule.targetUrlRule)
+        var urls = parser.getStrings(webRule.coverRule.urlRule)
         if (names.size != urls.size) {
             throw IllegalArgumentException("获取到的封面的名称和url数量不匹配")
         }
@@ -226,16 +243,22 @@ class WebStrategy(private val webRule: WebRule) {
             listener.onSuccess(emptyList())
             return
         }
+
         if (page == 1) {
             nextContentUrl = startUrl
             baseContentUrl = startUrl!!
-        }else if(
-            webRule.contentRule.pageRule == null){
+        } else if (
+            webRule.contentRule.pageRule == null) {
             listener.onSuccess(emptyList())
             return
         }
 
-
+        var newPage = page
+        if (webRule.contentRule.pageRule != null &&
+            webRule.contentRule.pageRule!!.startPage != null
+        ) {
+            newPage = webRule.coverRule.pageRule!!.startPage!! + page - 1
+        }
         webGetter.getWebsiteHtml(
             activity,
             webRule.contentRule.dynamicRender,
@@ -251,7 +274,7 @@ class WebStrategy(private val webRule: WebRule) {
                         //获取下一页的地址
                         if (webRule.contentRule.pageRule != null) {
                             nextContentUrl = webRule.contentRule.pageRule!!
-                                .getNextUrl(curParser, baseContentUrl,page+1)
+                                .getNextUrl(curParser, baseContentUrl, newPage + 1)
 
                         }
                         listener.onSuccess(res)
@@ -273,7 +296,7 @@ class WebStrategy(private val webRule: WebRule) {
         val parser = RuleParser(Jsoup.parse(html))
         var urls = parser.getStrings(webRule.contentRule.detailRule)
         urls = urls.map {
-            UrlUtils.getFullUrl(baseContentUrl,it)
+            UrlUtils.getFullUrl(baseContentUrl, it)
         }
         var names: List<String>? = null
         if (webRule.contentRule.nameRule != null) {

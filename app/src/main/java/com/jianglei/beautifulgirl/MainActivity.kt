@@ -20,12 +20,12 @@ class MainActivity : BaseActivity() {
             "  \"categoryRule\": {\n" +
             "    \"url\": \"https://www.t66y.com/index.php\",\n" +
             "    \"nameRule\": \"@class:<tr3 f_one> -> @label:<h2> ->@label:<a> ->@hasText:<新時代的我們,達蓋爾的旗幟>-> @text\",\n" +
-            "    \"targetUrlRule\": \"@class:<tr3 f_one> -> @label:<h2> ->@label:<a> ->@hasText:<新時代的我們,達蓋爾的旗幟>-> @property:<href>\"\n" +
+            "    \"urlRule\": \"@class:<tr3 f_one> -> @label:<h2> ->@label:<a> ->@hasText:<新時代的我們,達蓋爾的旗幟>-> @property:<href>\"\n" +
             "  },\n" +
             "  \"coverRule\": {\n" +
             "    \"nameRule\": \"@class:<tal>[0]->@label:<h3>[0]->@label:<a>[0]->@text\",\n" +
             "    \"descRule\": \"@class:<tal>[0]->@text\",\n" +
-            "    \"targetUrlRule\": \"@class:<tal>[0]->@label:<h3>[0]->@label:<a>[0]->@property:<href>\"\n" +
+            "    \"urlRule\": \"@class:<tal>[0]->@label:<h3>[0]->@label:<a>[0]->@property:<href>\"\n" +
             "  },\n" +
             "  \"contentRule\": {\n" +
             "    \"detailRule:\": \"@label:<input>->@property:<data-src>\"\n" +

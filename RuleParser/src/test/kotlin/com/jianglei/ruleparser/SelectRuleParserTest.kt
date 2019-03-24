@@ -65,6 +65,9 @@ class SelectRuleParserTest {
         Assert.assertEquals("p",classRule.regx)
         Assert.assertEquals(null,classRule.index)
 
+        classRule = SelectRuleParser.getRegexRuleDesc("@regex:<<!--[\\\\s*]([\\\\d]{10})[\\\\s*]-->>[1]")
+        Assert.assertEquals("<!--[\\\\s*]([\\\\d]{10})[\\\\s*]-->",classRule.regx)
+
 
 
         classRule = SelectRuleParser.getRegexRuleDesc("@regex:<p>[0]")

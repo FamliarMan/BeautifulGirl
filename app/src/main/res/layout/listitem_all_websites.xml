@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_item"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -19,7 +20,9 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_icon"
             android:layout_width="40dp"
+            app:placeholderImage="@mipmap/ic_loading"
             android:scaleType="fitXY"
+            app:retryImage="@mipmap/ic_load_error"
             android:layout_height="40dp"/>
 
         <TextView

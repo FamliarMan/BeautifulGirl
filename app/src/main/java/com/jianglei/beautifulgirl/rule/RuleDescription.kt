@@ -152,7 +152,7 @@ data class CoverRule(
     /**
      * 跳转url提取规则
      */
-    var targetUrlRule: String,
+    var urlRule: String,
     /**
      * 分页规则
      */
@@ -182,6 +182,11 @@ data class PageRule(
      *
      */
     var combinedUrl:String?,
+
+    /**
+     * 当页码为数字页码时，设置起始页码
+     */
+    var startPage:Int?,
 
     /**
      * 有些网址分页不是利用数字，而是利用html页面中返回的某个值决定的

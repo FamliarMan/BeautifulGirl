@@ -25,7 +25,7 @@ data class WebsiteDescVo(
 /**
  * [title]分类标题，[url]分类的url，[type]分类的类型
  */
-data class Category(var title: String, var url: String,var type:Int) : Parcelable {
+data class Category(var title: String, var url: String, var type: Int) : Parcelable {
 
     /**
      * 封面url
@@ -35,7 +35,7 @@ data class Category(var title: String, var url: String,var type:Int) : Parcelabl
     /**
      * 分类的描述
      */
-    var desc:String? = null
+    var desc: String? = null
 
     constructor(source: Parcel) : this(
         source.readString()!!,
@@ -72,15 +72,15 @@ data class Category(var title: String, var url: String,var type:Int) : Parcelabl
 }
 
 
-
 /**
  * xvideos搜索返回的关键字返回结构
  */
-data class XVideoKeyWordWrapper(var KEYWORDS:MutableList<SearchVideoKeyWord>)
+data class XVideoKeyWordWrapper(var KEYWORDS: MutableList<SearchVideoKeyWord>)
+
 /**
  * 搜索返回的关键字
  */
-data class SearchVideoKeyWord(var N:String, var R:String)
+data class SearchVideoKeyWord(var N: String, var R: String)
 
 /**
  * [defaultQuality]: 是否是默认选中
@@ -88,19 +88,13 @@ data class SearchVideoKeyWord(var N:String, var R:String)
  * [quality]: 当前视频质量
  * [videoUrl]: 当前视频地址
  */
-data class PlayUrl(var defaultQuality:Boolean,var format:String,var quality:String,var videoUrl:String )
+data class PlayUrl(var defaultQuality: Boolean, var format: String, var quality: String, var videoUrl: String)
 
 /**
  * [file]视频播放的实际地址,有时候一个栏目可能会有多个视频，所以这里是一个列表
  * [title] 视频名称
  * [desc] 视屏的描述
  */
-data class PlayContent(var file:List<PlayUrl>?,var title:String ,var desc:String?,var image:String=""):Serializable
+data class PlayContent(var file: List<PlayUrl>?, var title: String, var desc: String?, var image: String = "") :
+    Serializable
 
-/**
- * 视频或图片的地址
- */
-data class ContentVo(
-    var name: String?,
-    var url:String
-)

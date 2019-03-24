@@ -2,6 +2,7 @@ package com.jianglei.beautifulgirl
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,8 @@ import android.widget.Toast
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
+import com.jianglei.videoplay.ContentVo
+import com.jianglei.videoplay.VideoPlayActivity
 import com.jianglei.videoplay.WebViewPlayActivity
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import utils.ToastUtils
@@ -50,11 +53,6 @@ class ContentCoverListFragment : BaseFragment() {
         title = arguments?.getString("title")
         url = arguments?.getString("url")
         val view = inflater.inflate(R.layout.fragment_picture_list, container, false)
-        val dataSourceId = arguments?.getString("dataSourceId")
-//        webDataSource = WebSourceCenter.getWebSource(dataSourceId!!)
-//        if (webDataSource == null) {
-//            return view
-//        }
         rvContent = view.findViewById(R.id.rvContent)
         initRecyclerview()
         isPrepared = true
@@ -87,7 +85,7 @@ class ContentCoverListFragment : BaseFragment() {
                         }
                     }
                 } else {
-                    PictureDetailListActivity.start(activity!!,title.detailUrl)
+                    PictureDetailListActivity.start(activity!!, title.detailUrl)
                 }
 
             }
@@ -100,8 +98,8 @@ class ContentCoverListFragment : BaseFragment() {
             override fun onLoadMore() {
                 try {
                     fetchData()
-                }catch (e :Throwable){
-                    ToastUtils.showMsg(activity!!,e.toString())
+                } catch (e: Throwable) {
+                    ToastUtils.showMsg(activity!!, e.toString())
                 }
             }
 
@@ -112,8 +110,8 @@ class ContentCoverListFragment : BaseFragment() {
 
                 try {
                     fetchData()
-                }catch (e :Throwable){
-                    ToastUtils.showMsg(activity!!,e.toString())
+                } catch (e: Throwable) {
+                    ToastUtils.showMsg(activity!!, e.toString())
                 }
             }
 
@@ -123,40 +121,28 @@ class ContentCoverListFragment : BaseFragment() {
 
     private fun getVideoPlayUrl(detailUrl: String) {
         showProgress(true)
+        StrategyProvider.getCurStrategy()!!
+            .fetchAllContents(
+                activity!!,
+                1,
+                detailUrl,
+                object : OnDataResultListener<List<ContentVo>> {
+                    override fun onSuccess(data: List<ContentVo>) {
+                        val intent = Intent(activity, VideoPlayActivity::class.java)
+                        intent.putParcelableArrayListExtra("playUrl", data as java.util.ArrayList<out Parcelable>)
+                        startActivity(intent)
+                    }
 
-//        val webVideoSource = webDataSource as WebVideoSource
-//        webVideoSource.fetchVideoUrls(activity!!, detailUrl, object : OnDataResultListener<MutableList<PlayContent>> {
-//            override fun onSuccess(data: MutableList<PlayContent>) {
-//                showProgress(false)
-//                if (data.size > 1) {
-//                    //有多个播放地址，要进入播放列表选择页
-//                    val intent = Intent(activity, PlayContentListActivity::class.java)
-//                    intent.putExtra("playContents", Gson().toJson(data))
-//                    startActivity(intent)
-//                } else {
-//                    //只有一个播放地址选择合适的播放地址
-//                    val playContent = data[0]
-//                    val playUrls = playContent.file
-//                    var playUrl: String? = null
-//                    playUrls!!.forEach {
-//                        if (it.defaultQuality) {
-//                            playUrl = it.videoUrl
-//                        }
-//                    }
-//                    val intent = Intent(activity, VideoPlayActivity::class.java)
-//                    intent.putExtra("playUrl", playUrl)
-//                    startActivity(intent)
-//                }
-//            }
-//
-//            override fun onError(msg: String) {
-//                if (activity == null) {
-//                    return
-//                }
-//                showProgress(false)
-//                ToastUtils.showMsg(activity!!.applicationContext, getString(R.string.get_video_play_url_error))
-//            }
-//        })
+                    override fun onError(msg: String) {
+                        if (activity == null) {
+                            return
+                        }
+                        showProgress(false)
+                        ToastUtils.showMsg(activity!!.applicationContext, getString(R.string.get_video_play_url_error))
+                    }
+                }
+            )
+
 
 
     }
@@ -167,9 +153,9 @@ class ContentCoverListFragment : BaseFragment() {
         }
 
         StrategyProvider.getCurStrategy()!!
-            .fetchAllCover(activity!!,page, url!!, object : OnDataResultListener<List<ContentTitle>> {
+            .fetchAllCover(activity!!, page, url!!, object : OnDataResultListener<List<ContentTitle>> {
                 override fun onSuccess(data: List<ContentTitle>) {
-                    if (data.size == 0) {
+                    if (data.isEmpty()) {
                         rvContent.pushRefreshEnable = false
                         Toast.makeText(activity, R.string.no_more_data, Toast.LENGTH_LONG).show()
                         rvContent.post {

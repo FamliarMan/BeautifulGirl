@@ -15,7 +15,7 @@ import com.kk.taurus.playerbase.widget.BaseVideoView
 import kotlinx.android.synthetic.main.activity_video_play.*
 
 class VideoPlayActivity : AppCompatActivity() {
-    private var playUrl: String? = null
+    private var playUrls: List<ContentVo>? = null
     private var userPause: Boolean = false
     private var isLandscape: Boolean = false
     private lateinit var mReceiverGroup: ReceiverGroup
@@ -24,13 +24,12 @@ class VideoPlayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_video_play)
-        playUrl = intent.getStringExtra("playUrl")
-        if (playUrl == null) {
+        playUrls = intent.getParcelableArrayListExtra("playUrl")
+        if (playUrls.isNullOrEmpty()) {
             return
         }
-//        getPlayUrl()
         init()
-        play(playUrl!!)
+        play(playUrls!![0].url)
     }
 
 
@@ -62,7 +61,7 @@ class VideoPlayActivity : AppCompatActivity() {
                     DataInter.Event.EVENT_CODE_ERROR_SHOW -> {
                         playContent.stop()
                     }
-                    else ->{
+                    else -> {
                         super.onAssistHandle(assist, eventCode, bundle)
                     }
 
