@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/action_site"
+          android:title="@string/site_manager"
+          android:icon="@mipmap/ic_func"
+          app:showAsAction="always"/>
+
+    <item android:id="@+id/action_study"
+          android:title="@string/study"
+          android:icon="@mipmap/ic_rule_study"
+          app:showAsAction="always"/>
+</menu>

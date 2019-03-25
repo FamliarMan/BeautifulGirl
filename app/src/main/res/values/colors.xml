@@ -8,4 +8,7 @@
     <color name="controller_bg_light">#00000000</color>
 
     <color name="edit_base_line_color">#77ffffff</color>
+    <color name="grey">#cccccc</color>
+    <color name="red">#d81e06</color>
+    <color name="black">#000000</color>
 </resources>

@@ -1,0 +1,18 @@
+<resources>
+
+    <declare-styleable name="DocumentView">
+        <attr name="dv_title"
+              format="string"/>
+        <attr name="dv_content"
+              format="string"/>
+        <attr name="dv_help"
+              format="string"/>
+    </declare-styleable>
+    <declare-styleable name="DocumentEditView">
+        <attr name="dev_hintColor"
+              format="color"/>
+        <attr name="dev_hint"
+              format="string"/>
+    </declare-styleable>
+
+</resources>

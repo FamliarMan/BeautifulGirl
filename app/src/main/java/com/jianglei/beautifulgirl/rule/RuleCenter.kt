@@ -134,6 +134,7 @@ class RuleCenter {
                     "  }\n" +
                     "}\n"
             webRules.add(JsonUtils.parseJsonWithGson(xvideos, WebRule::class.java)!!)
+            webRules.clear()
             isInit = true
 
         }

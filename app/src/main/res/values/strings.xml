@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">美女集中营</string>
+    <string name="app_name">魔盒世界</string>
     <string name="net_error">网络错误</string>
     <string name="road">一片坦途</string>
     <string name="wall">墙外世界</string>
@@ -12,4 +12,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dialog_tip">提示</string>
+    <string name="edit_required">必填</string>
+    <string name="edit_choose">选填</string>
+    <string name="site_manager">站点管理</string>
+    <string name="study">规则学习</string>
+    <string name="open_draw">打开侧边栏</string>
+    <string name="close_draw">关闭侧边栏</string>
 </resources>
