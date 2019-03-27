@@ -1,5 +1,6 @@
 package com.jianglei.beautifulgirl.rule
 
+import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import com.jianglei.beautifulgirl.data.*
 import com.jianglei.beautifulgirl.vo.Category
@@ -21,9 +22,9 @@ import java.lang.IllegalStateException
  */
 class WebStrategy(val webRule: WebRule) {
     private var webGetter: WebGetter = WebGetter()
-    private var nextCategoryUrl: String? = webRule.categoryRule.url
-    private var nextCoverUrl: String? = null
-    private var nextContentUrl: String? = null
+    var nextCategoryUrl: String? = webRule.url
+    var nextCoverUrl: String? = null
+    var nextContentUrl: String? = null
     private var call: Call<ResponseBody>? = null
     /**
      * 封面的基本url（出去分页参数的url）
@@ -32,7 +33,7 @@ class WebStrategy(val webRule: WebRule) {
     private lateinit var baseContentUrl: String
     private lateinit var curParser: HtmlParser
     /**
-     * 获取某个网站的所有分类栏目
+     * 解析某个网站的所有分类栏目
      */
     fun fetchAllCategory(
         activity: FragmentActivity,
@@ -41,26 +42,29 @@ class WebStrategy(val webRule: WebRule) {
     ) {
 
         if (page == 1) {
-            nextCategoryUrl = webRule.categoryRule.url
+            nextCategoryUrl = webRule.url
         }
         var newPage = page
-        if (webRule.categoryRule.pageRule != null &&
-            webRule.categoryRule.pageRule!!.startPage != null
+        if(webRule.categoryRule == null){
+            throw IllegalArgumentException("第一级分类规则不能为空")
+        }
+        if (webRule.categoryRule!!.supportPage && webRule.categoryRule!!.pageRule != null &&
+            webRule.categoryRule!!.pageRule!!.startPage != null
         ) {
-            newPage = webRule.categoryRule.pageRule!!.startPage!! + page - 1
+            newPage = webRule.categoryRule!!.pageRule!!.startPage!! + page - 1
         }
         if (nextCategoryUrl == null) {
             listener.onSuccess(emptyList())
             return
         }
-        LogUtil.d("开始获取分类页面：$nextCategoryUrl")
+        LogUtil.d("开始解析分类页面：$nextCategoryUrl")
         webGetter.getWebsiteHtml(
-            activity, webRule.categoryRule.dynamicRender, nextCategoryUrl!!,
+            activity, webRule.categoryRule!!.dynamicRender, nextCategoryUrl!!,
             emptyMap(), object : OnWebViewResultListener {
                 override fun onSuccess(html: String) {
                     try {
                         val res = getCategory(html)
-                        LogUtil.d("----------------获取分类结果如下,数量：${res.size}---------------------")
+                        LogUtil.d("----------------解析分类结果如下,数量：${res.size}---------------------")
                         for (category in res) {
                             LogUtil.d(
                                 category.title + " "
@@ -68,10 +72,10 @@ class WebStrategy(val webRule: WebRule) {
                             )
                         }
                         //准备下一页的地址
-                        if (webRule.categoryRule.pageRule != null) {
-                            nextCategoryUrl = webRule.categoryRule.pageRule!!
-                                .getNextUrl(curParser, webRule.categoryRule.url, newPage + 1)
-                            LogUtil.d("获取分类下一页请求地址：$nextCategoryUrl")
+                        if (webRule.categoryRule!!.pageRule != null) {
+                            nextCategoryUrl = webRule.categoryRule!!.pageRule!!
+                                .getNextUrl(curParser, webRule.url, newPage + 1)
+                            LogUtil.d("解析分类下一页请求地址：$nextCategoryUrl")
                         }
                         listener.onSuccess(res)
                     } catch (e: Throwable) {
@@ -91,18 +95,21 @@ class WebStrategy(val webRule: WebRule) {
     private fun getCategory(html: String): MutableList<Category> {
         val document = Jsoup.parse(html)
         val ruleParser = HtmlParser(document)
-        val titles = ruleParser.getStrings(webRule.categoryRule.nameRule)
+        LogUtil.d("开始解析一级分类名称：")
+        val titles = ruleParser.getStrings(webRule.categoryRule!!.nameRule)
 
-        val host = UrlUtils.getWebHost(webRule.categoryRule.url)
-        val protocol = UrlUtils.getWebProtocol(webRule.categoryRule.url)
-        val urls = ruleParser.getStrings(webRule.categoryRule.urlRule)
+        val host = UrlUtils.getWebHost(webRule.url)
+        val protocol = UrlUtils.getWebProtocol(webRule.url)
+        LogUtil.d("开始解析一级分类跳转url：")
+        val urls = ruleParser.getStrings(webRule.categoryRule!!.urlRule)
             .map {
                 UrlUtils.getFullUrl(host, protocol, it)
             }.toList()
         var coverUrl: List<String>? = null
 
-        if (webRule.categoryRule.imageUrlRule != null) {
-            coverUrl = ruleParser.getStrings(webRule.categoryRule.imageUrlRule!!)
+        if (webRule.categoryRule!!.imageUrlRule != null) {
+            LogUtil.d("开始解析一级分类封面url：")
+            coverUrl = ruleParser.getStrings(webRule.categoryRule!!.imageUrlRule!!)
                 .map {
                     UrlUtils.getFullUrl(host, protocol, it)
                 }.toList()
@@ -139,25 +146,25 @@ class WebStrategy(val webRule: WebRule) {
     }
 
     /**
-     * 获取一个分类下的所有内容封面
+     * 解析一个分类下的所有内容封面
      * [startUrl] 在不是第一页时不用传，否则出错
      */
     fun fetchAllCover(
         activity: FragmentActivity,
         page: Int,
         startUrl: String?,
-        isSearch:Boolean,
+        isSearch: Boolean,
         listener: OnDataResultListener<List<ContentTitle>>
     ) {
         if (nextCoverUrl == null && page != 1) {
             listener.onSuccess(emptyList())
             return
         }
-        val curRule:CategoryRule
-        if(isSearch){
-            curRule = webRule.searchRule!!.resultRule
-        }else{
-            curRule = webRule.coverRule
+        val curRule: CategoryRule
+        if (isSearch) {
+            curRule = webRule.searchRule!!.resultRule!!
+        } else {
+            curRule = webRule.coverRule!!
         }
 
         if (page == 1) {
@@ -171,12 +178,12 @@ class WebStrategy(val webRule: WebRule) {
             }
         }
         var newPage = page
-        if (curRule.pageRule != null &&
+        if (curRule.supportPage && curRule.pageRule != null &&
             curRule.pageRule!!.startPage != null
         ) {
             newPage = curRule.pageRule!!.startPage!! + page - 1
         }
-        LogUtil.d("开始获取分类下级封面页面：$nextCoverUrl")
+        LogUtil.d("开始解析分类下级封面页面：$nextCoverUrl")
         webGetter.getWebsiteHtml(
             activity,
             curRule.dynamicRender,
@@ -185,16 +192,16 @@ class WebStrategy(val webRule: WebRule) {
             object : OnWebViewResultListener {
                 override fun onSuccess(html: String) {
                     try {
-                        val res = getContentTitle(html,curRule)
-                        LogUtil.d("----------------获取封面结果如下,数量：${res.size} ---------------------")
+                        val res = getContentTitle(html, curRule)
+                        LogUtil.d("----------------解析封面结果如下,数量：${res.size} ---------------------")
                         res.forEach {
                             LogUtil.d("name:" + it.title + " url:" + it.detailUrl + " img:" + it.coverUrl)
                         }
-                        //获取下一页的地址
+                        //解析下一页的地址
                         if (curRule.pageRule != null) {
                             nextCoverUrl = curRule.pageRule!!
                                 .getNextUrl(curParser, baseCoverUrl, newPage + 1)
-                            LogUtil.d("获取封面下一页请求地址：$nextCoverUrl")
+                            LogUtil.d("解析封面下一页请求地址：$nextCoverUrl")
                         }
                         listener.onSuccess(res)
                     } catch (e: Throwable) {
@@ -211,12 +218,14 @@ class WebStrategy(val webRule: WebRule) {
 
     }
 
-    private fun getContentTitle(html: String,curRule: CategoryRule): List<ContentTitle> {
+    private fun getContentTitle(html: String, curRule: CategoryRule): List<ContentTitle> {
         val parser = HtmlParser(Jsoup.parse(html))
+        LogUtil.d("开始解析二级分类名称：")
         val names = parser.getStrings(curRule.nameRule)
+        LogUtil.d("开始解析二级分类url：")
         var urls = parser.getStrings(curRule.urlRule)
         if (names.size != urls.size) {
-            throw IllegalArgumentException("获取到的封面的名称和url数量不匹配")
+            throw IllegalArgumentException("解析到的封面的名称和url数量不匹配")
         }
         urls = urls.map {
             UrlUtils.getFullUrl(baseCoverUrl, it)
@@ -224,9 +233,11 @@ class WebStrategy(val webRule: WebRule) {
         var descs: List<String>? = null
         var coverUrls: List<String>? = null
         if (curRule.descRule != null) {
+            LogUtil.d("开始解析二级分类描述：")
             descs = parser.getStrings(curRule.descRule!!)
         }
         if (curRule.imageUrlRule != null) {
+            LogUtil.d("开始解析二级分类封面url：")
             coverUrls = parser.getStrings(curRule.imageUrlRule!!)
         }
         val res = mutableListOf<ContentTitle>()
@@ -267,30 +278,29 @@ class WebStrategy(val webRule: WebRule) {
 
         if (page == 1) {
 
-            if (webRule.contentRule.realRequestUrlRule != null) {
-                nextContentUrl = webRule.contentRule.realRequestUrlRule!!
+            if (webRule.contentRule!!.realRequestUrlRule != null) {
+                nextContentUrl = webRule.contentRule!!.realRequestUrlRule!!
                     .replace("{baseUrl}", startUrl!!)
                 baseContentUrl = nextContentUrl!!
             } else {
                 nextContentUrl = startUrl
                 baseContentUrl = startUrl!!
             }
-        } else if (
-            webRule.contentRule.pageRule == null) {
+        } else if (!webRule.contentRule!!.supportPage) {
             listener.onSuccess(emptyList())
             return
         }
-        LogUtil.d("开始获取具体内容:$nextContentUrl")
+        LogUtil.d("开始解析具体内容:$nextContentUrl")
 
         var newPage = page
-        if (webRule.contentRule.pageRule != null &&
-            webRule.contentRule.pageRule!!.startPage != null
+        if (webRule.contentRule!!.supportPage && webRule.contentRule!!.pageRule != null &&
+            webRule.contentRule!!.pageRule!!.startPage != null
         ) {
-            newPage = webRule.contentRule.pageRule!!.startPage!! + page - 1
+            newPage = webRule.contentRule!!.pageRule!!.startPage!! + page - 1
         }
         webGetter.getWebsiteHtml(
             activity,
-            webRule.contentRule.dynamicRender,
+            webRule.contentRule!!.dynamicRender,
             nextContentUrl!!,
             emptyMap(),
             object : OnWebViewResultListener {
@@ -298,15 +308,15 @@ class WebStrategy(val webRule: WebRule) {
                     try {
                         val res = getContents(html)
 
-                        LogUtil.d("----------------获取具体地址如下:数量：${res.size}---------------------")
+                        LogUtil.d("----------------解析具体地址如下:数量：${res.size}---------------------")
                         res.forEach {
                             LogUtil.d("name:" + it.name + " url:" + it.url)
                         }
-                        //获取下一页的地址
-                        if (webRule.contentRule.pageRule != null) {
-                            nextContentUrl = webRule.contentRule.pageRule!!
+                        //解析下一页的地址
+                        if (webRule.contentRule!!.pageRule != null) {
+                            nextContentUrl = webRule.contentRule!!.pageRule!!
                                 .getNextUrl(curParser, baseContentUrl, newPage + 1)
-                            LogUtil.d("获取具体内容的下一页地址成功：$nextContentUrl")
+                            LogUtil.d("解析具体内容的下一页地址成功：$nextContentUrl")
 
                         }
                         listener.onSuccess(res)
@@ -326,13 +336,15 @@ class WebStrategy(val webRule: WebRule) {
 
     private fun getContents(html: String): List<ContentVo> {
         val parser = HtmlParser(Jsoup.parse(html))
-        var urls = parser.getStrings(webRule.contentRule.detailRule)
+        LogUtil.d("解析具体内容的url")
+        var urls = parser.getStrings(webRule.contentRule!!.urlRule)
         urls = urls.map {
             UrlUtils.getFullUrl(baseContentUrl, it)
         }
         var names: List<String>? = null
-        if (webRule.contentRule.nameRule != null) {
-            names = parser.getStrings(webRule.contentRule.nameRule!!)
+        if (!webRule.contentRule!!.nameRule.isBlank() ) {
+            LogUtil.d("解析具体内容的名称")
+            names = parser.getStrings(webRule.contentRule!!.nameRule)
         }
         val res = mutableListOf<ContentVo>()
         for (i in 0 until urls.size) {
@@ -368,12 +380,12 @@ class WebStrategy(val webRule: WebRule) {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 try {
                     val body = response.body()
-                    if(body == null){
-                        listener.onError("获取搜索建议失败")
+                    if (body == null) {
+                        listener.onError("解析搜索建议失败")
                         return
                     }
                     val res = getSuggest(body.string())
-                    LogUtil.d("--------------------获取搜索建议如下：-------------------")
+                    LogUtil.d("--------------------解析搜索建议如下：-------------------")
                     res.forEach {
                         LogUtil.d("key:${it.N} time:${it.R}")
                     }

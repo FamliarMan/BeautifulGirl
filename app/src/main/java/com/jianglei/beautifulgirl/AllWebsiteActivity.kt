@@ -4,18 +4,18 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
-import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.data.WebDataSource
 import com.jianglei.beautifulgirl.rule.RuleCenter
 import com.jianglei.beautifulgirl.rule.WebRule
 import com.jianglei.beautifulgirl.rule.WebStrategy
@@ -24,19 +24,18 @@ import com.jianglei.permission.JlPermission
 import com.jianglei.permission.OnPermissionResultListener
 import com.jianglei.ruleparser.LogUtil
 import kotlinx.android.synthetic.main.activity_all_website.*
+import kotlinx.android.synthetic.main.activity_base.*
 import utils.ToastUtils
 
 class AllWebsiteActivity : BaseActivity() {
-    private var allWebsites: ArrayList<WebDataSource>? = null
-    private var webDataSource: WebDataSource? = null
     private var webRules = RuleCenter.getWebRules()
     private var curWebStrategy: WebStrategy? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_website)
         initLog()
+        initView()
         rvWebsites.layoutManager = GridLayoutManager(this, 2)
-        allWebsites = WebSourceCenter.normalWebSources
         val adapter = WebsiteAdapter(this, webRules as MutableList<WebRule>)
         adapter.onItemClickListener = object : OnItemClickListener<WebRule> {
             override fun onItemClick(vo: WebRule, pos: Int) {
@@ -46,19 +45,17 @@ class AllWebsiteActivity : BaseActivity() {
         }
         rvWebsites.adapter = adapter
 
-        bottomNav.setOnNavigationItemSelectedListener {
-            when {
-                it.itemId == R.id.action_in_wall -> {
-                    allWebsites = WebSourceCenter.normalWebSources
-//                    adapter.updateData(allWebsites!!)
-                }
-                else -> {
-                    allWebsites = WebSourceCenter.vpnWebSources
-//                    adapter.updateData(allWebsites!!)
-                }
-            }
-            true
-        }
+//        bottomNav.setOnNavigationItemSelectedListener {
+//            when {
+//                it.itemId == R.id.action_in_wall -> {
+////                    adapter.updateData(allWebsites!!)
+//                }
+//                else -> {
+////                    adapter.updateData(allWebsites!!)
+//                }
+//            }
+//            true
+//        }
     }
 
 
@@ -77,12 +74,34 @@ class AllWebsiteActivity : BaseActivity() {
             })
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (isFinishing) {
-            webDataSource?.cancelAllNet()
+    private fun initView() {
+        navBody.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.action_site -> {
+                    //站点管理
+                    val intent = Intent(this, SiteRuleEditActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            true
+
         }
+        //初始化侧边栏
+        val drawerToggle = ActionBarDrawerToggle(
+            this,
+            navSlide,
+            toolBar,
+            R.string.open_draw,
+            R.string.close_draw
+        )
+        navSlide.addDrawerListener(drawerToggle)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setHomeButtonEnabled(true)
+        supportActionBar!!.setHomeAsUpIndicator(ContextCompat.getDrawable(this, R.mipmap.ic_func))
+
     }
+
+
 
     private fun getCategory(vo: WebRule) {
         showProgress(true)

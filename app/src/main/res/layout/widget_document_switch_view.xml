@@ -1,0 +1,29 @@
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:padding="5dp">
+
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/tvTitle"
+              tools:text="搜索规则"
+              android:layout_centerVertical="true"
+              android:textSize="16sp"/>
+    <ImageView android:layout_width="15dp"
+               android:layout_height="15dp"
+               android:id="@+id/ivHelp"
+               android:src="@mipmap/ic_question_mask"
+               android:layout_toEndOf="@id/tvTitle"
+               android:layout_centerVertical="true"
+               android:layout_marginStart="5dp"/>
+    <Switch android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/switchBtn"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+    />
+</RelativeLayout>

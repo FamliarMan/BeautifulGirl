@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">美女集中营</string>
+    <string name="app_name">魔盒世界</string>
     <string name="net_error">网络错误</string>
     <string name="road">一片坦途</string>
     <string name="wall">墙外世界</string>
@@ -12,4 +12,80 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dialog_tip">提示</string>
+    <string name="edit_required">必填</string>
+    <string name="edit_choose">选填</string>
+    <string name="site_manager">站点管理</string>
+    <string name="debug">调试</string>
+    <string name="save">保存</string>
+    <string name="study">规则学习</string>
+    <string name="open_draw">打开侧边栏</string>
+    <string name="close_draw">关闭侧边栏</string>
+    <string name="base_info">基本信息</string>
+    <string name="first_rule_title">第一级类别提取规则</string>
+    <string name="second_rule_title">第二级类别提取规则</string>
+    <string name="content_rule_title">内容提取规则</string>
+    <string name="category_name_rule">分类名称提取规则</string>
+    <string name="content_name_rule">内容名称提取规则</string>
+    <string name="category_url_rule">分类跳转url提取规则</string>
+    <string name="content_url_rule">内容url提取规则</string>
+    <string name="category_desc_rule">分类描述的提取规则</string>
+    <string name="category_cover_img_rule">分类图片的提取规则</string>
+    <string name="first_category_page">第一级类别分页</string>
+
+    <string name="title_web_name">网站名称</string>
+    <string name="title_web_icon_url">网站icon的url</string>
+    <string name="title_web_url">网站入口url</string>
+    <string name="title_category_name_rule">分类名称提取规则</string>
+    <string name="title_page_on">是否支持分页</string>
+    <string name="title_fromHtml">下一页url是否可以从网页直接抓取</string>
+    <string name="title_nextUrlRule">下一页url抓取规则</string>
+    <string name="title_combinedUrl">下一页url组合规则（combinedUrl）</string>
+    <string name="title_paramRule">页码抓取规则</string>
+    <string name="title_startPage">起始页码</string>
+    <string name="title_realRequestUrl">真正url请求地址 </string>
+    <string name="check_not_null">%s不能为空</string>
+
+    <string name="btn_debug_first_category">调试一级分类规则</string>
+    <string name="btn_debug_second_category">调试二级分类规则</string>
+    <string name="btn_debug_content_category">调试具体内容规则</string>
+
+
+    <string name="help_dynamicRender">有些网站使用非常多的js动态渲染，这个时候直接使用http请求网页获取到的内容不全，
+        这个时候可以使用webview来渲染界面，保证一些控件加载正常，然后获完整的页面。比如一般网页的翻页按钮都是后来通过js渲染出来的，
+        此时我们可以将这个值设为true，这样才能从界面上抓取下一页的地址</string>
+    <string name="help_type">目前仅支持抓取图片和视频网站</string>
+    <string name="help_encoding">大部分网站都是utf-8编码，然而如果使用utf-8编码导致中文乱码，可以尝试使用GBK</string>
+    <string name="help_fromHtml">一般来说，如果页面上有翻页控件，我们可以直接从下一页按钮中直接获取下一页url，这个参数应设为true，如果是某些滚动到底部自动翻页加载的
+        网站，就需要我们自己拼接翻页url规则，这个参数应当设为false</string>
+    <string name="help_combinedUrl">当我们无法从页面上抓取下一页地址的时候，我们需要自己拼接出下一页地址的url，
+        比如： http://www.baidu.com?page={page},其中{page}是页码的占位符，注意，通常情况，http://www.baidu.com其实是上一个页面
+        传过来的，在这里我们并不知道是多少，可以这样表示{baseUrl}?page={page}</string>
+    <string name="help_paramRule">有些网站页码不是利用数字，而是其他参数，所以这里需要提取规则从页面中提取出下一页页码,例如{baseUrl}?next={page},
+        其中{page}不是数字，而是一个来自html页面中的某个注释的时间戳，这个规则就是抓取这个时间戳的</string>
+    <string name="help_startPage">如果翻页规则是利用数字来的，我们需要区分页码是从0开始还是从1开始，由于本app翻页统一从1开始，所以需要大家计算好起始页码</string>
+    <string name="help_realRequestUrl">对于一些网页来说，从上一个页面的url点进来，该url并不会获取真正的内容，而是通过js向一个新的url请求，
+        这里就是填写这个新的url，其中{baseUrl}代表上次获取的url，比如我们获取到的真实url是：www.baidu.com,但是真实请求地址是www.baidu.com/activity,
+        这样我们这里可以表示成{baseUrl}/activity</string>
+
+    <string name="log_category_success">分类获取成功，总数量：%$1d.\n下一页请求地址：%2$s</string>
+    <string name="log_content_success">内容获取成功，总数量：%$1d.\n下一页请求地址：%2$s</string>
+    <string name="log_category_fail">未解析到任何分类，请确认分类规则正确</string>
+    <string name="log_content_fail">未解析到任何具体内容，请确认规则正确</string>
+    <string name="check_detail_log">查看详细日志</string>
+    <string name="please_debug_first_category">请先调试第一级分类规</string>
+    <string name="please_debug_second_category">请先调试第二级分类规
+        则</string>
+    <string-array name="encoding">
+        <item>utf-8</item>
+        <item>GBK</item>
+    </string-array>
+    <string-array name="siteType">
+        <item>video</item>
+        <item>image</item>
+    </string-array>
+    <string-array name="startPages">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
 </resources>

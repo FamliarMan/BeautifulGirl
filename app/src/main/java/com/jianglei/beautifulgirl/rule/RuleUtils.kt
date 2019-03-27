@@ -14,8 +14,8 @@ import java.lang.IllegalArgumentException
  * [baseUrl] 是当前页面除掉分页参数外的其他url
  */
 fun PageRule.getNextUrl(parser: HtmlParser, baseUrl: String, nextPage: Int?): String? {
-    if (this.isFromHtml) {
-        if (nextUrlRule == null) {
+    if (this.fromHtml) {
+        if (nextUrlRule.isNullOrBlank()) {
             throw IllegalArgumentException("当直接从网页抓取下一页的url时，nextUrlRule不能为空")
         }
         var newUrlRule = nextUrlRule!!
@@ -36,7 +36,7 @@ fun PageRule.getNextUrl(parser: HtmlParser, baseUrl: String, nextPage: Int?): St
             res[0]
         )
     }
-    if (combinedUrl == null || paramRule == null) {
+    if (combinedUrl.isNullOrBlank()  || paramRule.isNullOrBlank() ) {
         throw IllegalArgumentException("baseUrl 或combinedUrl paramRule 不能为空")
     }
     var combinedUrl = this.combinedUrl!!

@@ -42,6 +42,9 @@ android {
     applicationVariants.all { variant ->
         buildType = variant.buildType.name // sets the current build type
     }
+    dataBinding {
+        enabled = true
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.jianglei.beautifulgirl"
