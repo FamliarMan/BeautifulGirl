@@ -9,6 +9,7 @@
     <string name="search_note">搜索任意内容</string>
     <string name="retry">重新尝试</string>
     <string name="get_video_play_url_error">获取视频播放地址失败</string>
+    <string name="cancel">取消</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -68,14 +69,13 @@
         这里就是填写这个新的url，其中{baseUrl}代表上次获取的url，比如我们获取到的真实url是：www.baidu.com,但是真实请求地址是www.baidu.com/activity,
         这样我们这里可以表示成{baseUrl}/activity</string>
 
-    <string name="log_category_success">分类获取成功，总数量：%$1d.\n下一页请求地址：%2$s</string>
-    <string name="log_content_success">内容获取成功，总数量：%$1d.\n下一页请求地址：%2$s</string>
+    <string name="log_category_success">分类获取成功，总数量：%1$d.\n下一页请求地址：%2$s</string>
+    <string name="log_content_success">内容获取成功，总数量：%1$d.\n下一页请求地址：%2$s</string>
     <string name="log_category_fail">未解析到任何分类，请确认分类规则正确</string>
     <string name="log_content_fail">未解析到任何具体内容，请确认规则正确</string>
     <string name="check_detail_log">查看详细日志</string>
     <string name="please_debug_first_category">请先调试第一级分类规</string>
-    <string name="please_debug_second_category">请先调试第二级分类规
-        则</string>
+    <string name="please_debug_second_category">请先调试第二级分类规则</string>
     <string-array name="encoding">
         <item>utf-8</item>
         <item>GBK</item>

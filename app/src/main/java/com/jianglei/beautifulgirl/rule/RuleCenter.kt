@@ -19,30 +19,7 @@ class RuleCenter {
             if (isInit) {
                 return
             }
-            val caoliu = "{\n" +
-                    "  \"type\": \"image\",\n" +
-                    "  \"name\": \"草榴\",\n" +
-                    "  \"icon\": \"\",\n" +
-                    "  \"encoding\": \"GBK\",\n" +
-                    "  \"categoryRule\": {\n" +
-                    "    \"url\": \"https://www.t66y.com/index.php\",\n" +
-                    "    \"nameRule\": \"@class:<tr3 f_one> -> @label:<h2> ->@label:<a> -> @hasText:<新時代的我們,達蓋爾的旗幟> -> @text \",\n" +
-                    "    \"urlRule\": \"@class:<tr3 f_one> -> @label:<h2> ->@label:<a> -> @hasText:<新時代的我們,達蓋爾的旗幟>->@property:<href>\"\n" +
-                    "  },\n" +
-                    "  \"coverRule\": {\n" +
-                    "    \"dynamicRender\":true,\n" +
-                    "    \"nameRule\": \"@class:<tr3 t_one tac> -> @class:<tal>[0]->@label:<h3>[0]->@label:<a>[0]->@text\",\n" +
-                    "    \"descRule\": \"@class:<tr3 t_one tac>->@class:<tal>[0]->@text\",\n" +
-                    "    \"urlRule\": \"@class:<tr3 t_one tac>->@class:<tal>[0]->@label:<h3>[0]->@label:<a>[0]->@property:<href>\",\n" +
-                    "    \"pageRule\":{\n" +
-                    "      \"fromHtml\":true,\n" +
-                    "      \"nextUrlRule\":\"@class:<pages>[0] -> @label:<a> ->@hasText:<下一頁> -> @property:<href>\"\n" +
-                    "    }\n" +
-                    "  },\n" +
-                    "  \"contentRule\": {\n" +
-                    "    \"detailRule\": \"@label:<input>->@property:<data-src>\"\n" +
-                    "  }\n" +
-                    "}\n"
+            val caoliu = "{\"categoryRule\":{\"descRule\":\"\",\"dynamicRender\":false,\"imageUrlRule\":\"\",\"nameRule\":\"@class:\\u003ctr3 f_one\\u003e -\\u003e @label:\\u003ch2\\u003e -\\u003e@label:\\u003ca\\u003e -\\u003e @hasText:\\u003c新時代的我們,達蓋爾的旗幟\\u003e -\\u003e @text \",\"supportPage\":false,\"urlRule\":\"@class:\\u003ctr3 f_one\\u003e -\\u003e @label:\\u003ch2\\u003e -\\u003e@label:\\u003ca\\u003e -\\u003e @hasText:\\u003c新時代的我們,達蓋爾的旗幟\\u003e-\\u003e@property:\\u003chref\\u003e\",\"useWebView\":false},\"contentRule\":{\"dynamicRender\":false,\"nameRule\":\"\",\"realRequestUrlRule\":\"\",\"supportPage\":false,\"urlRule\":\"@label:\\u003cinput\\u003e-\\u003e@property:\\u003cdata-src\\u003e\",\"useWebView\":false},\"coverRule\":{\"descRule\":\"@class:\\u003ctr3 t_one tac\\u003e-\\u003e@class:\\u003ctal\\u003e[0]-\\u003e@text\",\"dynamicRender\":true,\"imageUrlRule\":\"\",\"nameRule\":\"@class:\\u003ctr3 t_one tac\\u003e -\\u003e @class:\\u003ctal\\u003e[0]-\\u003e@label:\\u003ch3\\u003e[0]-\\u003e@label:\\u003ca\\u003e[0]-\\u003e@text\",\"pageRule\":{\"combinedUrl\":\"\",\"fromHtml\":true,\"nextUrlRule\":\"@class:\\u003cpages\\u003e[0] -\\u003e @label:\\u003ca\\u003e -\\u003e@hasText:\\u003c下一頁\\u003e -\\u003e @property:\\u003chref\\u003e\",\"paramRule\":\"\",\"startPage\":0},\"supportPage\":true,\"urlRule\":\"@class:\\u003ctr3 t_one tac\\u003e-\\u003e@class:\\u003ctal\\u003e[0]-\\u003e@label:\\u003ch3\\u003e[0]-\\u003e@label:\\u003ca\\u003e[0]-\\u003e@property:\\u003chref\\u003e\",\"useWebView\":false},\"encoding\":\"GBK\",\"icon\":\"\",\"name\":\"草榴\",\"type\":\"image\",\"url\":\"https://www.t66y.com/index.php\"}"
             webRules.add(JsonUtils.parseJsonWithGson(caoliu, WebRule::class.java)!!)
 
             val fanli = "{\n" +

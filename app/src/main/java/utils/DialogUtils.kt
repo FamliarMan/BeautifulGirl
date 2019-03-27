@@ -34,6 +34,7 @@ class DialogUtils {
                 .setTitle(context.getString(R.string.dialog_tip))
                 .setMessage(msg)
                 .setCancelable(true)
+                .setNegativeButton(context.getString(R.string.cancel),null)
                 .setPositiveButton(rightText,listener)
             builder.create().show()
         }

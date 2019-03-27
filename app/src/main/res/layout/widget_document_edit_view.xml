@@ -29,6 +29,7 @@
               android:layout_marginTop="5dp"
               android:id="@+id/evContent"
               tools:hint="搜索规则"
-              android:inputType="text"/>
+              android:minLines="2"
+              android:inputType="textMultiLine"/>
 
 </LinearLayout>

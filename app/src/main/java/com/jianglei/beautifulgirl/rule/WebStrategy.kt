@@ -45,7 +45,7 @@ class WebStrategy(val webRule: WebRule) {
             nextCategoryUrl = webRule.url
         }
         var newPage = page
-        if(webRule.categoryRule == null){
+        if (webRule.categoryRule == null) {
             throw IllegalArgumentException("第一级分类规则不能为空")
         }
         if (webRule.categoryRule!!.supportPage && webRule.categoryRule!!.pageRule != null &&
@@ -72,10 +72,12 @@ class WebStrategy(val webRule: WebRule) {
                             )
                         }
                         //准备下一页的地址
-                        if (webRule.categoryRule!!.pageRule != null) {
+                        if (webRule.categoryRule!!.supportPage) {
                             nextCategoryUrl = webRule.categoryRule!!.pageRule!!
                                 .getNextUrl(curParser, webRule.url, newPage + 1)
                             LogUtil.d("解析分类下一页请求地址：$nextCategoryUrl")
+                        } else {
+                            nextCategoryUrl = ""
                         }
                         listener.onSuccess(res)
                     } catch (e: Throwable) {
@@ -107,7 +109,7 @@ class WebStrategy(val webRule: WebRule) {
             }.toList()
         var coverUrl: List<String>? = null
 
-        if (webRule.categoryRule!!.imageUrlRule != null) {
+        if (!webRule.categoryRule!!.imageUrlRule.isNullOrBlank()) {
             LogUtil.d("开始解析一级分类封面url：")
             coverUrl = ruleParser.getStrings(webRule.categoryRule!!.imageUrlRule!!)
                 .map {
@@ -168,7 +170,7 @@ class WebStrategy(val webRule: WebRule) {
         }
 
         if (page == 1) {
-            if (curRule.realRequestUrlRule != null) {
+            if (!curRule.realRequestUrlRule.isNullOrBlank()) {
                 nextCoverUrl = curRule.realRequestUrlRule!!
                     .replace("{baseUrl}", startUrl!!)
                 baseCoverUrl = nextCoverUrl!!
@@ -198,10 +200,12 @@ class WebStrategy(val webRule: WebRule) {
                             LogUtil.d("name:" + it.title + " url:" + it.detailUrl + " img:" + it.coverUrl)
                         }
                         //解析下一页的地址
-                        if (curRule.pageRule != null) {
+                        if (curRule.supportPage) {
                             nextCoverUrl = curRule.pageRule!!
                                 .getNextUrl(curParser, baseCoverUrl, newPage + 1)
                             LogUtil.d("解析封面下一页请求地址：$nextCoverUrl")
+                        } else {
+                            nextCoverUrl = ""
                         }
                         listener.onSuccess(res)
                     } catch (e: Throwable) {
@@ -232,11 +236,11 @@ class WebStrategy(val webRule: WebRule) {
         }.toList()
         var descs: List<String>? = null
         var coverUrls: List<String>? = null
-        if (curRule.descRule != null) {
+        if (!curRule.descRule.isNullOrBlank()) {
             LogUtil.d("开始解析二级分类描述：")
             descs = parser.getStrings(curRule.descRule!!)
         }
-        if (curRule.imageUrlRule != null) {
+        if (!curRule.imageUrlRule.isNullOrBlank()) {
             LogUtil.d("开始解析二级分类封面url：")
             coverUrls = parser.getStrings(curRule.imageUrlRule!!)
         }
@@ -278,7 +282,7 @@ class WebStrategy(val webRule: WebRule) {
 
         if (page == 1) {
 
-            if (webRule.contentRule!!.realRequestUrlRule != null) {
+            if (!webRule.contentRule!!.realRequestUrlRule.isNullOrBlank()) {
                 nextContentUrl = webRule.contentRule!!.realRequestUrlRule!!
                     .replace("{baseUrl}", startUrl!!)
                 baseContentUrl = nextContentUrl!!
@@ -313,11 +317,13 @@ class WebStrategy(val webRule: WebRule) {
                             LogUtil.d("name:" + it.name + " url:" + it.url)
                         }
                         //解析下一页的地址
-                        if (webRule.contentRule!!.pageRule != null) {
+                        if (webRule.contentRule!!.supportPage) {
                             nextContentUrl = webRule.contentRule!!.pageRule!!
                                 .getNextUrl(curParser, baseContentUrl, newPage + 1)
                             LogUtil.d("解析具体内容的下一页地址成功：$nextContentUrl")
 
+                        } else {
+                            nextContentUrl = ""
                         }
                         listener.onSuccess(res)
                     } catch (e: Throwable) {
@@ -342,7 +348,7 @@ class WebStrategy(val webRule: WebRule) {
             UrlUtils.getFullUrl(baseContentUrl, it)
         }
         var names: List<String>? = null
-        if (!webRule.contentRule!!.nameRule.isBlank() ) {
+        if (!webRule.contentRule!!.nameRule.isBlank()) {
             LogUtil.d("解析具体内容的名称")
             names = parser.getStrings(webRule.contentRule!!.nameRule)
         }
@@ -410,7 +416,7 @@ class WebStrategy(val webRule: WebRule) {
             json
         )
         var countsRes = emptyList<String>()
-        if (webRule.searchRule!!.suggestTimeRule != null) {
+        if (!webRule.searchRule!!.suggestTimeRule.isNullOrBlank()) {
             countsRes = jsonParser.getStrings(
                 webRule.searchRule!!.suggestTimeRule!!,
                 json

@@ -123,8 +123,7 @@
                             android:layout_height="wrap_content"
                             app:dev_isRequested="true"
                             app:dv_content="@={categoryRule.nameRule}"
-                            app:dv_title="@string/category_nam
-                            e_rule"
+                            app:dv_title="@string/category_name_rule"
                     />
                     <com.jianglei.beautifulgirl.widget.DocumentEditView
                             android:layout_width="match_parent"
@@ -171,6 +170,7 @@
                                 android:layout_height="wrap_content"
                                 app:dv_title="@string/title_nextUrlRule"
                                 app:dev_isRequested="true"
+                                app:dv_content="@{categoryPage.nextUrlRule}"
                                 android:visibility="@{categoryPage.fromHtml?View.VISIBLE:View.GONE}"
                         />
                         <com.jianglei.beautifulgirl.widget.DocumentEditView
@@ -211,6 +211,7 @@
                             android:layout_marginTop="10dp"
                             android:background="@color/colorPrimary"
                             android:textColor="#ffffff"
+                            android:layout_marginBottom="20dp"
                     />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -292,6 +293,7 @@
                                 android:layout_height="wrap_content"
                                 app:dv_title="@string/title_nextUrlRule"
                                 app:dev_isRequested="true"
+                                app:dv_content="@{coverPage.nextUrlRule}"
                                 android:visibility="@{coverPage.fromHtml?View.VISIBLE:View.GONE}"
                         />
                         <com.jianglei.beautifulgirl.widget.DocumentEditView
@@ -323,6 +325,17 @@
 
                     </LinearLayout>
 
+                    <Button android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btnSecondDebug"
+                            android:text="@string/btn_debug_second_category"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/colorPrimary"
+                            android:textColor="#ffffff"
+                            android:layout_marginBottom="20dp"
+                    />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -394,6 +407,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:dv_title="@string/title_nextUrlRule"
+                                app:dv_content="@{contentPage.nextUrlRule}"
                                 app:dev_isRequested="true"
                                 android:visibility="@{contentPage.fromHtml?View.VISIBLE:View.GONE}"
                         />
@@ -425,6 +439,17 @@
                         />
                     </LinearLayout>
 
+                    <Button android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btnContentDebug"
+                            android:text="@string/btn_debug_content_category"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/colorPrimary"
+                            android:textColor="#ffffff"
+                            android:layout_marginBottom="20dp"
+                    />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
