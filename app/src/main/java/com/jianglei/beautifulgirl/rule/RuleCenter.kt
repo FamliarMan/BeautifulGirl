@@ -35,7 +35,7 @@ class RuleCenter {
                     "    \"descRule\": \"@class:<tr3 t_one tac>->@class:<tal>[0]->@text\",\n" +
                     "    \"urlRule\": \"@class:<tr3 t_one tac>->@class:<tal>[0]->@label:<h3>[0]->@label:<a>[0]->@property:<href>\",\n" +
                     "    \"pageRule\":{\n" +
-                    "      \"isFromHtml\":true,\n" +
+                    "      \"fromHtml\":true,\n" +
                     "      \"nextUrlRule\":\"@class:<pages>[0] -> @label:<a> ->@hasText:<下一頁> -> @property:<href>\"\n" +
                     "    }\n" +
                     "  },\n" +
@@ -63,7 +63,7 @@ class RuleCenter {
                     "    \"imageUrlRule\":\"@label:<article>->@class:<focus>[0]->@label:<a>[0]->@label:<img>->@property:<data-original>\",\n" +
                     "    \"urlRule\": \"@label:<article>->@class:<focus>[0]->@label:<a>[0]->@property:<href>\",\n" +
                     "    \"pageRule\":{\n" +
-                    "      \"isFromHtml\":true,\n" +
+                    "      \"fromHtml\":true,\n" +
                     "      \"nextUrlRule\":\"@class:<pagination pagination-multi>->@label:<li>->@label:<a>[0]->@hasText:<{page}>->@property:<href>\"\n" +
                     "    }\n" +
                     "  },\n" +
@@ -71,7 +71,7 @@ class RuleCenter {
                     "    \"dynamicRender\":true,\n" +
                     "    \"detailRule\": \"@class:<article-content>[0]->@label:<img>->@property:<src>\",\n" +
                     "    \"pageRule\":{\n" +
-                    "      \"isFromHtml\":true,\n" +
+                    "      \"fromHtml\":true,\n" +
                     "      \"nextUrlRule\":\"@class:<article-paging>->@label:<a>->@hasText:<{page}>->@property:<href>\"\n" +
                     "    }\n" +
                     "  }\n" +
@@ -91,7 +91,7 @@ class RuleCenter {
                     "    \"imageUrlRule\": \"@class:<thumb-block >->@class:<thumb>[0]->@label:<a>[0]->@label:<img>[0]->@property:<src> \",\n" +
                     "    \"descRule\": \"@class:<thumb-block >-> @class:<profile-counts>[0]->@text\",\n" +
                     "    \"pageRule\": {\n" +
-                    "      \"isFromHtml\": \"true\",\n" +
+                    "      \"fromHtml\": \"true\",\n" +
                     "      \"startPage\": \"0\",\n" +
                     "      \"nextUrlRule\": \"@class:<pagination>[0]->@label:<li>->@hasClass:<no-page next-page>->@label:<a>[0]->@property:<href>\"\n" +
                     "    }\n" +
@@ -104,7 +104,7 @@ class RuleCenter {
                     "    \"urlRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@property:<href>\",\n" +
                     "    \"realRequestUrlRule\": \"{baseUrl}/activity\",\n" +
                     "    \"pageRule\": {\n" +
-                    "      \"isFromHtml\": false,\n" +
+                    "      \"fromHtml\": false,\n" +
                     "      \"combinedUrl\": \"{baseUrl}/{page}\",\n" +
                     "      \"paramRule\": \"@regex:<<!--[\\\\s*]([\\\\d]{10})[\\\\s*][-]{2}>[1]\"\n" +
                     "    }\n" +
@@ -119,7 +119,7 @@ class RuleCenter {
                     "      \"urlRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@property:<href>\",\n" +
                     "      \"realRequestUrlRule\": \"{baseUrl}/activity\",\n" +
                     "      \"pageRule\": {\n" +
-                    "        \"isFromHtml\": \"true\",\n" +
+                    "        \"fromHtml\": \"true\",\n" +
                     "        \"startPage\": \"1\",\n" +
                     "        \"nextUrlRule\": \"@class:<pagination>[0]->@label:<li>->@label:<a>[0]->@hasText:<{page}>->@property:<href>\"\n" +
                     "      }\n" +

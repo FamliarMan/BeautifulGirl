@@ -1,139 +1,252 @@
 package com.jianglei.beautifulgirl.rule
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import com.jianglei.beautifulgirl.BR
+
 /**
  * @author jianglei on 3/16/19.
  */
-data class WebRule(
+class WebRule : BaseObservable() {
     /**
      *默认为视频，可选项有 "video","image"
      */
-    var type: String = "video",
+    @get:Bindable
+    var type: String = "video"
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.type)
+        }
 
+
+    /**
+     * 分页页面的url
+     */
+    @get:Bindable
+    var url: String = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.url)
+        }
     /**
      * 网站名称
      */
-    var name: String,
+    @get:Bindable
+    var name: String = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.name)
+        }
+
 
     /**
      * 网站icon的url
      */
-    var icon: String?,
+    @get:Bindable
+    var icon: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.icon)
+        }
 
     /**
      * 网站编码，默认UTF-8
      */
-    var encoding: String = "UTF-8",
-
+    @get:Bindable
+    var encoding: String = "utf-8"
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.encoding)
+        }
 
     /**
      * 搜索规则
      */
-    var searchRule: SearchRule?,
+    var searchRule: SearchRule? = null
     /**
      * 类别提取规则
      */
-    var categoryRule: CategoryRule,
+    var categoryRule: CategoryRule? = null
 
     /**
      * 某个类别下面的封面内容提取规则
      */
-    var coverRule: CategoryRule,
+    var coverRule: CategoryRule? = null
 
     /**
      * 内容提取规则
      */
-    var contentRule: ContentRule
+    var contentRule: CategoryRule? = null
 
-)
+}
+
 
 /**
  * 搜索规则描述
  */
-data class SearchRule(
+class SearchRule : BaseObservable() {
     /**
      * 搜索地址,可以利用{searchTxt}占位
      */
-    var searchUrl: String,
-    /**
-     * 结果提取规则
-     */
-    var resultRule:CategoryRule,
-
+    @get:Bindable
+    var searchUrl: String = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.searchUrl)
+        }
     /**
      * 搜索建议的url地址,可以用{searchTxt}占位
      */
-    var suggestUrl:String?,
+    @get:Bindable
+    var suggestUrl: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.suggestUrl)
+        }
     /**
      * 搜索建议的key的提取规则
      */
-    var suggestKeyRule:String?,
+    @get:Bindable
+    var suggestKeyRule: String? = null
+        set(value) {
+            notifyPropertyChanged(BR.suggestKeyRule)
+            field = value
+        }
     /**
      * 某个单词数量的提取规则
      */
-    var suggestTimeRule:String?
+    @get:Bindable
+    var suggestTimeRule: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.suggestTimeRule)
+        }
 
-)
+    /**
+     * 结果提取规则
+     */
+    @get:Bindable
+    var resultRule: CategoryRule? = null
+}
 
 
 /**
  * 类别规则描述
  */
-data class CategoryRule(
+class CategoryRule : BaseObservable() {
 
-    var dynamicRender: Boolean,
-    /**
-     * 分页页面的url
-     */
-    var url: String,
+    @get:Bindable
+    var dynamicRender: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.dynamicRender)
+        }
     /**
      * 名称提取规则
      */
-    var nameRule: String,
+    @get:Bindable
+    var nameRule: String = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.nameRule)
+        }
 
     /**
      * 类别描述提取规则
      */
-    var descRule: String?,
+    @get:Bindable
+    var descRule: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.descRule)
+        }
 
     /**
      * 类别图片提取规则
      */
-    var imageUrlRule: String?,
+    @get:Bindable
+    var imageUrlRule: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.imageUrlRule)
+        }
 
     /**
      * 类别结果url提取规则
      */
-    var urlRule: String,
+    @get:Bindable
+    var urlRule: String = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.urlRule)
+        }
 
     /**
-     * 分页规则，为空说明不支持分页
+     * 是否支持分页
      */
-    var pageRule: PageRule?,
+    @get:Bindable
+    var supportPage: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.supportPage)
+        }
+
 
     /**
      * 请求封面时真正的请求地址，某些网站虽然点击分类页面获取的
      * 地址跳转到这个页面，但页面动态性很强，真正的内容是通过另外的地址拿到的，
      * 所以这里需要单独定义一个真实地址组合规则,其中{baseUrl}代表分类中获取的地址
      */
-    var realRequestUrlRule: String?
+    @get:Bindable
+    var realRequestUrlRule: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.realRequestUrlRule)
+        }
 
 
-)
+    /**
+     * 是否使用webveiw加载页面，
+     * 有些网站对真实地址加密，获取太过困难，可以直接使用webview加载那个网页,视屏播放页面专用
+     */
+    @get:Bindable
+    var useWebView: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.useWebView)
+        }
+
+    /**
+     * 分页规则，当[supportPage]为true时不能为空
+     */
+    var pageRule: PageRule?=null
+
+}
 
 /**
  * 分页规则
  */
-data class PageRule(
+class PageRule : BaseObservable() {
     /**
      * 下一个分页地址是否从上一个html页面直接获取
      * 某些网址可能会通过js计算出下一个分页的地址
      */
-    var isFromHtml: Boolean = true,
+    @get:Bindable
+    var fromHtml: Boolean = true
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.fromHtml)
+        }
 
     /**
-     * [isFromHtml] 为true时，用来抓取下一页的地址
+     * [fromHtml] 为true时，用来抓取下一页的地址
      */
-    var nextUrlRule: String?,
+    @get:Bindable
+    var nextUrlRule: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.nextUrlRule)
+        }
 
 
     /**
@@ -142,47 +255,73 @@ data class PageRule(
      * {page}代表当前分页具体参数
      *
      */
-    var combinedUrl: String?,
+    @get:Bindable
+    var combinedUrl: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.combinedUrl)
+        }
 
     /**
      * 当页码为数字页码时，设置起始页码
      */
-    var startPage: Int?,
+    @get:Bindable
+    var startPage: Int? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.startPage)
+        }
 
     /**
      * 有些网址分页不是利用数字，而是利用html页面中返回的某个值决定的
      * 这个规则用来提取那个值
      */
-    var paramRule: String?
+    @get:Bindable
+    var paramRule: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.paramRule)
+        }
 
 
-)
+}
 
-data class ContentRule(
+class ContentRule : BaseObservable() {
     /**
      * 比如图片地址或视频地址的获取规则
      */
-    var detailRule: String,
+    @get:Bindable
+    var detailRule: String = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.detailRule)
+        }
 
-    var dynamicRender: Boolean,
+    @get:Bindable
+    var dynamicRender: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.dynamicRender)
+        }
     /**
      * 名称的获取方式，可以为空
      */
-    var nameRule: String?,
+    @get:Bindable
+    var nameRule: String? = null
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.nameRule)
+        }
+    @get:Bindable
+    var supportPage: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.supportPage)
+        }
     /**
      * 翻页规则
      */
-    var pageRule: PageRule?,
-    /**
-     * 是否使用webveiw加载页面，
-     * 有些网站对真实地址加密，获取太过困难，可以直接使用webview加载那个网页
-     */
-    var useWebView: Boolean = false,
+    var pageRule: PageRule? = null
 
-    /**
-     * 请求封面时真正的请求地址，某些网站虽然点击分类页面获取的
-     * 地址跳转到这个页面，但页面动态性很强，真正的内容是通过另外的地址拿到的，
-     * 所以这里需要单独定义一个真实地址组合规则,其中{baseUrl}代表分类中获取的地址
-     */
-    var realRequestUrlRule: String?
-)
+}
+

@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import com.jianglei.beautifulgirl.OnItemClickListener
 import com.jianglei.beautifulgirl.R
 
 /**
@@ -16,7 +15,7 @@ import com.jianglei.beautifulgirl.R
 class DocumentSelectView : DocumentView {
 
 
-    private lateinit var allContents: List<String>
+    private var allContents: MutableList<String>? = null
 
 
     private lateinit var spinner: Spinner
@@ -29,13 +28,15 @@ class DocumentSelectView : DocumentView {
 
     override fun getView(context: Context, attrs: AttributeSet?, defStyleAttr: Int): View {
 
+        allContents = mutableListOf()
+        initXML(context, attrs)
         val thisView = LayoutInflater.from(context).inflate(R.layout.widget_document_select_view, this, false)
+
         tvTitle = thisView.findViewById(R.id.tvTitle)
         spinner = thisView.findViewById(R.id.spinner)
         ivHelp = thisView.findViewById(R.id.ivHelp)
 
         if (!isInEditMode) {
-            allContents = mutableListOf()
             spinner.adapter = ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, allContents)
         }
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -43,7 +44,7 @@ class DocumentSelectView : DocumentView {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                contentValue = allContents[position]
+                contentValue = allContents!![position]
             }
         }
 
@@ -52,10 +53,27 @@ class DocumentSelectView : DocumentView {
     }
 
 
+    private fun initXML(context: Context, attrs: AttributeSet?) {
+        // Load attributes
+        val a = context.obtainStyledAttributes(
+            attrs, R.styleable.DocumentSelectView
+        )
+        val chars = a.getTextArray(R.styleable.DocumentSelectView_android_entries)
+
+        if (chars != null) {
+            for (str in chars) {
+                allContents!!.add(str.toString())
+            }
+        }
+        a.recycle()
+
+
+    }
+
     override fun setContent(content: String?) {
         super.setContent(content)
         if (content != null) {
-            val index = allContents.indexOf(content)
+            val index = allContents!!.indexOf(content)
             if (index != -1) {
                 spinner.setSelection(index)
             }

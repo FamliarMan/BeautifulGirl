@@ -85,10 +85,15 @@ abstract class DocumentView : FrameLayout {
 
     open fun setContent(content: String?) {
         val old = this.contentValue
+        if(old == content){
+            return
+        }
         this.contentValue = content
         onContentChangeListener?.onChange(old, content)
 
     }
+
+
 
     open fun getContent(): String? {
         return contentValue

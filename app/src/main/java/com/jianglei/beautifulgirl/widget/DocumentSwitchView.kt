@@ -26,22 +26,20 @@ class DocumentSwitchView : DocumentView {
         switchBtn = view.findViewById(R.id.switchBtn)
         ivHelp = view.findViewById(R.id.ivHelp)
         switchBtn.setOnCheckedChangeListener { buttonView, isChecked ->
+            val value:String
             if (isChecked) {
-                contentValue = "1"
+                value = "1"
             } else {
-                contentValue = "0"
+                value = "0"
             }
+            setContent(value)
         }
         return view
     }
 
     override fun setContent(content: String?) {
         super.setContent(content)
-        if (content != null && content == "1") {
-            switchBtn.textOn
-        } else {
-            switchBtn.textOff
-        }
+        switchBtn.isChecked = content != null && content == "1"
     }
 
 

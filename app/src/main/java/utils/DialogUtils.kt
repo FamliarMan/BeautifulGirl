@@ -3,6 +3,7 @@ package utils
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import com.jianglei.beautifulgirl.R
 
 /**
@@ -21,6 +22,19 @@ class DialogUtils {
                 .setTitle(context.getString(R.string.dialog_tip))
                 .setMessage(msg)
                 .setCancelable(true)
+            builder.create().show()
+        }
+
+        fun showClickDialog(context: Context?,msg:String?,rightText:String,listener:DialogInterface.OnClickListener?){
+            if (context == null || (context is Activity && context.isFinishing)) {
+                return
+            }
+
+            val builder = AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.dialog_tip))
+                .setMessage(msg)
+                .setCancelable(true)
+                .setPositiveButton(rightText,listener)
             builder.create().show()
         }
     }
