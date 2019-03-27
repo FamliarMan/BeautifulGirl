@@ -46,6 +46,7 @@
 * @noId:<id1,id2> 上个结果节点不包含所有这些子节点的保留
 * @hasLabel:<label1,label2> 上个结果节点包含所有这些标签子节点的保留
 * @noLabel:<label1,label2> 上个结果节点不包含所有这些标签子节点的保留
+* @hasText:<text1,text2> 上个元素集合中text属性含有这些text的保留
 * @==:<value1,value2,value3>  上个结果字符串等于这些value的任意一个保留
 * @!=:<value1,value2,value3> 上个结果字符串不等于全部这些value的保留
 
