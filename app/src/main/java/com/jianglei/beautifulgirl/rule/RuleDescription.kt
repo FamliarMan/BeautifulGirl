@@ -59,6 +59,13 @@ class WebRule : BaseObservable() {
             notifyPropertyChanged(BR.encoding)
         }
 
+    @get:Bindable
+    var supportSearch:Boolean=false
+    set(value){
+        field = value
+        notifyPropertyChanged(BR.supportSearch)
+    }
+
     /**
      * 搜索规则
      */
@@ -85,6 +92,13 @@ class WebRule : BaseObservable() {
  * 搜索规则描述
  */
 class SearchRule : BaseObservable() {
+
+    @get:Bindable
+    var dynamicRender: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.dynamicRender)
+        }
     /**
      * 搜索地址,可以利用{searchTxt}占位
      */
@@ -93,6 +107,15 @@ class SearchRule : BaseObservable() {
         set(value) {
             field = value
             notifyPropertyChanged(BR.searchUrl)
+        }
+    /**
+     * 是否支持搜索建议
+     */
+    @get:Bindable
+    var supportSuggest: Boolean = false
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.supportSuggest)
         }
     /**
      * 搜索建议的url地址,可以用{searchTxt}占位
@@ -219,7 +242,7 @@ class CategoryRule : BaseObservable() {
     /**
      * 分页规则，当[supportPage]为true时不能为空
      */
-    var pageRule: PageRule?=null
+    var pageRule: PageRule? = null
 
 }
 

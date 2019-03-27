@@ -11,8 +11,11 @@ import com.jianglei.beautifulgirl.databinding.ActivitySiteRuleEditBinding
 import com.jianglei.beautifulgirl.rule.*
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
+import com.jianglei.beautifulgirl.vo.SearchVideoKeyWord
 import com.jianglei.ruleparser.GsonUtil
+import com.jianglei.ruleparser.RuleKeyWord
 import com.jianglei.videoplay.ContentVo
+import kotlinx.android.synthetic.main.activity_site_rule_edit.*
 import kotlinx.android.synthetic.main.activity_site_rule_edit.view.*
 import utils.DialogUtils
 import utils.JsonUtils
@@ -21,7 +24,7 @@ class SiteRuleEditActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySiteRuleEditBinding
     private lateinit var webRule: WebRule
-    private lateinit var webStrategy: WebStrategy
+    private var webStrategy: WebStrategy? = null
     /**
      * 第一个一级分类的url，为二级分类调试准备
      */
@@ -103,6 +106,11 @@ class SiteRuleEditActivity : BaseActivity() {
         binding.coverPage = webRule.coverRule!!.pageRule
         binding.contentRule = webRule.contentRule
         binding.contentPage = webRule.contentRule!!.pageRule
+
+        binding.searchRule = webRule.searchRule
+        if (webRule.searchRule != null) {
+            binding.searchPage = webRule.searchRule!!.resultRule!!.pageRule
+        }
     }
 
     private fun initView() {
@@ -110,11 +118,17 @@ class SiteRuleEditActivity : BaseActivity() {
             debugCategory()
 
         }
-        binding.btnSecondDebug.setOnClickListener{
+        binding.btnSecondDebug.setOnClickListener {
             debugSecondCategory()
         }
-        binding.btnContentDebug.setOnClickListener{
+        binding.btnContentDebug.setOnClickListener {
             debugContent()
+        }
+        btnSearchDebug.setOnClickListener {
+            debugSearch()
+        }
+        btnSearchSuggestDebug.setOnClickListener {
+            debugSearchSuggest()
         }
 
     }
@@ -149,7 +163,7 @@ class SiteRuleEditActivity : BaseActivity() {
 
         showProgress(true)
         webStrategy = WebStrategy(webRule)
-        webStrategy.fetchAllCategory(this, 0, object : OnDataResultListener<List<Category>> {
+        webStrategy!!.fetchAllCategory(this, 0, object : OnDataResultListener<List<Category>> {
             override fun onSuccess(data: List<Category>) {
                 showProgress(false)
                 if (data.isEmpty()) {
@@ -159,7 +173,7 @@ class SiteRuleEditActivity : BaseActivity() {
                 showLogTipDialog(
                     getString(
                         R.string.log_category_success,
-                        data.size, webStrategy.nextCategoryUrl
+                        data.size, webStrategy!!.nextCategoryUrl
                     )
                 )
                 firstCategoryUrl = data[0].url
@@ -177,7 +191,7 @@ class SiteRuleEditActivity : BaseActivity() {
     /**
      * 调试第二级类别规则
      */
-    fun debugSecondCategory() {
+    private fun debugSecondCategory() {
         firstCoveryUrl = null
         if (!checkSecondCategory()) {
             return
@@ -187,7 +201,7 @@ class SiteRuleEditActivity : BaseActivity() {
             return
         }
         showProgress(true)
-        webStrategy.fetchAllCover(this, 1, firstCategoryUrl, false,
+        webStrategy!!.fetchAllCover(this, 1, firstCategoryUrl, false,
             object : OnDataResultListener<List<ContentTitle>> {
                 override fun onSuccess(data: List<ContentTitle>) {
                     showProgress(false)
@@ -198,7 +212,7 @@ class SiteRuleEditActivity : BaseActivity() {
                     showLogTipDialog(
                         getString(
                             R.string.log_category_success,
-                            data.size, webStrategy.nextCoverUrl
+                            data.size, webStrategy!!.nextCoverUrl
                         )
                     )
                     firstCoveryUrl = data[0].detailUrl
@@ -222,7 +236,7 @@ class SiteRuleEditActivity : BaseActivity() {
             return
         }
         showProgress(true)
-        webStrategy.fetchAllContents(this, 1, firstCoveryUrl,
+        webStrategy!!.fetchAllContents(this, 1, firstCoveryUrl,
             object : OnDataResultListener<List<ContentVo>> {
                 override fun onSuccess(data: List<ContentVo>) {
                     showProgress(false)
@@ -233,7 +247,7 @@ class SiteRuleEditActivity : BaseActivity() {
                     showLogTipDialog(
                         getString(
                             R.string.log_content_success,
-                            data.size, webStrategy.nextContentUrl
+                            data.size, webStrategy!!.nextContentUrl
                         )
                     )
                 }
@@ -244,6 +258,74 @@ class SiteRuleEditActivity : BaseActivity() {
                 }
             })
     }
+
+    private fun debugSearchSuggest(){
+        if (!checkSearchSuggest()) {
+            return
+        }
+        val searchTxt = debugSearchSuggestTxt.getContent()
+        if (searchTxt.isNullOrBlank()) {
+
+            DialogUtils.showTipDialog(
+                this, getString(
+                    R.string.check_not_null,
+                    getString(R.string.title_debug_searchtxt)
+                )
+            )
+            return
+        }
+        if (webStrategy == null) {
+            webStrategy = WebStrategy(webRule)
+        }
+        showProgress(true)
+        webStrategy!!.fetchSearchSuggest(searchTxt, object : OnDataResultListener<List<SearchVideoKeyWord>> {
+            override fun onSuccess(data: List<SearchVideoKeyWord>) {
+                showProgress(false)
+                showLogTipDialog(getString(R.string.log_search_suggest_success, data.size))
+            }
+
+            override fun onError(msg: String) {
+                showProgress(false)
+                showLogTipDialog(msg)
+            }
+        })
+    }
+
+    private fun debugSearch() {
+        if (!checkSearchInfo()) {
+            return
+        }
+        val searchTxt = debugSearchTxt.getContent()
+        if (searchTxt.isNullOrBlank()) {
+
+            DialogUtils.showTipDialog(
+                this, getString(
+                    R.string.check_not_null,
+                    getString(R.string.title_debug_searchtxt)
+                )
+            )
+            return
+        }
+        if (webStrategy == null) {
+            webStrategy = WebStrategy(webRule)
+        }
+        showProgress(true)
+        val url = webRule.searchRule!!.searchUrl.replace(RuleKeyWord.SEARCH_TXT, searchTxt)
+        webStrategy!!.fetchAllCover(this,
+            1,url,true,
+            object:OnDataResultListener<List<ContentTitle>>{
+                override fun onSuccess(data: List<ContentTitle>) {
+                    showProgress(false)
+                    showLogTipDialog(getString(R.string.log_search_success, data.size,webStrategy!!.nextCoverUrl))
+                }
+
+                override fun onError(msg: String) {
+                    showProgress(false)
+                    showLogTipDialog(msg)
+                }
+            })
+    }
+
 
     private fun checkWebBaseInfo(): Boolean {
         if (webRule.name.isEmpty()) {
@@ -257,7 +339,7 @@ class SiteRuleEditActivity : BaseActivity() {
         return true
     }
 
-    private fun checkCategoryInfo(categoryRule: CategoryRule?,isLastLevel:Boolean=false): Boolean {
+    private fun checkCategoryInfo(categoryRule: CategoryRule?, isLastLevel: Boolean = false): Boolean {
         if (categoryRule == null) {
             DialogUtils.showTipDialog(this, getString(R.string.check_not_null, getString(R.string.first_rule_title)))
             return false
@@ -314,7 +396,39 @@ class SiteRuleEditActivity : BaseActivity() {
     }
 
     private fun checkContentInfo(): Boolean {
-        return checkSecondCategory() && checkCategoryInfo(webRule.contentRule,true)
+        return checkSecondCategory() && checkCategoryInfo(webRule.contentRule, true)
+    }
+
+    private fun checkSearchInfo(): Boolean {
+        if (webRule.searchRule!!.searchUrl.isBlank()) {
+            DialogUtils.showTipDialog(this, getString(R.string.check_not_null, getString(R.string.title_searchUrl)))
+            return false
+        }
+        return checkSearchSuggest() && checkCategoryInfo(webRule.searchRule!!.resultRule)
+    }
+    private fun checkSearchSuggest():Boolean{
+        if (webRule.searchRule!!.supportSuggest) {
+            if (webRule.searchRule!!.suggestUrl.isNullOrBlank()) {
+                DialogUtils.showTipDialog(
+                    this, getString(
+                        R.string.check_not_null,
+                        getString(R.string.title_searchSuggestUrl)
+                    )
+                )
+                return false
+            }
+            if (webRule.searchRule!!.suggestKeyRule.isNullOrBlank()) {
+                DialogUtils.showTipDialog(
+                    this, getString(
+                        R.string.check_not_null,
+                        getString(R.string.title_searchSuggestKeyRule)
+                    )
+                )
+                return false
+            }
+
+        }
+        return true
     }
 
     private fun showLogTipDialog(msg: String) {

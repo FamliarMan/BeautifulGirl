@@ -55,61 +55,7 @@ class RuleCenter {
                     "}\n"
             webRules.add(JsonUtils.parseJsonWithGson(fanli, WebRule::class.java)!!)
 
-            val xvideos = "{\n" +
-                    "  \"type\": \"video\",\n" +
-                    "  \"name\": \"XVideos\",\n" +
-                    "  \"icon\": \"https://www.xvideos.com/favicon.ico\",\n" +
-                    "  \"encoding\": \"utf-8\",\n" +
-                    "  \"categoryRule\": {\n" +
-                    "    \"dynamicRender\": true,\n" +
-                    "    \"url\": \"https://www.xvideos.com/channels-index\",\n" +
-                    "    \"nameRule\": \"@class:<thumb-block > -> @class:<profile-name>[0] ->@label:<a>[0]->@text\",\n" +
-                    "    \"urlRule\": \"@class:<thumb-block >->@class:<thumb>[0]->  @label:<a>[0]->@property:<href>\",\n" +
-                    "    \"imageUrlRule\": \"@class:<thumb-block >->@class:<thumb>[0]->@label:<a>[0]->@label:<img>[0]->@property:<src> \",\n" +
-                    "    \"descRule\": \"@class:<thumb-block >-> @class:<profile-counts>[0]->@text\",\n" +
-                    "    \"pageRule\": {\n" +
-                    "      \"fromHtml\": \"true\",\n" +
-                    "      \"startPage\": \"0\",\n" +
-                    "      \"nextUrlRule\": \"@class:<pagination>[0]->@label:<li>->@hasClass:<no-page next-page>->@label:<a>[0]->@property:<href>\"\n" +
-                    "    }\n" +
-                    "  },\n" +
-                    "  \"coverRule\": {\n" +
-                    "    \"dynamicRender\": false,\n" +
-                    "    \"nameRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@text\",\n" +
-                    "    \"descRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@class:<metadata>[0]->@text\",\n" +
-                    "    \"imageUrlRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-inside>[0]->@class:<thumb>->@label:<img>[0]->@property:<data-src>\",\n" +
-                    "    \"urlRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@property:<href>\",\n" +
-                    "    \"realRequestUrlRule\": \"{baseUrl}/activity\",\n" +
-                    "    \"pageRule\": {\n" +
-                    "      \"fromHtml\": false,\n" +
-                    "      \"combinedUrl\": \"{baseUrl}/{page}\",\n" +
-                    "      \"paramRule\": \"@regex:<<!--[\\\\s*]([\\\\d]{10})[\\\\s*][-]{2}>[1]\"\n" +
-                    "    }\n" +
-                    "  },\n" +
-                    "  \"searchRule\": {\n" +
-                    "    \"searchUrl\": \"https://www.xvideos.com/?k={searchTxt}&top\",\n" +
-                    "    \"resultRule\": {\n" +
-                    "      \"dynamicRender\": false,\n" +
-                    "      \"nameRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@text\",\n" +
-                    "      \"descRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@class:<metadata>[0]->@text\",\n" +
-                    "      \"imageUrlRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-inside>[0]->@class:<thumb>->@label:<img>[0]->@property:<data-src>\",\n" +
-                    "      \"urlRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@property:<href>\",\n" +
-                    "      \"realRequestUrlRule\": \"{baseUrl}/activity\",\n" +
-                    "      \"pageRule\": {\n" +
-                    "        \"fromHtml\": \"true\",\n" +
-                    "        \"startPage\": \"1\",\n" +
-                    "        \"nextUrlRule\": \"@class:<pagination>[0]->@label:<li>->@label:<a>[0]->@hasText:<{page}>->@property:<href>\"\n" +
-                    "      }\n" +
-                    "    },\n" +
-                    "    \"suggestUrl\": \"https://www.xvideos.com/search-suggest/{searchTxt}\",\n" +
-                    "    \"suggestKeyRule\": \"@jsonArr:<KEYWORDS>->@jsonValue:<N>\",\n" +
-                    "    \"suggestTimeRule\": \"@jsonArr:<KEYWORDS>->@jsonValue:<R>\"\n" +
-                    "  },\n" +
-                    "  \"contentRule\": {\n" +
-                    "    \"dynamicRender\": true,\n" +
-                    "    \"detailRule\": \"@regex:<setVideoUrlHigh\\\\('(.*?)'\\\\)>[1]\"\n" +
-                    "  }\n" +
-                    "}\n"
+            val xvideos = "{\"categoryRule\":{\"descRule\":\"@class:\\u003cthumb-block \\u003e-\\u003e @class:\\u003cprofile-counts\\u003e[0]-\\u003e@text\",\"dynamicRender\":true,\"imageUrlRule\":\"@class:\\u003cthumb-block \\u003e-\\u003e@class:\\u003cthumb\\u003e[0]-\\u003e@label:\\u003ca\\u003e[0]-\\u003e@label:\\u003cimg\\u003e[0]-\\u003e@property:\\u003csrc\\u003e \",\"nameRule\":\"@class:\\u003cthumb-block \\u003e -\\u003e @class:\\u003cprofile-name\\u003e[0] -\\u003e@label:\\u003ca\\u003e[0]-\\u003e@text\",\"pageRule\":{\"combinedUrl\":\"\",\"fromHtml\":true,\"nextUrlRule\":\"@class:\\u003cpagination\\u003e[0]-\\u003e@label:\\u003cli\\u003e-\\u003e@hasClass:\\u003cno-page next-page\\u003e-\\u003e@label:\\u003ca\\u003e[0]-\\u003e@property:\\u003chref\\u003e\",\"paramRule\":\"\",\"startPage\":0},\"supportPage\":true,\"urlRule\":\"@class:\\u003cthumb-block \\u003e-\\u003e@class:\\u003cthumb\\u003e[0]-\\u003e  @label:\\u003ca\\u003e[0]-\\u003e@property:\\u003chref\\u003e\",\"useWebView\":false},\"contentRule\":{\"dynamicRender\":true,\"nameRule\":\"\",\"realRequestUrlRule\":\"\",\"supportPage\":false,\"urlRule\":\"@regex:\\u003csetVideoUrlHigh\\\\(\\u0027(.*?)\\u0027\\\\)\\u003e[1]\",\"useWebView\":false},\"coverRule\":{\"descRule\":\"@class:\\u003cactivity-event\\u003e-\\u003e@class:\\u003cmozaique\\u003e-\\u003e@class:\\u003cthumb-block\\u003e-\\u003e@class:\\u003cthumb-under\\u003e[0]-\\u003e@class:\\u003cmetadata\\u003e[0]-\\u003e@text\",\"dynamicRender\":false,\"imageUrlRule\":\"@class:\\u003cactivity-event\\u003e-\\u003e@class:\\u003cmozaique\\u003e-\\u003e@class:\\u003cthumb-block\\u003e-\\u003e@class:\\u003cthumb-inside\\u003e[0]-\\u003e@class:\\u003cthumb\\u003e-\\u003e@label:\\u003cimg\\u003e[0]-\\u003e@property:\\u003cdata-src\\u003e\",\"nameRule\":\"@class:\\u003cactivity-event\\u003e-\\u003e@class:\\u003cmozaique\\u003e-\\u003e@class:\\u003cthumb-block\\u003e-\\u003e@class:\\u003cthumb-under\\u003e[0]-\\u003e@label:\\u003ca\\u003e[0]-\\u003e@text\",\"pageRule\":{\"combinedUrl\":\"{baseUrl}/{page}\",\"fromHtml\":false,\"paramRule\":\"@regex:\\u003c\\u003c!--[\\\\s*]([\\\\d]{10})[\\\\s*][-]{2}\\u003e[1]\",\"startPage\":0},\"realRequestUrlRule\":\"{baseUrl}/activity\",\"supportPage\":true,\"urlRule\":\"@class:\\u003cactivity-event\\u003e-\\u003e@class:\\u003cmozaique\\u003e-\\u003e@class:\\u003cthumb-block\\u003e-\\u003e@class:\\u003cthumb-under\\u003e[0]-\\u003e@label:\\u003ca\\u003e[0]-\\u003e@property:\\u003chref\\u003e\",\"useWebView\":false},\"encoding\":\"utf-8\",\"icon\":\"https://www.xvideos.com/favicon.ico\",\"name\":\"XVideos\",\"searchRule\":{\"dynamicRender\":false,\"resultRule\":{\"descRule\":\"@class:\\u003cmozaique\\u003e-\\u003e@class:\\u003cthumb-block\\u003e-\\u003e@class:\\u003cthumb-under\\u003e[0]-\\u003e@class:\\u003cmetadata\\u003e[0]-\\u003e@text\",\"dynamicRender\":false,\"imageUrlRule\":\"@class:\\u003cmozaique\\u003e-\\u003e@class:\\u003cthumb-block\\u003e-\\u003e@class:\\u003cthumb-inside\\u003e[0]-\\u003e@class:\\u003cthumb\\u003e-\\u003e@label:\\u003cimg\\u003e[0]-\\u003e@property:\\u003cdata-src\\u003e\",\"nameRule\":\"@class:\\u003cmozaique\\u003e-\\u003e@class:\\u003cthumb-block\\u003e-\\u003e@class:\\u003cthumb-under\\u003e[0]-\\u003e@label:\\u003ca\\u003e[0]-\\u003e@text\",\"pageRule\":{\"combinedUrl\":\"\",\"fromHtml\":true,\"nextUrlRule\":\"@class:\\u003cpagination\\u003e[0]-\\u003e@label:\\u003cli\\u003e-\\u003e@label:\\u003ca\\u003e[0]-\\u003e@hasText:\\u003c{page}\\u003e-\\u003e@property:\\u003chref\\u003e\",\"paramRule\":\"\",\"startPage\":1},\"realRequestUrlRule\":\"{baseUrl}/activity\",\"supportPage\":true,\"urlRule\":\"@class:\\u003cmozaique\\u003e-\\u003e@class:\\u003cthumb-block\\u003e-\\u003e@class:\\u003cthumb-under\\u003e[0]-\\u003e@label:\\u003ca\\u003e[0]-\\u003e@property:\\u003chref\\u003e\",\"useWebView\":false},\"searchUrl\":\"https://www.xvideos.com/?k\\u003d{searchTxt}\\u0026top\",\"suggestKeyRule\":\"@jsonArr:\\u003cKEYWORDS\\u003e-\\u003e@jsonValue:\\u003cN\\u003e\",\"suggestTimeRule\":\"@jsonArr:\\u003cKEYWORDS\\u003e-\\u003e@jsonValue:\\u003cR\\u003e\",\"suggestUrl\":\"https://www.xvideos.com/search-suggest/{searchTxt}\",\"supportSuggest\":true},\"supportSearch\":true,\"type\":\"video\",\"url\":\"https://www.xvideos.com/channels-index\"}\n"
             webRules.add(JsonUtils.parseJsonWithGson(xvideos, WebRule::class.java)!!)
             webRules.clear()
             isInit = true

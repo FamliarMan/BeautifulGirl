@@ -26,6 +26,7 @@
     <string name="first_rule_title">第一级类别提取规则</string>
     <string name="second_rule_title">第二级类别提取规则</string>
     <string name="content_rule_title">内容提取规则</string>
+    <string name="search_rule_title">搜索提取规则</string>
     <string name="category_name_rule">分类名称提取规则</string>
     <string name="content_name_rule">内容名称提取规则</string>
     <string name="category_url_rule">分类跳转url提取规则</string>
@@ -45,11 +46,21 @@
     <string name="title_paramRule">页码抓取规则</string>
     <string name="title_startPage">起始页码</string>
     <string name="title_realRequestUrl">真正url请求地址 </string>
+    <string name="title_searchUrl">搜索结果跳转url</string>
+    <string name="title_debug_searchtxt">搜索调试关键字</string>
+    <string name="title_searchSuggestUrl">搜索建议url</string>
+    <string name="title_searchSuggestKeyRule">搜索建议结果的关键字提取规则</string>
+    <string name="title_searchSuggestTimeRule">搜索建议结果的关键字次数提取规则</string>
+    <string name="title_supportSearch">是否支持搜索</string>
+    <string name="title_supportSearchSuggest">是否支持搜索建议</string>
+    <string name="title_search_note">以下是搜索结果的提取规则</string>
     <string name="check_not_null">%s不能为空</string>
 
     <string name="btn_debug_first_category">调试一级分类规则</string>
     <string name="btn_debug_second_category">调试二级分类规则</string>
     <string name="btn_debug_content_category">调试具体内容规则</string>
+    <string name="btn_debug_search_category">调试搜索规则</string>
+    <string name="btn_debug_search_suggest_category">调试搜索建议规则</string>
 
 
     <string name="help_dynamicRender">有些网站使用非常多的js动态渲染，这个时候直接使用http请求网页获取到的内容不全，
@@ -68,9 +79,13 @@
     <string name="help_realRequestUrl">对于一些网页来说，从上一个页面的url点进来，该url并不会获取真正的内容，而是通过js向一个新的url请求，
         这里就是填写这个新的url，其中{baseUrl}代表上次获取的url，比如我们获取到的真实url是：www.baidu.com,但是真实请求地址是www.baidu.com/activity,
         这样我们这里可以表示成{baseUrl}/activity</string>
+    <string name="help_suggestUrl">搜索建议的url地址，可以用{searchTxt}占位</string>
+    <string name="help_debug_searchtxt">调试搜索时，可以在这里填写想要搜索的内容</string>
 
     <string name="log_category_success">分类获取成功，总数量：%1$d.\n下一页请求地址：%2$s</string>
     <string name="log_content_success">内容获取成功，总数量：%1$d.\n下一页请求地址：%2$s</string>
+    <string name="log_search_success">搜索结果获取成功，总数量：%1$d.\n下一页请求地址：%2$s</string>
+    <string name="log_search_suggest_success">搜索建议获取成功，总数量：%d</string>
     <string name="log_category_fail">未解析到任何分类，请确认分类规则正确</string>
     <string name="log_content_fail">未解析到任何具体内容，请确认规则正确</string>
     <string name="check_detail_log">查看详细日志</string>
