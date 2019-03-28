@@ -9,6 +9,7 @@ import com.jianglei.ruleparser.LogUtil
 import com.kk.taurus.exoplayer.ExoMediaPlayer
 import com.kk.taurus.playerbase.config.PlayerConfig
 import com.kk.taurus.playerbase.config.PlayerLibrary
+import com.uuzuche.lib_zxing.activity.ZXingLibrary
 
 /**
  * @author jianglei on 1/4/19.
@@ -26,6 +27,7 @@ class MyApplication : MultiDexApplication() {
         PlayerLibrary.init(this)
         ExoMediaPlayer.init(this)
         DataStorage.init(this)
+        ZXingLibrary.initDisplayOpinion(this)
 
     }
 }

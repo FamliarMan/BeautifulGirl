@@ -1,7 +1,9 @@
 package com.jianglei.beautifulgirl
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -16,17 +18,25 @@ import com.jianglei.beautifulgirl.vo.SearchVideoKeyWord
 import com.jianglei.ruleparser.GsonUtil
 import com.jianglei.ruleparser.RuleKeyWord
 import com.jianglei.videoplay.ContentVo
+import com.uuzuche.lib_zxing.activity.CaptureActivity
 import kotlinx.android.synthetic.main.activity_site_rule_edit.*
 import kotlinx.android.synthetic.main.activity_site_rule_edit.view.*
 import utils.DialogUtils
 import utils.JsonUtils
+import android.widget.Toast
+import com.jianglei.permission.JlPermission
+import com.jianglei.permission.OnPermissionResultListener
+import com.uuzuche.lib_zxing.activity.CodeUtils
+import java.util.jar.Manifest
+
 
 class SiteRuleEditActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySiteRuleEditBinding
     private lateinit var webRule: WebRule
+    private val REQUEST_FROM_QRCODE = 100
     private var webStrategy: WebStrategy? = null
-    private var ruleRecord:RuleRecord?=null
+    private var ruleRecord: RuleRecord? = null
     /**
      * 第一个一级分类的url，为二级分类调试准备
      */
@@ -101,23 +111,12 @@ class SiteRuleEditActivity : BaseActivity() {
                 "}\n"
         initView()
         ruleRecord = intent.getParcelableExtra("rule")
-        if(ruleRecord==null ){
+        if (ruleRecord == null) {
             webRule = WebRule()
-        }else{
+        } else {
             webRule = JsonUtils.parseJsonWithGson(ruleRecord!!.rule, WebRule::class.java)!!
         }
-        binding.webRule = webRule
-        binding.categoryPage = webRule.categoryRule!!.pageRule
-        binding.categoryRule = webRule.categoryRule
-        binding.coverRule = webRule.coverRule
-        binding.coverPage = webRule.coverRule!!.pageRule
-        binding.contentRule = webRule.contentRule
-        binding.contentPage = webRule.contentRule!!.pageRule
-
-        binding.searchRule = webRule.searchRule
-        if (webRule.searchRule != null) {
-            binding.searchPage = webRule.searchRule!!.resultRule!!.pageRule
-        }
+        bindRule(webRule)
     }
 
     private fun initView() {
@@ -152,10 +151,71 @@ class SiteRuleEditActivity : BaseActivity() {
                 Log.d("longyi", GsonUtil.gson.toJson(webRule))
                 true
             }
+            R.id.action_add_from_qrcode -> {
+                JlPermission.start(this@SiteRuleEditActivity)
+                    .permission(android.Manifest.permission.CAMERA)
+                    .build()
+                    .request(object : OnPermissionResultListener {
+                        override fun onGranted(permissions: Array<out String>?) {
+                            val intent = Intent(this@SiteRuleEditActivity, CaptureActivity::class.java)
+                            startActivityForResult(intent, REQUEST_FROM_QRCODE)
+
+                        }
+
+                        override fun onDenied(permissions: Array<out String>?) {
+                        }
+                    })
+                true
+            }
             else -> {
                 super.onOptionsItemSelected(item)
             }
 
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_FROM_QRCODE && resultCode == Activity.RESULT_OK) {
+            if (data == null) {
+                return
+            }
+            val bundle = data.extras ?: return
+            if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+                val result = bundle.getString(CodeUtils.RESULT_STRING)
+                replaceRule(result)
+            } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+                DialogUtils.showTipDialog(this@SiteRuleEditActivity, "解析二维码失败")
+            }
+        }
+    }
+
+    private fun replaceRule(json: String?) {
+        if (json == null) {
+            DialogUtils.showTipDialog(this@SiteRuleEditActivity, getString(R.string.error_json))
+            return
+        }
+        val newWebRule = JsonUtils.parseJsonWithGson(json, WebRule::class.java)
+        if (newWebRule == null) {
+            DialogUtils.showTipDialog(this@SiteRuleEditActivity, getString(R.string.error_json))
+            return
+        }
+        webRule = newWebRule
+        bindRule(webRule)
+    }
+
+    private fun bindRule(webRule: WebRule) {
+        binding.webRule = webRule
+        binding.categoryPage = webRule.categoryRule!!.pageRule
+        binding.categoryRule = webRule.categoryRule
+        binding.coverRule = webRule.coverRule
+        binding.coverPage = webRule.coverRule!!.pageRule
+        binding.contentRule = webRule.contentRule
+        binding.contentPage = webRule.contentRule!!.pageRule
+
+        binding.searchRule = webRule.searchRule
+        if (webRule.searchRule != null) {
+            binding.searchPage = webRule.searchRule!!.resultRule!!.pageRule
         }
     }
 

@@ -20,7 +20,8 @@
     <string name="debug">调试</string>
     <string name="save">保存</string>
     <string name="add_from_clip">从剪贴板导入</string>
-    <string name="add_from_qrcode">从二维码导入</string>
+    <string name="add_from_qrcode">扫描二维码</string>
+    <string name="add_from_img">从图片二维码导入</string>
     <string name="study">规则学习</string>
     <string name="open_draw">打开侧边栏</string>
     <string name="close_draw">关闭侧边栏</string>
@@ -65,6 +66,7 @@
     <string name="btn_debug_search_suggest_category">调试搜索建议规则</string>
 
     <string name="delete_confirm">确定要删除此网站吗？</string>
+    <string name="error_json">非法的json，无法转换成网站规则</string>
     <string name="confirm">确定</string>
 
 
