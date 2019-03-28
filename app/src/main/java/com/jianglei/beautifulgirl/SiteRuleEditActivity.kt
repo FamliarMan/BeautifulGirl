@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.databinding.ActivitySiteRuleEditBinding
 import com.jianglei.beautifulgirl.rule.*
+import com.jianglei.beautifulgirl.storage.RuleRecord
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.SearchVideoKeyWord
@@ -25,6 +26,7 @@ class SiteRuleEditActivity : BaseActivity() {
     private lateinit var binding: ActivitySiteRuleEditBinding
     private lateinit var webRule: WebRule
     private var webStrategy: WebStrategy? = null
+    private var ruleRecord:RuleRecord?=null
     /**
      * 第一个一级分类的url，为二级分类调试准备
      */
@@ -98,7 +100,12 @@ class SiteRuleEditActivity : BaseActivity() {
                 "  }\n" +
                 "}\n"
         initView()
-        webRule = JsonUtils.parseJsonWithGson(caoliu, WebRule::class.java)!!
+        ruleRecord = intent.getParcelableExtra("rule")
+        if(ruleRecord==null ){
+            webRule = WebRule()
+        }else{
+            webRule = JsonUtils.parseJsonWithGson(ruleRecord!!.rule, WebRule::class.java)!!
+        }
         binding.webRule = webRule
         binding.categoryPage = webRule.categoryRule!!.pageRule
         binding.categoryRule = webRule.categoryRule
@@ -259,7 +266,7 @@ class SiteRuleEditActivity : BaseActivity() {
             })
     }
 
-    private fun debugSearchSuggest(){
+    private fun debugSearchSuggest() {
         if (!checkSearchSuggest()) {
             return
         }
@@ -312,11 +319,11 @@ class SiteRuleEditActivity : BaseActivity() {
         showProgress(true)
         val url = webRule.searchRule!!.searchUrl.replace(RuleKeyWord.SEARCH_TXT, searchTxt)
         webStrategy!!.fetchAllCover(this,
-            1,url,true,
-            object:OnDataResultListener<List<ContentTitle>>{
+            1, url, true,
+            object : OnDataResultListener<List<ContentTitle>> {
                 override fun onSuccess(data: List<ContentTitle>) {
                     showProgress(false)
-                    showLogTipDialog(getString(R.string.log_search_success, data.size,webStrategy!!.nextCoverUrl))
+                    showLogTipDialog(getString(R.string.log_search_success, data.size, webStrategy!!.nextCoverUrl))
                 }
 
                 override fun onError(msg: String) {
@@ -406,7 +413,8 @@ class SiteRuleEditActivity : BaseActivity() {
         }
         return checkSearchSuggest() && checkCategoryInfo(webRule.searchRule!!.resultRule)
     }
-    private fun checkSearchSuggest():Boolean{
+
+    private fun checkSearchSuggest(): Boolean {
         if (webRule.searchRule!!.supportSuggest) {
             if (webRule.searchRule!!.suggestUrl.isNullOrBlank()) {
                 DialogUtils.showTipDialog(

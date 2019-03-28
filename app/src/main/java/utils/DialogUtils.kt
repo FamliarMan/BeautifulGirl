@@ -25,7 +25,12 @@ class DialogUtils {
             builder.create().show()
         }
 
-        fun showClickDialog(context: Context?,msg:String?,rightText:String,listener:DialogInterface.OnClickListener?){
+        fun showClickDialog(
+            context: Context?,
+            msg: String?,
+            rightText: String,
+            listener: DialogInterface.OnClickListener?
+        ) {
             if (context == null || (context is Activity && context.isFinishing)) {
                 return
             }
@@ -34,8 +39,8 @@ class DialogUtils {
                 .setTitle(context.getString(R.string.dialog_tip))
                 .setMessage(msg)
                 .setCancelable(true)
-                .setNegativeButton(context.getString(R.string.cancel),null)
-                .setPositiveButton(rightText,listener)
+                .setNegativeButton(context.getString(R.string.cancel), null)
+                .setPositiveButton(rightText, listener)
             builder.create().show()
         }
     }

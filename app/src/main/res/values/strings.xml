@@ -19,6 +19,8 @@
     <string name="site_manager">站点管理</string>
     <string name="debug">调试</string>
     <string name="save">保存</string>
+    <string name="add_from_clip">从剪贴板导入</string>
+    <string name="add_from_qrcode">从二维码导入</string>
     <string name="study">规则学习</string>
     <string name="open_draw">打开侧边栏</string>
     <string name="close_draw">关闭侧边栏</string>
@@ -61,6 +63,9 @@
     <string name="btn_debug_content_category">调试具体内容规则</string>
     <string name="btn_debug_search_category">调试搜索规则</string>
     <string name="btn_debug_search_suggest_category">调试搜索建议规则</string>
+
+    <string name="delete_confirm">确定要删除此网站吗？</string>
+    <string name="confirm">确定</string>
 
 
     <string name="help_dynamicRender">有些网站使用非常多的js动态渲染，这个时候直接使用http请求网页获取到的内容不全，

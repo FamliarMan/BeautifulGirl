@@ -30,7 +30,7 @@ class RuleViewModel : ViewModel() {
         return ruleRecordsData
     }
 
-    fun getRules() {
+    private fun getRules() {
         ruleRecordsData = DataStorage.db.ruleDao().getAllRules()
         ruleData = Transformations.map(ruleRecordsData, object : Function<List<RuleRecord>, List<WebRule>> {
             override fun apply(t: List<RuleRecord>): List<WebRule> {
@@ -41,6 +41,24 @@ class RuleViewModel : ViewModel() {
             }
         }) as MutableLiveData<List<WebRule>>
 
+    }
+
+    fun updateRule(rule: RuleRecord) {
+        DataStorage.excutorService.execute {
+            DataStorage.db.ruleDao().updateRule(rule)
+        }
+    }
+
+    fun deleteRule(rule: RuleRecord) {
+        DataStorage.excutorService.execute {
+            DataStorage.db.ruleDao().deleteRule(rule)
+        }
+    }
+
+    fun addRule(rule: RuleRecord) {
+        DataStorage.excutorService.execute {
+            DataStorage.db.ruleDao().addRule(rule)
+        }
     }
 
 }

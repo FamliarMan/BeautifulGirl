@@ -2,11 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_debug"
-          android:title="@string/debug"
-          app:showAsAction="always"/>
 
     <item android:id="@+id/action_save"
           android:title="@string/save"
           app:showAsAction="always"/>
+    <item android:id="@+id/action_add_from_clipboard"
+          android:title="@string/add_from_clip"
+          app:showAsAction="collapseActionView"/>
+    <item android:id="@+id/action_add_from_qrcode"
+          android:title="@string/add_from_qrcode"
+          app:showAsAction="collapseActionView"/>
 </menu>
