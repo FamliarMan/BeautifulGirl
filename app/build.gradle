@@ -105,6 +105,12 @@ dependencies {
     implementation 'com.facebook.fresco:animated-gif:1.5.0'
     implementation('me.relex:photodraweeview:2.0.0') {
     }
+
+    //room
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    kapt 'android.arch.persistence.room:compiler:1.1.1'
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    kapt "android.arch.lifecycle:compiler:1.1.1"
     //加载框
     implementation 'com.kaopiz:kprogresshud:1.0.2'
     implementation 'org.jsoup:jsoup:1.11.3'

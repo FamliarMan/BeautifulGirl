@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -12,6 +13,9 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
@@ -19,6 +23,9 @@ import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.rule.RuleCenter
 import com.jianglei.beautifulgirl.rule.WebRule
 import com.jianglei.beautifulgirl.rule.WebStrategy
+import com.jianglei.beautifulgirl.storage.DataStorage
+import com.jianglei.beautifulgirl.storage.OnSqlExcuteListener
+import com.jianglei.beautifulgirl.storage.RuleRecord
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.permission.JlPermission
 import com.jianglei.permission.OnPermissionResultListener
@@ -35,6 +42,7 @@ class AllWebsiteActivity : BaseActivity() {
         setContentView(R.layout.activity_all_website)
         initLog()
         initView()
+        initData()
         rvWebsites.layoutManager = GridLayoutManager(this, 2)
         val adapter = WebsiteAdapter(this, webRules as MutableList<WebRule>)
         adapter.onItemClickListener = object : OnItemClickListener<WebRule> {
@@ -79,7 +87,7 @@ class AllWebsiteActivity : BaseActivity() {
             when (it.itemId) {
                 R.id.action_site -> {
                     //站点管理
-                    val intent = Intent(this, SiteRuleEditActivity::class.java)
+                    val intent = Intent(this, SiteRuleListActivity::class.java)
                     startActivity(intent)
                 }
             }
@@ -101,6 +109,23 @@ class AllWebsiteActivity : BaseActivity() {
 
     }
 
+    private fun initData(){
+        val vm = ViewModelProviders.of(this).get(RuleViewModel::class.java)
+        vm.getRuleData().observe(this, Observer<List<WebRule>> {
+                for(record in it){
+                    Log.d("longyi",record.name)
+                }
+        })
+//        DataStorage.sqlOperation(object:OnSqlExcuteListener<List<RuleRecord>>{
+//            override fun onChildThread(): List<RuleRecord> {
+//                 return DataStorage.db.ruleDao()
+//                    .getAllRules()
+//            }
+//
+//            override fun onMainThread(res: List<RuleRecord>) {
+//            }
+//        })
+    }
 
 
     private fun getCategory(vo: WebRule) {
