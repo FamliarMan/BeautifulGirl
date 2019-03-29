@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_in_wall"
-          android:title="墙里"
-          android:icon="@mipmap/ic_car"
+    <item android:id="@+id/action_video"
+          android:title="@string/video"
+          android:icon="@mipmap/ic_video"
           app:showAsAction="always"/>
 
-    <item android:id="@+id/action_out_wall"
-          android:title="墙外"
-          android:icon="@mipmap/ico_wall"
+    <item android:id="@+id/action_image"
+          android:title="@string/image"
+          android:icon="@mipmap/ic_image"
           app:showAsAction="always"/>
 </menu>

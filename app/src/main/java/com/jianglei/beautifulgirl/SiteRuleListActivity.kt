@@ -32,11 +32,11 @@ class SiteRuleListActivity :BaseActivity() {
                     adapter = RuleAdapter(this@SiteRuleListActivity, it)
                     rvRules.adapter = adapter!!
                 } else {
-                    if (it.size != adapter!!.itemCount) {
-                        adapter!!.replaceAll(it)
-                    } else {
-                        adapter!!.notifyDataSetChanged()
-                    }
+                    adapter!!.replaceAll(it)
+//                    if (it.size != adapter!!.itemCount) {
+//                    } else {
+//                        adapter!!.notifyDataSetChanged()
+//                    }
                 }
             })
     }

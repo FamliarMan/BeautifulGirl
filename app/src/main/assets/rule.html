@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   Made with Remarkable!
+  </title>
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/github.min.css" rel="stylesheet"/>
+  <style type="text/css">
+   body,table tr{background-color:#fff}table tr td,table tr th{border:1px solid #ccc;text-align:left;padding:6px 13px;margin:0}pre code,table,table tr{padding:0}hr,pre code{background:0 0}body{font:16px Helvetica,Arial,sans-serif;line-height:1.4;color:#333;word-wrap:break-word;padding:10px 15px}strong,table tr th{font-weight:700}h1{font-size:2em;margin:.67em 0;text-align:center}h2{font-size:1.75em}h3{font-size:1.5em}h4{font-size:1.25em}h1,h2,h3,h4,h5,h6{font-weight:700;position:relative;margin-top:15px;margin-bottom:15px;line-height:1.1}h1,h2{border-bottom:1px solid #eee}hr{height:0;margin:15px 0;overflow:hidden;border:0;border-bottom:1px solid #ddd}a{color:#4183C4}a.absent{color:#c00}ol,ul{padding-left:15px;margin-left:5px}ol{list-style-type:lower-roman}table tr{border-top:1px solid #ccc;margin:0}table tr:nth-child(2n){background-color:#aaa}table tr td :first-child,table tr th :first-child{margin-top:0}table tr td:last-child,table tr th :last-child{margin-bottom:0}img{max-width:100%}blockquote{padding:0 15px;border-left:4px solid #ccc}code,tt{margin:0 2px;padding:0 5px;white-space:nowrap;border:1px solid #eaeaea;background-color:#f8f8f8;border-radius:3px}pre code{margin:0;white-space:pre;border:none}.highlight pre,pre{background-color:#f8f8f8;border:1px solid #ccc;font-size:13px;line-height:19px;overflow:auto;padding:6px 10px;border-radius:3px}
+  </style>
+ </head>
+ <body>
+  <h1 id="_1">
+   网站提取规则学习
+  </h1>
+  <h2 id="1-html">
+   1. Html元素提取规则
+  </h2>
+  <h3 id="11">
+   1.1 通过类名查找
+  </h3>
+  <pre><code>@class:&lt;name&gt;    查找所有class为name的元素
+@class:&lt;name&gt;[0] 查找class为name的第一个元素 （里面的数字可以随意填）
+@class:regex&lt;n[.]me&gt;  查找满足该正则的class元素
+@class:regex&lt;n[.]me&gt;[0] 查找满足该正则的class元素的第一个
+</code></pre>
+  <h3 id="12-id">
+   1.2 通过id查找
+  </h3>
+  <pre><code>@id:&lt;content&gt;  查找id为content的元素
+@id:regex&lt;n[.]me&gt;  查找id满足该正则的所有元素
+@id:regex&lt;n[.]me&gt;[0] 查找id满足该正则的第一个元素
+</code></pre>
+  <h3 id="13">
+   1.3  通过标签查找
+  </h3>
+  <pre><code>@label:&lt;a&gt;  查找标签为a的所有元素
+@label:&lt;a&gt;[0]  查找标签为a的第一个元素（里面的数字可以随意填）
+</code></pre>
+  <h3 id="14">
+   1.4 获取属性
+  </h3>
+  <pre><code>@property:&lt;href&gt;  元素的href属性的值，此时提取到的是文本
+</code></pre>
+  <h3 id="15">
+   1.5. 获取文本内容
+  </h3>
+  <pre><code>@text 获取第一个p元素的文本内容
+</code></pre>
+  <h2 id="2">
+   2. 任意文本提取
+  </h2>
+  <h3 id="21">
+   2.1  通过正则匹配
+  </h3>
+  <pre><code>@regex:&lt;(n([.])me)&gt;[1] 查找满足该正则文本，并提取第一个括号中的内容
+</code></pre>
+  <h2 id="3">
+   3. 组合使用
+  </h2>
+  <pre><code>@class:&lt;name&gt; -&gt; @id:&lt;content&gt; 查找所有class为name的元素下id为content的元素 
+@class:&lt;name&gt; -&gt; @class:&lt;content&gt;[0]  所有class为name的元素下第一个class为content的元素，累加起来返回一个列表
+</code></pre>
+  <h2 id="4">
+   4. 元素过滤规则
+  </h2>
+  <p>
+   具体规则如下：
+  </p>
+  <pre><code>* @hasClass:&lt;className1,className2&gt;  上个结果节点有class为className1或className2的子节点的保留
+* @noClass:&lt;className1,className2&gt; 上个结果节点不包含这个子class节点的保留
+* @hasId:&lt;id1,id2&gt; 包含所有id子节点保留
+* @noId:&lt;id1,id2&gt; 上个结果节点不包含所有这些子节点的保留
+* @hasLabel:&lt;label1,label2&gt; 上个结果节点包含所有这些标签子节点的保留
+* @noLabel:&lt;label1,label2&gt; 上个结果节点不包含所有这些标签子节点的保留
+* @hasText:&lt;text1,text2&gt; 上个元素集合中text属性含有这些text的保留
+* @==:&lt;value1,value2,value3&gt;  上个结果字符串等于这些value的任意一个保留
+* @!=:&lt;value1,value2,value3&gt; 上个结果字符串不等于全部这些value的保留
+
+比如：
+@label:&lt;h&gt;-&gt;@fileter:&lt;@hasClass(content)&gt;  找出所有不包含content节点的h节点
+
+</code></pre>
+  <h2 id="5-json">
+   5. Json提取
+  </h2>
+  <pre><code>@jsonArr:&lt;keyName&gt; 提取key为keyName的数组
+@jsonObj:&lt;keyName&gt; 提取key为keyName的对象
+@jsonValue:&lt;keyName&gt;提取key为keyName的某个属性
+
+组合使用
+@jsonArr&lt;keyName&gt; -&gt; @jsonObj:&lt;keyName2&gt; -&gt; @jsonValue:&lt;name&gt;
+</code></pre>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js">
+  </script>
+  <script>
+   hljs.initHighlightingOnLoad();
+  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
+  </script>
+  <script type="text/javascript">
+   MathJax.Hub.Config({"showProcessingMessages" : false,"messageStyle" : "none","tex2jax": { inlineMath: [ [ "$", "$" ] ] }});
+  </script>
+ </body>
+</html>

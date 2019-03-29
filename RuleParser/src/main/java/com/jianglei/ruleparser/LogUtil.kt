@@ -1,11 +1,16 @@
 package com.jianglei.ruleparser
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Environment
+import android.widget.Toast
 import com.elvishew.xlog.XLog
 import com.elvishew.xlog.printer.AndroidPrinter
 import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
+import com.elvishew.xlog.printer.file.naming.ChangelessFileNameGenerator
 import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import java.io.File
 
@@ -16,14 +21,15 @@ class LogUtil {
     companion object {
         private var open: Boolean = false
         var logHtml: Boolean = false
-        fun initOnlyConsole(logOpen: Boolean, logHtml: Boolean){
-            init(logOpen,logHtml,false)
+        fun initOnlyConsole(logOpen: Boolean, logHtml: Boolean) {
+            init(logOpen, logHtml, false)
 
         }
-        fun init(logOpen: Boolean, logHtml: Boolean,isFile:Boolean) {
+
+        fun init(logOpen: Boolean, logHtml: Boolean, isFile: Boolean) {
             LogUtil.open = logOpen
             LogUtil.logHtml = logHtml
-            if(!isFile){
+            if (!isFile) {
                 XLog.init()
                 return
             }
@@ -35,7 +41,7 @@ class LogUtil {
             val filePrinter = FilePrinter.Builder(
                 dir
             )
-                .fileNameGenerator(DateFileNameGenerator())
+                .fileNameGenerator(ChangelessFileNameGenerator("log"))
                 .cleanStrategy(FileLastModifiedCleanStrategy(24 * 60 * 60 * 100))
                 .build()
             XLog.init(AndroidPrinter(), filePrinter)
@@ -43,6 +49,21 @@ class LogUtil {
 
         fun d(msg: String) {
             XLog.d(msg)
+        }
+
+        fun openLog(context: Context) {
+
+            val dir = Environment.getExternalStorageDirectory().toString() + "/BeautifulGirl/log"
+            val file = File(dir)
+            if (!file.exists()) {
+                Toast.makeText(context, "没有找到日志文件,您可能为授予磁盘读写权限", Toast.LENGTH_LONG).show()
+                return
+            }
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(Uri.fromFile(File(dir)), "text/plain")
+            context.startActivity(intent)
+
+
         }
     }
 }

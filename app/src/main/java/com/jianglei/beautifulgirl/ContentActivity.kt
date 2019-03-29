@@ -54,7 +54,7 @@ class ContentActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return if (webStrategy.webRule.searchRule != null) {
+        return if (webStrategy.webRule.supportSearch) {
             menuInflater.inflate(R.menu.search, menu)
             true
         } else {

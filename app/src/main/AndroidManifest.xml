@@ -22,6 +22,8 @@
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".RuleHelpActivity">
+        </activity>
         <activity android:name=".SiteRuleListActivity">
         </activity>
         <activity android:name=".SiteRuleEditActivity">

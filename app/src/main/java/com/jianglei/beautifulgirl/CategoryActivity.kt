@@ -18,6 +18,7 @@ import com.jianglei.beautifulgirl.vo.Category
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_category.*
+import utils.DialogUtils
 import utils.ToastUtils
 
 class CategoryActivity : BaseActivity() {
@@ -49,7 +50,7 @@ class CategoryActivity : BaseActivity() {
                 try {
                     fetchData()
                 } catch (e: Throwable) {
-                    ToastUtils.showMsg(this@CategoryActivity, e.toString())
+                    DialogUtils.showLogTipDialog(this@CategoryActivity, e.toString())
                 }
 
             }
@@ -59,7 +60,7 @@ class CategoryActivity : BaseActivity() {
                 try {
                     fetchData()
                 } catch (e: Throwable) {
-                    ToastUtils.showMsg(this@CategoryActivity, e.toString())
+                    DialogUtils.showLogTipDialog(this@CategoryActivity, e.toString())
                 }
 
             }
@@ -68,7 +69,7 @@ class CategoryActivity : BaseActivity() {
         try {
             fetchData()
         } catch (e: Throwable) {
-            ToastUtils.showMsg(this@CategoryActivity, e.toString())
+            DialogUtils.showLogTipDialog(this@CategoryActivity, e.toString())
         }
 
     }
@@ -100,7 +101,7 @@ class CategoryActivity : BaseActivity() {
 
                         page++
                         if (data.isEmpty()) {
-                            ToastUtils.showMsg(
+                            DialogUtils.showLogTipDialog(
                                 this@CategoryActivity,
                                 getString(R.string.no_more_data)
                             )
@@ -119,7 +120,7 @@ class CategoryActivity : BaseActivity() {
                         rvCategory.post {
                             rvCategory.setPullLoadMoreCompleted()
                         }
-                        ToastUtils.showMsg(this@CategoryActivity, msg)
+                        DialogUtils.showLogTipDialog(this@CategoryActivity, msg)
                     }
                 }
             )
@@ -127,7 +128,7 @@ class CategoryActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return if (StrategyProvider.getCurStrategy()!!.webRule.searchRule != null) {
+        return if (StrategyProvider.getCurStrategy()!!.webRule.supportSearch) {
             menuInflater.inflate(R.menu.search, menu)
             true
         } else {

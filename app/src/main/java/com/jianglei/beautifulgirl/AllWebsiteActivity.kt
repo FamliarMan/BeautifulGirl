@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.rule.RuleCenter
+import com.jianglei.beautifulgirl.rule.RuleConstants
 import com.jianglei.beautifulgirl.rule.WebRule
 import com.jianglei.beautifulgirl.rule.WebStrategy
 import com.jianglei.beautifulgirl.storage.DataStorage
@@ -30,13 +31,18 @@ import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.permission.JlPermission
 import com.jianglei.permission.OnPermissionResultListener
 import com.jianglei.ruleparser.LogUtil
+import com.jianglei.ruleparser.ruledescription.RuleDesc
 import kotlinx.android.synthetic.main.activity_all_website.*
 import kotlinx.android.synthetic.main.activity_base.*
+import utils.DialogUtils
+import utils.JsonUtils
 import utils.ToastUtils
 
 class AllWebsiteActivity : BaseActivity() {
-    private var webRules = RuleCenter.getWebRules()
+    private var videoRules: MutableList<WebRule> = mutableListOf()
+    private var imageRules: MutableList<WebRule> = mutableListOf()
     private var curWebStrategy: WebStrategy? = null
+    private lateinit var adapter:WebsiteAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_website)
@@ -44,7 +50,7 @@ class AllWebsiteActivity : BaseActivity() {
         initView()
         initData()
         rvWebsites.layoutManager = GridLayoutManager(this, 2)
-        val adapter = WebsiteAdapter(this, webRules as MutableList<WebRule>)
+        adapter = WebsiteAdapter(this, videoRules)
         adapter.onItemClickListener = object : OnItemClickListener<WebRule> {
             override fun onItemClick(vo: WebRule, pos: Int) {
                 getCategory(vo)
@@ -53,17 +59,17 @@ class AllWebsiteActivity : BaseActivity() {
         }
         rvWebsites.adapter = adapter
 
-//        bottomNav.setOnNavigationItemSelectedListener {
-//            when {
-//                it.itemId == R.id.action_in_wall -> {
-////                    adapter.updateData(allWebsites!!)
-//                }
-//                else -> {
-////                    adapter.updateData(allWebsites!!)
-//                }
-//            }
-//            true
-//        }
+        bottomNav.setOnNavigationItemSelectedListener {
+            when {
+                it.itemId == R.id.action_video -> {
+                    adapter.updateData(videoRules)
+                }
+                else -> {
+                    adapter.updateData(imageRules)
+                }
+            }
+            true
+        }
     }
 
 
@@ -90,6 +96,11 @@ class AllWebsiteActivity : BaseActivity() {
                     val intent = Intent(this, SiteRuleListActivity::class.java)
                     startActivity(intent)
                 }
+                R.id.action_study -> {
+                    val intent = Intent(this, RuleHelpActivity::class.java)
+                    startActivity(intent)
+
+                }
             }
             true
 
@@ -109,22 +120,20 @@ class AllWebsiteActivity : BaseActivity() {
 
     }
 
-    private fun initData(){
+    private fun initData() {
         val vm = ViewModelProviders.of(this).get(RuleViewModel::class.java)
         vm.getRuleData().observe(this, Observer<List<WebRule>> {
-                for(record in it){
-                    Log.d("longyi",record.name)
+            imageRules.clear()
+            videoRules.clear()
+            for (rule in it) {
+                if(rule.type ==RuleConstants.TYPE_IMAGE){
+                    imageRules.add(rule)
+                }else{
+                    videoRules.add(rule)
                 }
+                adapter.notifyDataSetChanged()
+            }
         })
-//        DataStorage.sqlOperation(object:OnSqlExcuteListener<List<RuleRecord>>{
-//            override fun onChildThread(): List<RuleRecord> {
-//                 return DataStorage.db.ruleDao()
-//                    .getAllRules()
-//            }
-//
-//            override fun onMainThread(res: List<RuleRecord>) {
-//            }
-//        })
     }
 
 
@@ -149,7 +158,7 @@ class AllWebsiteActivity : BaseActivity() {
 
                 override fun onError(msg: String) {
                     showProgress(false)
-                    ToastUtils.showMsg(this@AllWebsiteActivity, msg)
+                    DialogUtils.showLogTipDialog(this@AllWebsiteActivity, msg)
                 }
             })
 

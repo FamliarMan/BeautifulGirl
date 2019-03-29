@@ -14,6 +14,7 @@ import com.jianglei.beautifulgirl.storage.RuleRecord
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.SearchVideoKeyWord
+import com.jianglei.ruleparser.LogUtil
 import com.jianglei.ruleparser.RuleKeyWord
 import com.jianglei.videoplay.ContentVo
 import kotlinx.android.synthetic.main.activity_site_rule_edit.*
@@ -36,6 +37,7 @@ class SiteRuleEditActivity : BaseActivity() {
      * 第一个二级分类的url，为具体地址调试做准备
      */
     private var firstCoveryUrl: String? = null
+    private var isEdit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +48,10 @@ class SiteRuleEditActivity : BaseActivity() {
         ruleRecord = intent.getParcelableExtra("rule")
         if (ruleRecord == null) {
             webRule = getEmptyRule()
+            isEdit = false
         } else {
             webRule = getRuleFromJson(ruleRecord!!.rule)!!
+            isEdit = true
         }
         bindRule(webRule)
     }
@@ -418,8 +422,15 @@ class SiteRuleEditActivity : BaseActivity() {
             return
         }
         val ruleViewModel: RuleViewModel = ViewModelProviders.of(this).get(RuleViewModel::class.java)
-        val ruleRecord = RuleRecord(0, webRule.name, 1, JsonUtils.toJsonString(webRule))
-        ruleViewModel.addRule(ruleRecord)
+        if (isEdit) {
+            ruleRecord!!.rule = JsonUtils.toJsonString(webRule)
+            ruleViewModel.updateRule(ruleRecord!!)
+
+        } else {
+            val ruleRecord = RuleRecord(0, webRule.name, 1, JsonUtils.toJsonString(webRule))
+            ruleViewModel.addRule(ruleRecord)
+        }
+
     }
 
     private fun checkWebBaseInfo(): Boolean {
@@ -495,6 +506,9 @@ class SiteRuleEditActivity : BaseActivity() {
     }
 
     private fun checkSearchInfo(): Boolean {
+        if(!webRule.supportSearch){
+            return true
+        }
         if (webRule.searchRule!!.searchUrl.isBlank()) {
             DialogUtils.showTipDialog(this, getString(R.string.check_not_null, getString(R.string.title_searchUrl)))
             return false
@@ -530,7 +544,9 @@ class SiteRuleEditActivity : BaseActivity() {
     private fun showLogTipDialog(msg: String) {
         DialogUtils.showClickDialog(this, msg, getString(R.string.check_detail_log),
             DialogInterface.OnClickListener { dialog, which ->
+                LogUtil.openLog(this@SiteRuleEditActivity)
             })
     }
+
 
 }

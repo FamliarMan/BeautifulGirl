@@ -9,22 +9,26 @@
         tools:context=".AllWebsiteActivity">
 
 
-    <!--<com.google.android.material.bottomnavigation.BottomNavigationView-->
-    <!--android:id="@+id/bottomNav"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:layout_width="match_parent"-->
-    <!--app:menu="@menu/bottom_nav"-->
-    <!--android:layout_height="wrap_content"-->
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-    <!--/>-->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomNav"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                app:menu="@menu/bottom_nav"
+                android:layout_height="wrap_content"
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:id="@+id/rvWebsites"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_height="match_parent">
+        />
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/rvWebsites"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </RelativeLayout>
     <com.google.android.material.navigation.NavigationView
             android:id="@+id/navBody"
             android:layout_width="250dp"

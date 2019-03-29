@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import com.jianglei.beautifulgirl.R
+import com.jianglei.ruleparser.LogUtil
 
 /**
  *@author longyi created on 19-3-25
@@ -42,6 +43,14 @@ class DialogUtils {
                 .setNegativeButton(context.getString(R.string.cancel), null)
                 .setPositiveButton(rightText, listener)
             builder.create().show()
+        }
+
+
+        fun showLogTipDialog(context: Context, msg: String) {
+            DialogUtils.showClickDialog(context, msg, context.getString(R.string.check_detail_log),
+                DialogInterface.OnClickListener { _, _ ->
+                    LogUtil.openLog(context)
+                })
         }
     }
 }

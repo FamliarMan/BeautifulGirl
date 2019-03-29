@@ -14,6 +14,7 @@ import com.jianglei.videoplay.ContentVo
 import com.jianglei.videoplay.VideoPlayActivity
 import com.jianglei.videoplay.WebViewPlayActivity
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
+import utils.DialogUtils
 import utils.ToastUtils
 
 /**
@@ -84,7 +85,7 @@ class ContentCoverListFragment : BaseFragment() {
                     } catch (e: Exception) {
                         e.printStackTrace()
                         if (activity != null) {
-                            ToastUtils.showMsg(activity!!, e.toString())
+                            DialogUtils.showLogTipDialog(activity!!, e.toString())
                         }
                     }
                 } else {
@@ -102,7 +103,7 @@ class ContentCoverListFragment : BaseFragment() {
                 try {
                     fetchData()
                 } catch (e: Throwable) {
-                    ToastUtils.showMsg(activity!!, e.toString())
+                    DialogUtils.showLogTipDialog(activity!!, e.toString())
                 }
             }
 
@@ -114,7 +115,7 @@ class ContentCoverListFragment : BaseFragment() {
                 try {
                     fetchData()
                 } catch (e: Throwable) {
-                    ToastUtils.showMsg(activity!!, e.toString())
+                    DialogUtils.showLogTipDialog(activity!!, e.toString())
                 }
             }
 
@@ -142,7 +143,7 @@ class ContentCoverListFragment : BaseFragment() {
                             return
                         }
                         showProgress(false)
-                        ToastUtils.showMsg(activity!!.applicationContext, getString(R.string.get_video_play_url_error))
+                        DialogUtils.showLogTipDialog(activity!!.applicationContext, getString(R.string.get_video_play_url_error))
                     }
                 }
             )

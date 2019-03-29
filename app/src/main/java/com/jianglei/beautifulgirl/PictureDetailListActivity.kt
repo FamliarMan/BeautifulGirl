@@ -15,6 +15,7 @@ import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.videoplay.ContentVo
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import kotlinx.android.synthetic.main.layout_recyclerview.*
+import utils.DialogUtils
 import utils.ToastUtils
 
 class PictureDetailListActivity : BaseActivity() {
@@ -75,7 +76,7 @@ class PictureDetailListActivity : BaseActivity() {
                             rvContent.setPullLoadMoreCompleted()
                         }
                         if (page == 1 && data.size == 0) {
-                            ToastUtils.showMsg(this@PictureDetailListActivity, getString(R.string.no_picture))
+                            DialogUtils.showTipDialog(this@PictureDetailListActivity, getString(R.string.no_picture))
                             return
                         } else if (data.size == 0) {
                             rvContent.pushRefreshEnable = false
@@ -106,8 +107,10 @@ class PictureDetailListActivity : BaseActivity() {
                 })
     }
 
-    private class PictureAdapter(private var context: Context,
-                                 private var urls: MutableList<ContentVo>) :
+    private class PictureAdapter(
+        private var context: Context,
+        private var urls: MutableList<ContentVo>
+    ) :
         RecyclerView.Adapter<PictureHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureHolder {
             val view = LayoutInflater.from(context).inflate(R.layout.listitem_picture_detail, parent, false)
