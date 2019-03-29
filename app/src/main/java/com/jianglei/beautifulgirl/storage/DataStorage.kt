@@ -33,6 +33,8 @@ class DataStorage {
                     val insert = "INSERT INTO RuleRecord (name,enabled,rule) values(?,1,?)"
                     db.execSQL(insert, arrayOf("草榴",caoliu))
                     db.execSQL(insert, arrayOf("xvideos",RuleCenter.xvideos))
+                    db.execSQL(insert, arrayOf("饭粒",RuleCenter.fanli))
+                    db.execSQL(insert, arrayOf("pornhub",RuleCenter.pornhub))
                 }
             }).build()
         }

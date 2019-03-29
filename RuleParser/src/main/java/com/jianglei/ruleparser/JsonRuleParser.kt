@@ -29,6 +29,7 @@ class JsonRuleParser {
             return jsonRule.trim().startsWith("@jsonValue")
         }
 
+
         fun getKeyName(jsonRule: String): String {
             val rule = jsonRule.trim()
             for (regex in regexAll) {
@@ -123,6 +124,9 @@ class JsonRuleParser {
                     val jsonObject = GsonUtil.gsonParser.parse(preString).asJsonObject
                     val arr = jsonObject.getAsJsonPrimitive(key).asString
                         ?: ExceptionUtils.throwIllegalArgumentException("错误的json key： $key")
+                    if (arr.isBlank()) {
+                        continue
+                    }
                     res.add(arr)
                 }
                 return res
@@ -141,6 +145,9 @@ class JsonRuleParser {
                 for (preObj in preObjects) {
                     val arr = preObj.getAsJsonPrimitive(key).asString
                         ?: ExceptionUtils.throwIllegalArgumentException("错误的json key： $key")
+                    if (arr.isBlank()) {
+                        continue
+                    }
                     res.add(arr)
                 }
                 return res
@@ -156,13 +163,20 @@ class JsonRuleParser {
             try {
                 for (preArr in preArrs) {
                     for (i in 0 until preArr.size()) {
-                        val arr = preArr.get(i).asJsonObject.getAsJsonPrimitive(key).asString
-                            ?: ExceptionUtils.throwIllegalArgumentException("错误的json key： $key")
-                        res.add(arr)
+                        if (preArr[i].isJsonPrimitive) {
+                            res.add(preArr[i].asJsonPrimitive.asString)
+                        } else {
+                            val arr = preArr.get(i).asJsonObject.getAsJsonPrimitive(key).asString
+                                ?: ExceptionUtils.throwIllegalArgumentException("错误的json key： $key")
+                            if (arr.isBlank()) {
+                                continue
+                            }
+                            res.add(arr)
+                        }
                     }
                 }
                 return res
-            }catch (e:Throwable){
+            } catch (e: Throwable) {
                 e.printStackTrace()
                 ExceptionUtils.throwIllegalArgumentException("非法的json规则：$jsonRule")
             }

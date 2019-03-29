@@ -185,7 +185,9 @@ class SelectRuleParser {
                 } else {
                     val element = e.getElementById(idRule.name)
                     elements = Elements()
-                    elements.add(element)
+                    if(element != null) {
+                        elements.add(element)
+                    }
                 }
                 if (elements.size == 0) {
                     continue

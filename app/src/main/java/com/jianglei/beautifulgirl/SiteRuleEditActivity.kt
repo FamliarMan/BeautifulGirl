@@ -288,6 +288,7 @@ class SiteRuleEditActivity : BaseActivity() {
             return
         }
         showProgress(true)
+        webStrategy = WebStrategy(webRule)
         webStrategy!!.fetchAllCover(this, 1, firstCategoryUrl, false,
             object : OnDataResultListener<List<ContentTitle>> {
                 override fun onSuccess(data: List<ContentTitle>) {
@@ -323,6 +324,7 @@ class SiteRuleEditActivity : BaseActivity() {
             return
         }
         showProgress(true)
+        webStrategy = WebStrategy(webRule)
         webStrategy!!.fetchAllContents(this, 1, firstCoveryUrl,
             object : OnDataResultListener<List<ContentVo>> {
                 override fun onSuccess(data: List<ContentVo>) {
@@ -361,9 +363,7 @@ class SiteRuleEditActivity : BaseActivity() {
             )
             return
         }
-        if (webStrategy == null) {
-            webStrategy = WebStrategy(webRule)
-        }
+        webStrategy = WebStrategy(webRule)
         showProgress(true)
         webStrategy!!.fetchSearchSuggest(searchTxt, object : OnDataResultListener<List<SearchVideoKeyWord>> {
             override fun onSuccess(data: List<SearchVideoKeyWord>) {
@@ -393,9 +393,7 @@ class SiteRuleEditActivity : BaseActivity() {
             )
             return
         }
-        if (webStrategy == null) {
-            webStrategy = WebStrategy(webRule)
-        }
+        webStrategy = WebStrategy(webRule)
         showProgress(true)
         val url = webRule.searchRule!!.searchUrl.replace(RuleKeyWord.SEARCH_TXT, searchTxt)
         webStrategy!!.fetchAllCover(this,
