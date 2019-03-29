@@ -31,8 +31,7 @@ fun PageRule.getNextUrl(parser: HtmlParser, baseUrl: String, nextPage: Int?): St
             return null
         }
         return UrlUtils.getFullUrl(
-            UrlUtils.getWebHost(baseUrl),
-            UrlUtils.getWebProtocol(baseUrl),
+            baseUrl,
             res[0]
         )
     }
@@ -51,4 +50,12 @@ fun PageRule.getNextUrl(parser: HtmlParser, baseUrl: String, nextPage: Int?): St
     combinedUrl = combinedUrl.replace("{page}", pages[0])
     return combinedUrl
 
+}
+
+fun WebRule.getBaseUrl():String{
+    return if(!this.homeUrl.isBlank()){
+        homeUrl
+    }else{
+        url
+    }
 }

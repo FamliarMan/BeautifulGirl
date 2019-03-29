@@ -22,6 +22,7 @@ class RuleKeyWord {
         const val EQUALS = "@=="
         const val NOT_EQUAL = "@!="
         const val HAS_TEXT = "@hasText"
+        const val NO_TEXT = "@noText"
 
         const val JSON_ARR ="@jsonArr"
         const val JSON_OBJ = "@jsonObj"

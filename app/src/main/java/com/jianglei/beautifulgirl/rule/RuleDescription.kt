@@ -39,6 +39,12 @@ class WebRule : BaseObservable() {
         }
 
 
+    @get:Bindable
+    var homeUrl:String=""
+    set(value){
+        field = value
+        notifyPropertyChanged(BR.homeUrl)
+    }
     /**
      * 网站icon的url
      */

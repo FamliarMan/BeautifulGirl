@@ -74,7 +74,7 @@ class WebStrategy(val webRule: WebRule) {
                         //准备下一页的地址
                         if (webRule.categoryRule!!.supportPage) {
                             nextCategoryUrl = webRule.categoryRule!!.pageRule!!
-                                .getNextUrl(curParser, webRule.url, newPage + 1)
+                                .getNextUrl(curParser, webRule.getBaseUrl(), newPage + 1)
                             LogUtil.d("解析分类下一页请求地址：$nextCategoryUrl")
                         } else {
                             nextCategoryUrl = ""
@@ -202,7 +202,7 @@ class WebStrategy(val webRule: WebRule) {
                         //解析下一页的地址
                         if (curRule.supportPage) {
                             nextCoverUrl = curRule.pageRule!!
-                                .getNextUrl(curParser, baseCoverUrl, newPage + 1)
+                                .getNextUrl(curParser, webRule.getBaseUrl(), newPage + 1)
                             LogUtil.d("解析封面下一页请求地址：$nextCoverUrl")
                         } else {
                             nextCoverUrl = ""
@@ -232,7 +232,7 @@ class WebStrategy(val webRule: WebRule) {
             throw IllegalArgumentException("解析到的封面的名称和url数量不匹配")
         }
         urls = urls.map {
-            UrlUtils.getFullUrl(baseCoverUrl, it)
+            UrlUtils.getFullUrl(webRule.getBaseUrl(), it)
         }.toList()
         var descs: List<String>? = null
         var coverUrls: List<String>? = null
@@ -319,7 +319,7 @@ class WebStrategy(val webRule: WebRule) {
                         //解析下一页的地址
                         if (webRule.contentRule!!.supportPage) {
                             nextContentUrl = webRule.contentRule!!.pageRule!!
-                                .getNextUrl(curParser, baseContentUrl, newPage + 1)
+                                .getNextUrl(curParser, webRule.getBaseUrl(), newPage + 1)
                             LogUtil.d("解析具体内容的下一页地址成功：$nextContentUrl")
 
                         } else {
@@ -345,7 +345,7 @@ class WebStrategy(val webRule: WebRule) {
         LogUtil.d("解析具体内容的url")
         var urls = parser.getStrings(webRule.contentRule!!.urlRule)
         urls = urls.map {
-            UrlUtils.getFullUrl(baseContentUrl, it)
+            UrlUtils.getFullUrl(webRule.getBaseUrl(), it)
         }
         var names: List<String>? = null
         if (!webRule.contentRule!!.nameRule.isBlank()) {

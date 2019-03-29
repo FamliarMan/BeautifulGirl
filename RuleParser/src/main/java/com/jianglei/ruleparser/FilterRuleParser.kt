@@ -15,10 +15,13 @@ class FilterRuleParser {
         private val noLabelRegex = Regex("^@noLabel:<(.*)>$")
         private val equalsRegex = Regex("^@==:<(.*)>$")
         private val hasTextRegex = Regex("^@hasText:<(.*)>$")
+        private val noTextRegex = Regex("^@noText:<(.*)>$")
         private val notEqualsRegex = Regex("^@!=:<(.*)>$")
         private val regexArray = listOf(
             hasClassRegex, noClassRegex, hasIdRegex,
-            noIdRegex, hasLabelRegex, noLabelRegex, equalsRegex, notEqualsRegex, hasTextRegex
+            noIdRegex, hasLabelRegex, noLabelRegex,
+            equalsRegex, notEqualsRegex, hasTextRegex,
+            noTextRegex
         )
 
 
@@ -35,6 +38,7 @@ class FilterRuleParser {
                     || rule.startsWith(RuleKeyWord.NO_CLASS)
                     || rule.startsWith(RuleKeyWord.NO_ID)
                     || rule.startsWith(RuleKeyWord.HAS_TEXT)
+                    ||rule.startsWith(RuleKeyWord.NO_TEXT)
         }
 
         /**
@@ -167,6 +171,19 @@ class FilterRuleParser {
                             }
                         }
                         hasText
+                    }.toList()
+                    return Elements(res)
+                }
+                rule.startsWith(RuleKeyWord.NO_TEXT) ->{
+                    val res = preElements.filter {
+                        var hasText = false
+                        for (text in filterCondition) {
+                            if (it.text() == text) {
+                                hasText = true
+                                break
+                            }
+                        }
+                        !hasText
                     }.toList()
                     return Elements(res)
                 }

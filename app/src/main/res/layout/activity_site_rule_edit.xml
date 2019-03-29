@@ -68,6 +68,13 @@
                     <com.jianglei.beautifulgirl.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        app:dv_content="@={webRule.homeUrl}"
+                        app:dv_title="@string/title_web_home_url"
+                        app:dv_help="@string/help_web_home_url"
+                    />
+                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         app:dv_title="@string/title_web_icon_url"
                         app:dv_content="@={webRule.icon}"
                     />

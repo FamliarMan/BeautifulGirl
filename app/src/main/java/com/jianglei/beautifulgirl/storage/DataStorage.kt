@@ -35,6 +35,7 @@ class DataStorage {
                     db.execSQL(insert, arrayOf("xvideos",RuleCenter.xvideos))
                     db.execSQL(insert, arrayOf("饭粒",RuleCenter.fanli))
                     db.execSQL(insert, arrayOf("pornhub",RuleCenter.pornhub))
+                    db.execSQL(insert, arrayOf("91porn",RuleCenter.nineone))
                 }
             }).build()
         }

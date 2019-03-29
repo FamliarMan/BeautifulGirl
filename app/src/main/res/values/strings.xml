@@ -44,6 +44,7 @@
     <string name="first_category_page">第一级类别分页</string>
 
     <string name="title_web_name">网站名称</string>
+    <string name="title_web_home_url">网站首页路径</string>
     <string name="title_web_icon_url">网站icon的url</string>
     <string name="title_web_url">网站入口url</string>
     <string name="title_category_name_rule">分类名称提取规则</string>
@@ -96,6 +97,9 @@
         这里就是填写这个新的url，其中{baseUrl}代表上次获取的url，比如我们获取到的真实url是：www.baidu.com,但是真实请求地址是www.baidu.com/activity,
         这样我们这里可以表示成{baseUrl}/activity
     </string>
+
+    <string name="help_web_home_url">某些网站的首页根路径不是协议+域名，例如不是https://www.baidu.com,而是https://www.baidu.com/index.php
+        ，我们需要这个值来计算一些相对路径的全路径</string>
     <string name="help_suggestUrl">搜索建议的url地址，可以用{searchTxt}占位</string>
     <string name="help_debug_searchtxt">调试搜索时，可以在这里填写想要搜索的内容</string>
 

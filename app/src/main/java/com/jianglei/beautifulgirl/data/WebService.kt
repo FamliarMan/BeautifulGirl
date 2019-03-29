@@ -1,6 +1,5 @@
 package com.jianglei.beautifulgirl.data
 
-import com.jianglei.beautifulgirl.spider.vpn.PornHubSpider
 import com.jianglei.beautifulgirl.vo.XVideoKeyWordWrapper
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -24,8 +23,6 @@ interface WebService {
     @GET("https://www.xvideos.com/search-suggest/{keyword}")
     fun xvideoSearch(@Path("keyword") keyWord: String): Call<XVideoKeyWordWrapper>
 
-    @GET("https://www.pornhub.com/video/search_autocomplete?pornstars=true")
-    fun pornhubSearch(@Query("q") keyWord: String): Call<PornHubSpider.PornHubKeyWordWrapper>
 
     @GET
     fun searchSuggest(@Url url: String ): Call<ResponseBody>
