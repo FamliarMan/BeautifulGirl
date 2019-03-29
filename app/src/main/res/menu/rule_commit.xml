@@ -5,14 +5,17 @@
 
     <item android:id="@+id/action_save"
           android:title="@string/save"
-          app:showAsAction="always"/>
+          app:showAsAction="ifRoom"/>
     <item android:id="@+id/action_add_from_clipboard"
           android:title="@string/add_from_clip"
           app:showAsAction="collapseActionView"/>
-    <item android:id="@+id/action_add_from_qrcode"
-          android:title="@string/add_from_qrcode"
-          app:showAsAction="collapseActionView"/>
-    <item android:id="@+id/action_add_from_img"
-          android:title="@string/add_from_img"
+    <!--<item android:id="@+id/action_add_from_qrcode"-->
+          <!--android:title="@string/add_from_qrcode"-->
+          <!--app:showAsAction="collapseActionView"/>-->
+    <!--<item android:id="@+id/action_add_from_img"-->
+          <!--android:title="@string/add_from_img"-->
+          <!--app:showAsAction="collapseActionView"/>-->
+    <item android:id="@+id/action_export_to_clipboard"
+          android:title="@string/export_to_clipboard"
           app:showAsAction="collapseActionView"/>
 </menu>

@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.CheckBox
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +16,7 @@ import com.jianglei.beautifulgirl.storage.RuleRecord
 import kotlinx.android.synthetic.main.activity_site_rule_list.*
 import utils.DialogUtils
 
-class SiteRuleListActivity : AppCompatActivity() {
+class SiteRuleListActivity :BaseActivity() {
     private var adapter: RuleAdapter? = null
     private lateinit var ruleViewModel: RuleViewModel
 
@@ -29,19 +29,19 @@ class SiteRuleListActivity : AppCompatActivity() {
         ruleViewModel.getRuleRecodeData()
             .observe(this, Observer {
                 if (adapter == null) {
-                    adapter = RuleAdapter(this@SiteRuleListActivity, it )
+                    adapter = RuleAdapter(this@SiteRuleListActivity, it)
                     rvRules.adapter = adapter!!
-                }else{
-                    if(it.size != adapter!!.itemCount){
+                } else {
+                    if (it.size != adapter!!.itemCount) {
                         adapter!!.replaceAll(it)
-                    }else{
+                    } else {
                         adapter!!.notifyDataSetChanged()
                     }
                 }
             })
     }
 
-    inner class RuleAdapter(val context: Context,val rules: List<RuleRecord>) :
+    inner class RuleAdapter(val context: Context, val rules: List<RuleRecord>) :
         CommonRecyclerAdapter<RuleRecord>(context, R.layout.listitem_rule, rules) {
         override fun onUpdate(helper: BaseAdapterHelper?, item: RuleRecord?, position: Int) {
             helper?.setText(R.id.tvName, item?.name)
@@ -66,14 +66,32 @@ class SiteRuleListActivity : AppCompatActivity() {
                         ruleViewModel.deleteRule(item!!)
                     })
             }
-            helper?.setOnClickListener(R.id.ivEdit){
-                val intent = Intent(context,SiteRuleEditActivity::class.java)
-                intent.putExtra("rule",item)
+            helper?.setOnClickListener(R.id.ivEdit) {
+                val intent = Intent(context, SiteRuleEditActivity::class.java)
+                intent.putExtra("rule", item)
                 context.startActivity(intent)
             }
         }
 
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.rule_list, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item!!.itemId) {
+            R.id.action_add_rule -> {
+                val intent = Intent(this, SiteRuleEditActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
+    }
 
 }

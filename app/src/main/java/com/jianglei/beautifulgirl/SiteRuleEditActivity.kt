@@ -1,13 +1,12 @@
 package com.jianglei.beautifulgirl
 
-import android.app.Activity
-import android.content.ContentValues
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.os.Bundle
-import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.databinding.ActivitySiteRuleEditBinding
 import com.jianglei.beautifulgirl.rule.*
@@ -15,26 +14,18 @@ import com.jianglei.beautifulgirl.storage.RuleRecord
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.beautifulgirl.vo.ContentTitle
 import com.jianglei.beautifulgirl.vo.SearchVideoKeyWord
-import com.jianglei.ruleparser.GsonUtil
 import com.jianglei.ruleparser.RuleKeyWord
 import com.jianglei.videoplay.ContentVo
-import com.uuzuche.lib_zxing.activity.CaptureActivity
 import kotlinx.android.synthetic.main.activity_site_rule_edit.*
-import kotlinx.android.synthetic.main.activity_site_rule_edit.view.*
 import utils.DialogUtils
 import utils.JsonUtils
-import android.widget.Toast
-import com.jianglei.permission.JlPermission
-import com.jianglei.permission.OnPermissionResultListener
-import com.uuzuche.lib_zxing.activity.CodeUtils
-import java.util.jar.Manifest
+import utils.ToastUtils
 
 
 class SiteRuleEditActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySiteRuleEditBinding
     private lateinit var webRule: WebRule
-    private val REQUEST_FROM_QRCODE = 100
     private var webStrategy: WebStrategy? = null
     private var ruleRecord: RuleRecord? = null
     /**
@@ -51,70 +42,12 @@ class SiteRuleEditActivity : BaseActivity() {
         binding =
             DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.activity_site_rule_edit, null, false)
         super.setContentView(binding.root)
-        val caoliu = "{\n" +
-                "  \"type\": \"video\",\n" +
-                "  \"name\": \"XVideos\",\n" +
-                "  \"icon\": \"https://www.xvideos.com/favicon.ico\",\n" +
-                "  \"encoding\": \"utf-8\",\n" +
-                "  \"url\": \"https://www.xvideos.com/channels-index\",\n" +
-                "  \"categoryRule\": {\n" +
-                "    \"dynamicRender\": true,\n" +
-                "    \"nameRule\": \"@class:<thumb-block > -> @class:<profile-name>[0] ->@label:<a>[0]->@text\",\n" +
-                "    \"urlRule\": \"@class:<thumb-block >->@class:<thumb>[0]->  @label:<a>[0]->@property:<href>\",\n" +
-                "    \"imageUrlRule\": \"@class:<thumb-block >->@class:<thumb>[0]->@label:<a>[0]->@label:<img>[0]->@property:<src> \",\n" +
-                "    \"descRule\": \"@class:<thumb-block >-> @class:<profile-counts>[0]->@text\",\n" +
-                "    \"supportPage\":true,\n" +
-                "    \"pageRule\": {\n" +
-                "      \"fromHtml\": \"true\",\n" +
-                "      \"startPage\": \"0\",\n" +
-                "      \"nextUrlRule\": \"@class:<pagination>[0]->@label:<li>->@hasClass:<no-page next-page>->@label:<a>[0]->@property:<href>\"\n" +
-                "    }\n" +
-                "  },\n" +
-                "  \"coverRule\": {\n" +
-                "    \"dynamicRender\": false,\n" +
-                "    \"nameRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@text\",\n" +
-                "    \"descRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@class:<metadata>[0]->@text\",\n" +
-                "    \"imageUrlRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-inside>[0]->@class:<thumb>->@label:<img>[0]->@property:<data-src>\",\n" +
-                "    \"urlRule\": \"@class:<activity-event>->@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@property:<href>\",\n" +
-                "    \"realRequestUrlRule\": \"{baseUrl}/activity\",\n" +
-                "    \"supportPage\":true,\n" +
-                "    \"pageRule\": {\n" +
-                "      \"fromHtml\": false,\n" +
-                "      \"combinedUrl\": \"{baseUrl}/{page}\",\n" +
-                "      \"paramRule\": \"@regex:<<!--[\\\\s*]([\\\\d]{10})[\\\\s*][-]{2}>[1]\"\n" +
-                "    }\n" +
-                "  },\n" +
-                "  \"searchRule\": {\n" +
-                "    \"searchUrl\": \"https://www.xvideos.com/?k={searchTxt}&top\",\n" +
-                "    \"resultRule\": {\n" +
-                "      \"dynamicRender\": false,\n" +
-                "      \"nameRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@text\",\n" +
-                "      \"descRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@class:<metadata>[0]->@text\",\n" +
-                "      \"imageUrlRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-inside>[0]->@class:<thumb>->@label:<img>[0]->@property:<data-src>\",\n" +
-                "      \"urlRule\": \"@class:<mozaique>->@class:<thumb-block>->@class:<thumb-under>[0]->@label:<a>[0]->@property:<href>\",\n" +
-                "      \"realRequestUrlRule\": \"{baseUrl}/activity\",\n" +
-                "      \"pageRule\": {\n" +
-                "        \"fromHtml\": \"true\",\n" +
-                "        \"startPage\": \"1\",\n" +
-                "        \"nextUrlRule\": \"@class:<pagination>[0]->@label:<li>->@label:<a>[0]->@hasText:<{page}>->@property:<href>\"\n" +
-                "      }\n" +
-                "    },\n" +
-                "    \"suggestUrl\": \"https://www.xvideos.com/search-suggest/{searchTxt}\",\n" +
-                "    \"suggestKeyRule\": \"@jsonArr:<KEYWORDS>->@jsonValue:<N>\",\n" +
-                "    \"suggestTimeRule\": \"@jsonArr:<KEYWORDS>->@jsonValue:<R>\"\n" +
-                "  },\n" +
-                "  \"contentRule\": {\n" +
-                "    \"dynamicRender\": true,\n" +
-                "    \"urlRule\": \"@regex:<setVideoUrlHigh\\\\('(.*?)'\\\\)>[1]\",\n" +
-                "    \"supportPage\":false\n" +
-                "  }\n" +
-                "}\n"
         initView()
         ruleRecord = intent.getParcelableExtra("rule")
         if (ruleRecord == null) {
-            webRule = WebRule()
+            webRule = getEmptyRule()
         } else {
-            webRule = JsonUtils.parseJsonWithGson(ruleRecord!!.rule, WebRule::class.java)!!
+            webRule = getRuleFromJson(ruleRecord!!.rule)!!
         }
         bindRule(webRule)
     }
@@ -139,6 +72,87 @@ class SiteRuleEditActivity : BaseActivity() {
 
     }
 
+    private fun getEmptyRule(): WebRule {
+        val webRule = WebRule()
+        //第一级分类规则
+        val categoryPage = PageRule()
+        val categoryRule = CategoryRule()
+        categoryRule.pageRule = categoryPage
+
+        //第二级分类规则
+        val coverPage = PageRule()
+        val coverRule = CategoryRule()
+        coverRule.pageRule = coverPage
+
+        //第三级分类规则
+        val contentPage = PageRule()
+        val contentRule = CategoryRule()
+        contentRule.pageRule = contentPage
+
+        //搜索规则
+        val searchResultRule = CategoryRule()
+        val searchResultPage = PageRule()
+        searchResultRule.pageRule = searchResultPage
+        val searchRule = SearchRule()
+        searchRule.resultRule = searchResultRule
+
+        webRule.searchRule = searchRule
+        webRule.categoryRule = categoryRule
+        webRule.coverRule = coverRule
+        webRule.contentRule = contentRule
+        return webRule
+    }
+
+    /**
+     * 有些特殊情况json有些数据没有记载，我们需要补全，
+     * 方便双向绑定，考虑这种情况，某个网站事先不支持搜索，
+     * 所以我们searchRule字段为空，如果我们想重新支持搜索，
+     * 我们双向绑定就会出问题，因为这个时候根本没有对应数据绑定
+     * 所以我们要先补上一个空的searchRule,由于supportSearch还是没有
+     * 改变，所以不会影响
+     */
+    private fun getCompleteRule(webRule: WebRule): WebRule {
+        //补齐一级分类分页
+        if (webRule.categoryRule!!.pageRule == null) {
+            webRule.categoryRule!!.pageRule = PageRule()
+
+        }
+        //补齐二级分类分页
+        if (webRule.coverRule!!.pageRule == null) {
+            webRule.coverRule!!.pageRule = PageRule()
+        }
+        //补齐三级分类分页
+        if (webRule.contentRule!!.pageRule == null) {
+            webRule.contentRule!!.pageRule = PageRule()
+        }
+        //补齐搜索规则
+        if (webRule.searchRule == null) {
+            val searchResultRule = CategoryRule()
+            val searchResultPage = PageRule()
+            searchResultRule.pageRule = searchResultPage
+            val searchRule = SearchRule()
+            searchRule.resultRule = searchResultRule
+            webRule.searchRule = searchRule
+        } else if (webRule.searchRule!!.resultRule == null) {
+            val searchResultRule = CategoryRule()
+            val searchResultPage = PageRule()
+            searchResultRule.pageRule = searchResultPage
+            webRule.searchRule!!.resultRule = searchResultRule
+        } else if (webRule.searchRule!!.resultRule!!.pageRule == null) {
+            webRule.searchRule!!.resultRule!!.pageRule = PageRule()
+        }
+        return webRule
+    }
+
+    private fun getRuleFromJson(str: String): WebRule? {
+        val webRule = JsonUtils.parseJsonWithGson(str, WebRule::class.java)
+        if (webRule == null) {
+            DialogUtils.showTipDialog(this, getString(R.string.error_json))
+            return null
+        }
+        return getCompleteRule(webRule)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.rule_commit, menu)
         return true
@@ -147,24 +161,42 @@ class SiteRuleEditActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item!!.itemId) {
             R.id.action_save -> {
-
-                Log.d("longyi", GsonUtil.gson.toJson(webRule))
+                save()
                 true
             }
-            R.id.action_add_from_qrcode -> {
-                JlPermission.start(this@SiteRuleEditActivity)
-                    .permission(android.Manifest.permission.CAMERA)
-                    .build()
-                    .request(object : OnPermissionResultListener {
-                        override fun onGranted(permissions: Array<out String>?) {
-                            val intent = Intent(this@SiteRuleEditActivity, CaptureActivity::class.java)
-                            startActivityForResult(intent, REQUEST_FROM_QRCODE)
-
-                        }
-
-                        override fun onDenied(permissions: Array<out String>?) {
-                        }
-                    })
+//            R.id.action_add_from_qrcode -> {
+//                JlPermission.start(this@SiteRuleEditActivity)
+//                    .permission(android.Manifest.permission.CAMERA)
+//                    .build()
+//                    .request(object : OnPermissionResultListener {
+//                        override fun onGranted(permissions: Array<out String>?) {
+//                            val intent = Intent(this@SiteRuleEditActivity, CaptureActivity::class.java)
+//                            startActivityForResult(intent, REQUEST_FROM_QRCODE)
+//
+//                        }
+//
+//                        override fun onDenied(permissions: Array<out String>?) {
+//                        }
+//                    })
+//                true
+//            }
+            R.id.action_add_from_clipboard -> {
+                //从剪贴板导入
+                val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val json = cm.primaryClip?.getItemAt(0)?.text.toString()
+                val newRule = getRuleFromJson(json)
+                if (newRule != null) {
+                    webRule = newRule
+                    bindRule(webRule)
+                }
+                true
+            }
+            R.id.action_export_to_clipboard -> {
+                //导出到剪贴板
+                val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("text", JsonUtils.toJsonString(webRule))
+                cm.primaryClip = clip
+                ToastUtils.showShortMsg(this, getString(R.string.copy_success))
                 true
             }
             else -> {
@@ -176,33 +208,20 @@ class SiteRuleEditActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_FROM_QRCODE && resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                return
-            }
-            val bundle = data.extras ?: return
-            if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                val result = bundle.getString(CodeUtils.RESULT_STRING)
-                replaceRule(result)
-            } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                DialogUtils.showTipDialog(this@SiteRuleEditActivity, "解析二维码失败")
-            }
-        }
+//        if (requestCode == REQUEST_FROM_QRCODE && resultCode == Activity.RESULT_OK) {
+//            if (data == null) {
+//                return
+//            }
+//            val bundle = data.extras ?: return
+//            if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+//                val result = bundle.getString(CodeUtils.RESULT_STRING)
+//                replaceRule(result)
+//            } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+//                DialogUtils.showTipDialog(this@SiteRuleEditActivity, "解析二维码失败")
+//            }
+//        }
     }
 
-    private fun replaceRule(json: String?) {
-        if (json == null) {
-            DialogUtils.showTipDialog(this@SiteRuleEditActivity, getString(R.string.error_json))
-            return
-        }
-        val newWebRule = JsonUtils.parseJsonWithGson(json, WebRule::class.java)
-        if (newWebRule == null) {
-            DialogUtils.showTipDialog(this@SiteRuleEditActivity, getString(R.string.error_json))
-            return
-        }
-        webRule = newWebRule
-        bindRule(webRule)
-    }
 
     private fun bindRule(webRule: WebRule) {
         binding.webRule = webRule
@@ -212,17 +231,14 @@ class SiteRuleEditActivity : BaseActivity() {
         binding.coverPage = webRule.coverRule!!.pageRule
         binding.contentRule = webRule.contentRule
         binding.contentPage = webRule.contentRule!!.pageRule
-
         binding.searchRule = webRule.searchRule
-        if (webRule.searchRule != null) {
-            binding.searchPage = webRule.searchRule!!.resultRule!!.pageRule
-        }
+        binding.searchPage = webRule.searchRule!!.resultRule!!.pageRule
     }
 
     /**
      * 调试第一级类别规则
      */
-    fun debugCategory() {
+    private fun debugCategory() {
         firstCategoryUrl = null
         if (!checkFirstCategory()) {
             return
@@ -393,6 +409,18 @@ class SiteRuleEditActivity : BaseActivity() {
             })
     }
 
+
+    private fun save() {
+        if (!checkContentInfo()) {
+            return
+        }
+        if (!checkSearchInfo()) {
+            return
+        }
+        val ruleViewModel: RuleViewModel = ViewModelProviders.of(this).get(RuleViewModel::class.java)
+        val ruleRecord = RuleRecord(0, webRule.name, 1, JsonUtils.toJsonString(webRule))
+        ruleViewModel.addRule(ruleRecord)
+    }
 
     private fun checkWebBaseInfo(): Boolean {
         if (webRule.name.isEmpty()) {

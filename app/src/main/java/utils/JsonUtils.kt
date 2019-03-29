@@ -3,21 +3,22 @@ package utils
 import android.text.TextUtils
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import java.lang.reflect.GenericSignatureFormatError
 
 /**
  * @author jianglei on 1/25/19.
  */
 class JsonUtils {
     companion object {
+        private val gson =Gson()
         /**
          * 将Json数据解析成相应的映射对象
          */
         public fun <T> parseJsonWithGson(jsonData: String, type: Class<T>): T? {
             var result: T? = null
             if (!TextUtils.isEmpty(jsonData)) {
-                val gson = Gson()
                 try {
-                    result = gson.fromJson(jsonData, type);
+                    result = gson.fromJson(jsonData, type)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -31,7 +32,6 @@ class JsonUtils {
         public fun <T> parseJsonArrayWithGson(jsonData: String, type: Class<T>): List<T>? {
             var result: List<T>? = null
             if (!TextUtils.isEmpty(jsonData)) {
-                val gson = Gson()
                 try {
 
                     val parser = JsonParser()
@@ -52,6 +52,10 @@ class JsonUtils {
                 }
             }
             return result;
+        }
+
+        public fun toJsonString(obj: Any):String{
+            return gson.toJson(obj)
         }
     }
 }

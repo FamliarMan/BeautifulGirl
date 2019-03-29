@@ -10,6 +10,8 @@
     <string name="retry">重新尝试</string>
     <string name="get_video_play_url_error">获取视频播放地址失败</string>
     <string name="cancel">取消</string>
+    <string name="menu_add_rule">新增书源</string>
+    <string name="copy_success">拷贝规则成功</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -22,6 +24,7 @@
     <string name="add_from_clip">从剪贴板导入</string>
     <string name="add_from_qrcode">扫描二维码</string>
     <string name="add_from_img">从图片二维码导入</string>
+    <string name="export_to_clipboard">导出到剪贴板</string>
     <string name="study">规则学习</string>
     <string name="open_draw">打开侧边栏</string>
     <string name="close_draw">关闭侧边栏</string>
