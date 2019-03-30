@@ -13,7 +13,7 @@ import java.io.File
 fun getAvaliableUri(context: Context, filePath: String): Uri {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         FileProvider.getUriForFile(
-            context, "com.jianglei.beautifulgirl.fileprovider",
+            context, "com.jianglei.beautifulgirl.appfileprovider",
             File(filePath)
         )
     } else {

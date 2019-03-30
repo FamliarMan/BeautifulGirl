@@ -12,14 +12,15 @@
     <string name="cancel">取消</string>
     <string name="menu_add_rule">新增</string>
     <string name="menu_export_to_file">导出到文件</string>
-    <string name="menu_import_from_file">从文件中恢复</string>
+    <string name="menu_import_from_file">从文件中导入</string>
     <string name="copy_success">拷贝规则成功</string>
     <string name="image">图片</string>
     <string name="video">视频</string>
 
     <string name="backup_error">备份文件失败</string>
     <string name="backup_success">成功备份文件到%s</string>
-    <string name="restore_not_exist">您之前未备份过数据</string>
+    <string name="restore_not_exist">该文件不存在</string>
+    <string name="restore_error">恢复文件失败</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dialog_tip">提示</string>
@@ -121,6 +122,8 @@
     <string name="check_detail_log">查看详细日志</string>
     <string name="please_debug_first_category">请先调试第一级分类规</string>
     <string name="please_debug_second_category">请先调试第二级分类规则</string>
+    <string name="import_select_rule">导入选中的网站</string>
+    <string name="import_none">文件中没有网站规则记录</string>
     <string-array name="encoding">
         <item>utf-8</item>
         <item>GBK</item>

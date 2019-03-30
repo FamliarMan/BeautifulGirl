@@ -1,8 +1,10 @@
 package com.jianglei.beautifulgirl
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -14,11 +16,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.classic.adapter.BaseAdapterHelper
 import com.classic.adapter.CommonRecyclerAdapter
-import com.jianglei.beautifulgirl.storage.DataStorage
 import com.jianglei.beautifulgirl.storage.RuleRecord
 import kotlinx.android.synthetic.main.activity_site_rule_list.*
-import org.jetbrains.anko.browse
-import org.jetbrains.anko.coroutines.experimental.asReference
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
@@ -102,18 +101,31 @@ class SiteRuleListActivity : BaseActivity() {
                 writeRuleToFile()
                 true
             }
-//            R.id.action_import_from_file->{
-//                restoreFromFile()
-//                true
-//            }
+            R.id.action_import_from_file -> {
+                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                intent.setType("*/*").addCategory(Intent.CATEGORY_OPENABLE)
+                startActivityForResult(intent, REQUEST_FILE)
+                true
+            }
             else -> {
                 super.onOptionsItemSelected(item)
             }
         }
     }
 
-    fun writeRuleToFile() {
-        val ref = this.asReference()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_FILE && resultCode == Activity.RESULT_OK) {
+            if (data == null) {
+                return
+            }
+            val url = data.data ?: return
+            restoreFromFile(url)
+
+        }
+    }
+
+    private fun writeRuleToFile() {
         showProgress(true)
         doAsync {
             val dir = Environment.getExternalStorageDirectory().toString() + "/BeautifulGirl"
@@ -147,40 +159,66 @@ class SiteRuleListActivity : BaseActivity() {
 
     }
 
-    fun restoreFromFile(){
+    fun restoreFromFile(uri: Uri) {
+        showProgress(true)
         doAsync {
-            val dir = Environment.getExternalStorageDirectory().toString() + "/BeautifulGirl"
-            val file = File(dir)
-            if (!file.exists()) {
-                toast(R.string.restore_not_exist)
-                return@doAsync
-            }
-            val path = "$dir/rule.bak"
             var bfw: BufferedReader? = null
             try {
-                bfw = BufferedReader(FileReader(File(path)))
-                while(true){
+                val inputStream = contentResolver.openInputStream(uri)
+                    ?: return@doAsync
+                if (inputStream.available() > 1024 * 1024) {
+                    uiThread {
+                        showProgress(false)
+                        DialogUtils.showLogTipDialog(
+                            this@SiteRuleListActivity,
+                            getString(R.string.restore_error)
+                        )
+                    }
+                    return@doAsync
+                }
+                bfw = BufferedReader(InputStreamReader(inputStream))
+                val rules = mutableListOf<RuleRecord>()
+                while (true) {
                     val str = bfw.readLine() ?: break
-                    if(str.isEmpty()){
+                    if (str.isEmpty()) {
                         continue
                     }
-                    Log.d("longyi",str)
+                    val rule = JsonUtils.parseJsonWithGson(str, RuleRecord::class.java) ?: continue
+                    rules.add(rule)
 
+                }
+
+                uiThread {
+                    showProgress(false)
+                    if (rules.isEmpty()) {
+                        toast(R.string.import_none)
+                    } else {
+                        val restoreDialog = RestoreDialogFragment()
+                        restoreDialog.setRecords(rules)
+                        restoreDialog.show(
+                            supportFragmentManager,
+                            "restore"
+                        )
+                    }
                 }
 
             } catch (e: Throwable) {
                 e.printStackTrace()
                 uiThread {
-                    toast(R.string.backup_error)
+                    showProgress(false)
+                    DialogUtils.showLogTipDialog(
+                        this@SiteRuleListActivity,
+                        getString(R.string.restore_error)
+                    )
                 }
             } finally {
                 bfw?.close()
-                uiThread {
-                    showProgress(false)
-                    toast(getString(R.string.backup_success, path))
-                }
             }
 
         }
+    }
+
+    companion object {
+        private const val REQUEST_FILE = 100
     }
 }

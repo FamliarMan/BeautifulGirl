@@ -7,7 +7,6 @@
           app:showAsAction="always"/>
     <item android:id="@+id/action_export_to_file"
           android:title="@string/menu_export_to_file"/>
-    <!--<item android:id="@+id/action_import_from_file"-->
-          <!--android:title="@string/
-          menu_import_from_file"/>-->
+    <item android:id="@+id/action_import_from_file"
+          android:title="@string/menu_import_from_file"/>
 </menu>
