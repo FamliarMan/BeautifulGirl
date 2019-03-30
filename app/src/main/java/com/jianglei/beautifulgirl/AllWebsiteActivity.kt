@@ -20,6 +20,7 @@ import com.jianglei.beautifulgirl.data.OnDataResultListener
 import com.jianglei.beautifulgirl.rule.RuleConstants
 import com.jianglei.beautifulgirl.rule.WebRule
 import com.jianglei.beautifulgirl.rule.WebStrategy
+import com.jianglei.beautifulgirl.storage.RuleRecord
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.permission.JlPermission
 import com.jianglei.permission.OnPermissionResultListener
@@ -27,12 +28,13 @@ import com.jianglei.ruleparser.LogUtil
 import kotlinx.android.synthetic.main.activity_all_website.*
 import kotlinx.android.synthetic.main.activity_base.*
 import utils.DialogUtils
+import utils.JsonUtils
 
 class AllWebsiteActivity : BaseActivity() {
     private var videoRules: MutableList<WebRule> = mutableListOf()
     private var imageRules: MutableList<WebRule> = mutableListOf()
     private var curWebStrategy: WebStrategy? = null
-    private lateinit var adapter:WebsiteAdapter
+    private lateinit var adapter: WebsiteAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_all_website)
@@ -112,17 +114,26 @@ class AllWebsiteActivity : BaseActivity() {
 
     private fun initData() {
         val vm = ViewModelProviders.of(this).get(RuleViewModel::class.java)
-        vm.getRuleData().observe(this, Observer<List<WebRule>> {
+        vm.getRuleRecodeData().observe(this, Observer<List<RuleRecord>> { list ->
             imageRules.clear()
             videoRules.clear()
-            for (rule in it) {
-                if(rule.type ==RuleConstants.TYPE_IMAGE){
-                    imageRules.add(rule)
-                }else{
-                    videoRules.add(rule)
+            list.filter {
+                it.enabled == 1
+            }.map {
+                JsonUtils.parseJsonWithGson(it.rule, WebRule::class.java)
+            }.filter {
+                it != null
+            }.forEach {
+                    if (it!!.type == RuleConstants.TYPE_IMAGE) {
+                        imageRules.add(it)
+                    } else {
+                        videoRules.add(it)
+                    }
+                    adapter.notifyDataSetChanged()
                 }
-                adapter.notifyDataSetChanged()
-            }
+//            for (rule in list) {
+//                if (list.)
+//            }
         })
     }
 

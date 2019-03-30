@@ -1,9 +1,9 @@
 package com.jianglei.ruleparser
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.widget.Toast
 import com.elvishew.xlog.XLog
@@ -11,7 +11,6 @@ import com.elvishew.xlog.printer.AndroidPrinter
 import com.elvishew.xlog.printer.file.FilePrinter
 import com.elvishew.xlog.printer.file.clean.FileLastModifiedCleanStrategy
 import com.elvishew.xlog.printer.file.naming.ChangelessFileNameGenerator
-import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator
 import java.io.File
 
 /**
@@ -35,7 +34,7 @@ class LogUtil {
                 XLog.init()
                 return
             }
-            val dir = Environment.getExternalStorageDirectory().toString() + "/BeautifulGirl"
+            val dir = Environment.getExternalStorageDirectory().toString() + "/BeautifulGirl/log"
             val file = File(dir)
             if (!file.exists()) {
                 file.mkdirs()
@@ -55,17 +54,21 @@ class LogUtil {
 
         fun openLog(context: Context) {
 
-            val dir = Environment.getExternalStorageDirectory().toString() + "/BeautifulGirl/log"
+            val dir = Environment.getExternalStorageDirectory().toString() + "/BeautifulGirl/log/log"
             val file = File(dir)
             if (!file.exists()) {
                 Toast.makeText(context, "没有找到日志文件,您可能为授予磁盘读写权限", Toast.LENGTH_LONG).show()
                 return
             }
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.setDataAndType(Uri.fromFile(File(dir)), "text/plain")
+            val uri = getAvaliableUri(context,dir)
+            intent.setDataAndType(uri, "text/plain")
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             context.startActivity(intent)
 
 
         }
     }
+
 }
+
