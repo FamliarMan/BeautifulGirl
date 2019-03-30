@@ -3,6 +3,7 @@ package com.jianglei.beautifulgirl
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -185,7 +186,7 @@ class AllWebsiteActivity : BaseActivity() {
         }
 
         override fun onBindViewHolder(holder: WebsiteHolder, position: Int) {
-            holder.ivContent.setImageURI(webRules[position].icon)
+            holder.ivContent.setImageURI(Uri.parse(webRules[position].icon))
             holder.tvName.text = webRules[position].name
             holder.tvType.text = webRules[position].type
             holder.mainItem.setOnClickListener {

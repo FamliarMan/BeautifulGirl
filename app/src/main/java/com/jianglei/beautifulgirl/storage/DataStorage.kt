@@ -28,12 +28,12 @@ class DataStorage {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
                     val caoliu = RuleCenter.caoliu
-                    val insert = "INSERT INTO RuleRecord (name,enabled,rule) values(?,1,?)"
-                    db.execSQL(insert, arrayOf("草榴",caoliu))
-                    db.execSQL(insert, arrayOf("xvideos",RuleCenter.xvideos))
-                    db.execSQL(insert, arrayOf("饭粒",RuleCenter.fanli))
-                    db.execSQL(insert, arrayOf("pornhub",RuleCenter.pornhub))
-                    db.execSQL(insert, arrayOf("91porn",RuleCenter.nineone))
+//                    val insert = "INSERT INTO RuleRecord (name,enabled,rule) values(?,1,?)"
+//                    db.execSQL(insert, arrayOf("草榴",caoliu))
+//                    db.execSQL(insert, arrayOf("xvideos",RuleCenter.xvideos))
+//                    db.execSQL(insert, arrayOf("饭粒",RuleCenter.fanli))
+//                    db.execSQL(insert, arrayOf("pornhub",RuleCenter.pornhub))
+//                    db.execSQL(insert, arrayOf("91porn",RuleCenter.nineone))
                 }
             }).build()
         }
