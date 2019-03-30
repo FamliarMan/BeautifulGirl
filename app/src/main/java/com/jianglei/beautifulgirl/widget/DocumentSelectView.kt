@@ -41,10 +41,11 @@ class DocumentSelectView : DocumentView {
         }
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
+                setOnlyContent(allContents!![0])
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                contentValue = allContents!![position]
+                setOnlyContent(allContents!![position])
             }
         }
 
@@ -78,6 +79,10 @@ class DocumentSelectView : DocumentView {
                 spinner.setSelection(index)
             }
         }
+    }
+
+    fun setOnlyContent(content:String?){
+        super.setContent(content)
     }
 
 

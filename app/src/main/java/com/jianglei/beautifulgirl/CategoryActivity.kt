@@ -33,6 +33,9 @@ class CategoryActivity : BaseActivity() {
         rvCategory.setGridLayout(2)
         adapter = CategoryAdapter(this, categories)
         rvCategory.setAdapter(adapter)
+        if(!StrategyProvider.getCurStrategy()!!.webRule.categoryRule!!.supportPage){
+            rvCategory.pushRefreshEnable = false
+        }
         adapter.onItemClickListener = (object : OnItemClickListener<Category> {
             override fun onItemClick(vo: Category, pos: Int) {
                 val intent = Intent(this@CategoryActivity, ContentActivity::class.java)

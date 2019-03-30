@@ -98,12 +98,12 @@ class WebStrategy(val webRule: WebRule) {
         val document = Jsoup.parse(html)
         val ruleParser = HtmlParser(document)
         LogUtil.d("开始解析一级分类名称：")
-        val titles = ruleParser.getStrings(webRule.categoryRule!!.nameRule)
+        val titles = ruleParser.getStringsUnit(webRule.categoryRule!!.nameRule)
 
         val host = UrlUtils.getWebHost(webRule.url)
         val protocol = UrlUtils.getWebProtocol(webRule.url)
         LogUtil.d("开始解析一级分类跳转url：")
-        val urls = ruleParser.getStrings(webRule.categoryRule!!.urlRule)
+        val urls = ruleParser.getStringsUnit(webRule.categoryRule!!.urlRule)
             .map {
                 UrlUtils.getFullUrl(host, protocol, it)
             }.toList()
@@ -111,7 +111,7 @@ class WebStrategy(val webRule: WebRule) {
 
         if (!webRule.categoryRule!!.imageUrlRule.isNullOrBlank()) {
             LogUtil.d("开始解析一级分类封面url：")
-            coverUrl = ruleParser.getStrings(webRule.categoryRule!!.imageUrlRule!!)
+            coverUrl = ruleParser.getStringsUnit(webRule.categoryRule!!.imageUrlRule!!)
                 .map {
                     UrlUtils.getFullUrl(host, protocol, it)
                 }.toList()
@@ -225,9 +225,9 @@ class WebStrategy(val webRule: WebRule) {
     private fun getContentTitle(html: String, curRule: CategoryRule): List<ContentTitle> {
         val parser = HtmlParser(Jsoup.parse(html))
         LogUtil.d("开始解析二级分类名称：")
-        val names = parser.getStrings(curRule.nameRule)
+        val names = parser.getStringsUnit(curRule.nameRule)
         LogUtil.d("开始解析二级分类url：")
-        var urls = parser.getStrings(curRule.urlRule)
+        var urls = parser.getStringsUnit(curRule.urlRule)
         if (names.size != urls.size) {
             throw IllegalArgumentException("解析到的封面的名称和url数量不匹配")
         }
@@ -238,11 +238,11 @@ class WebStrategy(val webRule: WebRule) {
         var coverUrls: List<String>? = null
         if (!curRule.descRule.isNullOrBlank()) {
             LogUtil.d("开始解析二级分类描述：")
-            descs = parser.getStrings(curRule.descRule!!)
+            descs = parser.getStringsUnit(curRule.descRule!!)
         }
         if (!curRule.imageUrlRule.isNullOrBlank()) {
             LogUtil.d("开始解析二级分类封面url：")
-            coverUrls = parser.getStrings(curRule.imageUrlRule!!)
+            coverUrls = parser.getStringsUnit(curRule.imageUrlRule!!)
         }
         val res = mutableListOf<ContentTitle>()
         for (i in 0 until names.size) {
@@ -343,14 +343,14 @@ class WebStrategy(val webRule: WebRule) {
     private fun getContents(html: String): List<ContentVo> {
         val parser = HtmlParser(Jsoup.parse(html))
         LogUtil.d("解析具体内容的url")
-        var urls = parser.getStrings(webRule.contentRule!!.urlRule)
+        var urls = parser.getStringsUnit(webRule.contentRule!!.urlRule)
         urls = urls.map {
             UrlUtils.getFullUrl(webRule.getBaseUrl(), it)
         }
         var names: List<String>? = null
         if (!webRule.contentRule!!.nameRule.isBlank()) {
             LogUtil.d("解析具体内容的名称")
-            names = parser.getStrings(webRule.contentRule!!.nameRule)
+            names = parser.getStringsUnit(webRule.contentRule!!.nameRule)
         }
         val res = mutableListOf<ContentVo>()
         for (i in 0 until urls.size) {

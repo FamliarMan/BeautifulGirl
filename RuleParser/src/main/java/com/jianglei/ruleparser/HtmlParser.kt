@@ -12,6 +12,22 @@ import org.jsoup.select.Elements
 class HtmlParser(private val document: Document) {
     private val elementsCache: MutableMap<String, Elements> = mutableMapOf()
     private val jsonCache: MutableMap<String, List<Any>> = mutableMapOf()
+
+    /**
+     * 处理规则 or 的情况
+     */
+    fun getStringsUnit(rule:String):List<String>{
+        val mainRules = rule.split(" or ")
+        var res = mutableListOf<String>()
+        mainRules.forEach{
+            if(res.isEmpty()){
+                val oneRes = getStrings(it)
+                res.addAll(oneRes)
+            }
+
+        }
+        return res
+    }
     /**
      * 根据规则获取字符串结果，返回值统一为列表，便于抽象
      */

@@ -307,7 +307,7 @@
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_nextUrlRule"
                             app:dev_isRequested="true"
-                            app:dv_content="@{coverPage.nextUrlRule}"
+                            app:dv_content="@={coverPage.nextUrlRule}"
                             android:visibility="@{coverPage.fromHtml?View.VISIBLE:View.GONE}"
                         />
                         <com.jianglei.beautifulgirl.widget.DocumentEditView

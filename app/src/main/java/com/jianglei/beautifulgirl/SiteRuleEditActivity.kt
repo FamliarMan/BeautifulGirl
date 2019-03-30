@@ -429,6 +429,7 @@ class SiteRuleEditActivity : BaseActivity() {
             val ruleRecord = RuleRecord(0, webRule.name, 1, JsonUtils.toJsonString(webRule))
             ruleViewModel.addRule(ruleRecord)
         }
+        finish()
 
     }
 
