@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.CheckBox
@@ -12,11 +14,19 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.classic.adapter.BaseAdapterHelper
 import com.classic.adapter.CommonRecyclerAdapter
+import com.jianglei.beautifulgirl.storage.DataStorage
 import com.jianglei.beautifulgirl.storage.RuleRecord
 import kotlinx.android.synthetic.main.activity_site_rule_list.*
+import org.jetbrains.anko.browse
+import org.jetbrains.anko.coroutines.experimental.asReference
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 import utils.DialogUtils
+import utils.JsonUtils
+import java.io.*
 
-class SiteRuleListActivity :BaseActivity() {
+class SiteRuleListActivity : BaseActivity() {
     private var adapter: RuleAdapter? = null
     private lateinit var ruleViewModel: RuleViewModel
 
@@ -88,10 +98,89 @@ class SiteRuleListActivity :BaseActivity() {
                 startActivity(intent)
                 true
             }
+            R.id.action_export_to_file -> {
+                writeRuleToFile()
+                true
+            }
+//            R.id.action_import_from_file->{
+//                restoreFromFile()
+//                true
+//            }
             else -> {
                 super.onOptionsItemSelected(item)
             }
         }
     }
 
+    fun writeRuleToFile() {
+        val ref = this.asReference()
+        showProgress(true)
+        doAsync {
+            val dir = Environment.getExternalStorageDirectory().toString() + "/BeautifulGirl"
+            val file = File(dir)
+            if (!file.exists()) {
+                file.mkdirs()
+            }
+            val path = "$dir/rule.bak"
+            var bfw: BufferedWriter? = null
+            try {
+                bfw = BufferedWriter(FileWriter(File(path)))
+                for (ruleRecord in adapter!!.data) {
+                    bfw.write(JsonUtils.toJsonString(ruleRecord).replace("\n", ""))
+                    bfw.write("\n\n")
+                }
+
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                uiThread {
+                    toast(R.string.backup_error)
+                }
+            } finally {
+                bfw?.close()
+                uiThread {
+                    showProgress(false)
+                    toast(getString(R.string.backup_success, path))
+                }
+            }
+
+        }
+
+    }
+
+    fun restoreFromFile(){
+        doAsync {
+            val dir = Environment.getExternalStorageDirectory().toString() + "/BeautifulGirl"
+            val file = File(dir)
+            if (!file.exists()) {
+                toast(R.string.restore_not_exist)
+                return@doAsync
+            }
+            val path = "$dir/rule.bak"
+            var bfw: BufferedReader? = null
+            try {
+                bfw = BufferedReader(FileReader(File(path)))
+                while(true){
+                    val str = bfw.readLine() ?: break
+                    if(str.isEmpty()){
+                        continue
+                    }
+                    Log.d("longyi",str)
+
+                }
+
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                uiThread {
+                    toast(R.string.backup_error)
+                }
+            } finally {
+                bfw?.close()
+                uiThread {
+                    showProgress(false)
+                    toast(getString(R.string.backup_success, path))
+                }
+            }
+
+        }
+    }
 }

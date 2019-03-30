@@ -10,11 +10,16 @@
     <string name="retry">重新尝试</string>
     <string name="get_video_play_url_error">获取视频播放地址失败</string>
     <string name="cancel">取消</string>
-    <string name="menu_add_rule">新增书源</string>
+    <string name="menu_add_rule">新增</string>
+    <string name="menu_export_to_file">导出到文件</string>
+    <string name="menu_import_from_file">从文件中恢复</string>
     <string name="copy_success">拷贝规则成功</string>
     <string name="image">图片</string>
     <string name="video">视频</string>
 
+    <string name="backup_error">备份文件失败</string>
+    <string name="backup_success">成功备份文件到%s</string>
+    <string name="restore_not_exist">您之前未备份过数据</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dialog_tip">提示</string>
@@ -37,6 +42,10 @@
     <string name="search_rule_title">搜索提取规则</string>
     <string name="category_name_rule">分类名称提取规则</string>
     <string name="content_name_rule">内容名称提取规则</string>
+    <string name="search_name_rule">搜索结果名称提取规则</string>
+    <string name="search_url_rule">搜索结果跳转url提取规则</string>
+    <string name="search_imageUrl_rule">搜索结果封面url提取规则</string>
+    <string name="search_desc_rule">搜索结果描述提取规则</string>
     <string name="category_url_rule">分类跳转url提取规则</string>
     <string name="content_url_rule">内容url提取规则</string>
     <string name="category_desc_rule">分类描述的提取规则</string>

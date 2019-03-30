@@ -17,8 +17,6 @@ import java.util.concurrent.Executors
 class DataStorage {
     companion object {
         lateinit var db: AppDataBase
-        val excutorService = Executors.newCachedThreadPool()
-        val mainHandler = Handler(Looper.getMainLooper())
 
 
         fun init(context: Context) {
@@ -40,15 +38,6 @@ class DataStorage {
             }).build()
         }
 
-        fun <E> sqlOperation(listener: OnSqlExcuteListener<E>) {
-            excutorService.execute {
-                val res = listener.onChildThread()
-                mainHandler.post {
-                    listener.onMainThread(res)
-                }
-            }
-
-        }
     }
 }
 

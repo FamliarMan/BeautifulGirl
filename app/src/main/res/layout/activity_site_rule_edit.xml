@@ -578,14 +578,27 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_content="@={searchRule.resultRule.nameRule}"
-                            app:dv_title="@string/content_name_rule"
+                            app:dv_title="@string/search_name_rule"
                         />
                         <com.jianglei.beautifulgirl.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dev_isRequested="true"
                             app:dv_content="@={searchRule.resultRule.urlRule}"
-                            app:dv_title="@string/content_url_rule"
+                            app:dv_title="@string/search_url_rule"
+                        />
+
+                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:dv_title="@string/search_desc_rule"
+                            app:dv_content="@={searchRule.resultRule.descRule}"
+                        />
+                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:dv_title="@string/search_imageUrl_rule"
+                            app:dv_content="@={searchRule.resultRule.imageUrlRule}"
                         />
                         <com.jianglei.beautifulgirl.widget.DocumentSwitchView
                             android:layout_width="match_parent"

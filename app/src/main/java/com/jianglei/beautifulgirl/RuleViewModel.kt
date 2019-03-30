@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.jianglei.beautifulgirl.rule.WebRule
 import com.jianglei.beautifulgirl.storage.DataStorage
 import com.jianglei.beautifulgirl.storage.RuleRecord
+import org.jetbrains.anko.doAsync
 import utils.JsonUtils
 
 /**
@@ -44,19 +45,19 @@ class RuleViewModel : ViewModel() {
     }
 
     fun updateRule(rule: RuleRecord) {
-        DataStorage.excutorService.execute {
+        doAsync {
             DataStorage.db.ruleDao().updateRule(rule)
         }
     }
 
     fun deleteRule(rule: RuleRecord) {
-        DataStorage.excutorService.execute {
+        doAsync {
             DataStorage.db.ruleDao().deleteRule(rule)
         }
     }
 
     fun addRule(rule: RuleRecord) {
-        DataStorage.excutorService.execute {
+        doAsync {
             DataStorage.db.ruleDao().addRule(rule)
         }
     }

@@ -4,9 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -14,29 +12,21 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
 import com.jianglei.beautifulgirl.data.OnDataResultListener
-import com.jianglei.beautifulgirl.rule.RuleCenter
 import com.jianglei.beautifulgirl.rule.RuleConstants
 import com.jianglei.beautifulgirl.rule.WebRule
 import com.jianglei.beautifulgirl.rule.WebStrategy
-import com.jianglei.beautifulgirl.storage.DataStorage
-import com.jianglei.beautifulgirl.storage.OnSqlExcuteListener
-import com.jianglei.beautifulgirl.storage.RuleRecord
 import com.jianglei.beautifulgirl.vo.Category
 import com.jianglei.permission.JlPermission
 import com.jianglei.permission.OnPermissionResultListener
 import com.jianglei.ruleparser.LogUtil
-import com.jianglei.ruleparser.ruledescription.RuleDesc
 import kotlinx.android.synthetic.main.activity_all_website.*
 import kotlinx.android.synthetic.main.activity_base.*
 import utils.DialogUtils
-import utils.JsonUtils
-import utils.ToastUtils
 
 class AllWebsiteActivity : BaseActivity() {
     private var videoRules: MutableList<WebRule> = mutableListOf()
@@ -79,11 +69,11 @@ class AllWebsiteActivity : BaseActivity() {
             .build()
             .request(object : OnPermissionResultListener {
                 override fun onGranted(permissions: Array<out String>?) {
-                    LogUtil.init(true, true, true)
+                    LogUtil.init(logOpen = true, isFile = true)
                 }
 
                 override fun onDenied(permissions: Array<out String>?) {
-                    LogUtil.init(true, false, false)
+                    LogUtil.init(logOpen = true, isFile = false)
                 }
             })
     }

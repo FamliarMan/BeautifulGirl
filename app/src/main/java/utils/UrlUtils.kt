@@ -45,7 +45,7 @@ class UrlUtils {
             return when {
                 url.startsWith("http") -> url
                 url.startsWith("//") -> protocol + url
-                url.startsWith("/") -> noSuffixBaseUrl + url
+                url.startsWith("/") -> host+ url
                 url.startsWith("?") -> noSuffixBaseUrl + url
                 else -> "$host/$url"
             }

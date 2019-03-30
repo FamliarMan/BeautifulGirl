@@ -3,7 +3,7 @@ package com.jianglei.beautifulgirl.storage
 /**
  *@author longyi created on 19-3-28
  */
-interface OnSqlExcuteListener<T> {
+interface OnAsyncUtilListener<T> {
     /**
      * 子线程的操作
      */

@@ -37,7 +37,7 @@ class DynamicWebGetter {
                 if (isCanceled) {
                     return
                 }
-                if(LogUtil.logHtml){
+                if(LogUtil.isHtmlLogOpen()){
                     LogUtil.d(html)
                 }
                 listener.onSuccess(html,webView)

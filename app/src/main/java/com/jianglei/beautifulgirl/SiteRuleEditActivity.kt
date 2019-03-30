@@ -41,6 +41,7 @@ class SiteRuleEditActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LogUtil.openHtmlLog(true)
         binding =
             DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.activity_site_rule_edit, null, false)
         super.setContentView(binding.root)
@@ -546,5 +547,9 @@ class SiteRuleEditActivity : BaseActivity() {
             })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        LogUtil.openHtmlLog(false)
+    }
 
 }

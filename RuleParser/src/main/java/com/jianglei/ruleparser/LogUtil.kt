@@ -20,13 +20,15 @@ import java.io.File
 class LogUtil {
     companion object {
         private var open: Boolean = false
-        var logHtml: Boolean = false
-        fun initOnlyConsole(logOpen: Boolean, logHtml: Boolean) {
-            init(logOpen, logHtml, false)
-
+        private var logHtml: Boolean = false
+        fun isHtmlLogOpen():Boolean{
+            return logHtml
+        }
+        fun openHtmlLog(isOpen: Boolean) {
+            logHtml = isOpen
         }
 
-        fun init(logOpen: Boolean, logHtml: Boolean, isFile: Boolean) {
+        fun init(logOpen: Boolean, isFile: Boolean) {
             LogUtil.open = logOpen
             LogUtil.logHtml = logHtml
             if (!isFile) {
@@ -42,7 +44,7 @@ class LogUtil {
                 dir
             )
                 .fileNameGenerator(ChangelessFileNameGenerator("log"))
-                .cleanStrategy(FileLastModifiedCleanStrategy(24 * 60 * 60 * 100))
+                .cleanStrategy(FileLastModifiedCleanStrategy(60 * 60 * 100))
                 .build()
             XLog.init(AndroidPrinter(), filePrinter)
         }
