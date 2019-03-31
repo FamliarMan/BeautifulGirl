@@ -10,23 +10,6 @@ class SelectRuleParserTest {
 
 
     @Test
-    fun getClassRuleDesc(){
-        var classRule = SelectRuleParser.getClassRuleDesc("@class:<name>")
-        Assert.assertEquals("name",classRule.name)
-
-
-        classRule = SelectRuleParser.getClassRuleDesc("@class:<name>[0]")
-        Assert.assertEquals("name",classRule.name)
-        Assert.assertEquals(0,classRule.index)
-
-
-        classRule = SelectRuleParser.getClassRuleDesc("@class:regex<name>[0]")
-        Assert.assertEquals(null,classRule.name)
-        Assert.assertEquals("name",classRule.regx)
-        Assert.assertEquals(0,classRule.index)
-    }
-
-    @Test
     fun getIdRuleDesc(){
         var classRule = SelectRuleParser.getIdRuleDesc("@id:<name>")
         Assert.assertEquals("name",classRule.name)
