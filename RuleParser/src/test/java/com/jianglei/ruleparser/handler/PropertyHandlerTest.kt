@@ -7,26 +7,13 @@ import org.junit.Test
 /**
  * @author jianglei on 3/31/19.
  */
-class ClassHandlerTest {
+class PropertyHandlerTest {
 
     @Test
-    fun getClassRuleDesc() {
-        var classHandler = ClassHandler("@class:<name>")
-        var classRule = classHandler.getRuleDesc()
-        Assert.assertEquals("name", classRule.name)
-
-
-        classHandler = ClassHandler("@class:<name>[0]")
-        classRule = classHandler.getRuleDesc()
-        Assert.assertEquals("name", classRule.name)
-        Assert.assertEquals(0, classRule.index)
-
-
-        classHandler = ClassHandler("@class:regex<name>[0]")
-        classRule = classHandler.getRuleDesc()
-        Assert.assertEquals(null, classRule.name)
-        Assert.assertEquals("name", classRule.regx)
-        Assert.assertEquals(0, classRule.index)
+    fun getPropertyRuleDesc() {
+        var propertyHandler = PropertyHandler("@property:<name>")
+        var propertyRule = propertyHandler.getRuleDesc()
+        Assert.assertEquals("name", propertyRule.name)
     }
 
 
@@ -52,12 +39,10 @@ class ClassHandlerTest {
                 "</body>\n" +
                 "</html>\n"
         val document = Jsoup.parse(html)
-        val elemens = listOf(document)
-        var classHandler = ClassHandler("@class:regex<free>")
-        var res = classHandler.handle(null,elemens)
+        val elemens = listOf(document.selectFirst("li").selectFirst("a"))
+        var propertyHandler = PropertyHandler("@property:<href>")
+        var res = propertyHandler.handle(null,elemens)
         Assert.assertEquals(1,res.size)
-        classHandler = ClassHandler("@class:<freemore>")
-        res = classHandler.handle(null,elemens)
-        Assert.assertEquals(1,res.size)
+        Assert.assertEquals("//hotmovs.com/",res[0])
     }
 }

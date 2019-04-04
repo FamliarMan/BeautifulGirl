@@ -1,16 +1,16 @@
 package com.jianglei.ruleparser.handler
 
 import com.google.gson.JsonObject
+import com.jianglei.ruleparser.RuleKeyWord
 import com.jianglei.ruleparser.ruledescription.RuleDesc
 import org.json.JSONArray
-import org.w3c.dom.Element
-import kotlin.math.sin
+import org.jsoup.nodes.Element
 import kotlin.reflect.KClass
 
 /**
  * @author jianglei on 3/30/19.
  */
-abstract class AbstractRuleHandler(var singleRule:String) {
+abstract class AbstractRuleHandler(var singleRule: String) {
     companion object {
         const val TYPE_HTML_ELEMENT = 1
         const val TYPE_STRING = 2
@@ -22,14 +22,66 @@ abstract class AbstractRuleHandler(var singleRule:String) {
             TYPE_JSON_OBJ to JsonObject::class,
             TYPE_JSON_ARR to JSONArray::class
         )
+
+        /**
+         * 判断[selectRule]是否是一个元素提取规则
+         */
+        fun isElementSelectRule(selectRule: String): Boolean {
+            val rule = selectRule.trim()
+            return rule.startsWith(RuleKeyWord.CLASS)
+                    || rule.startsWith(RuleKeyWord.ID)
+                    || rule.startsWith(RuleKeyWord.LABEL)
+        }
+
+        /**
+         * 判断[selectRule] 是否是一个字符串提取规则
+         */
+        fun isStringSelectRule(selectRule: String): Boolean {
+            val rule = selectRule.trim()
+            return rule.startsWith(RuleKeyWord.PROPERTY)
+                    || rule.startsWith(RuleKeyWord.TEXT)
+                    || rule.startsWith(RuleKeyWord.REGX)
+        }
+
+        /**
+         * 判断当前规则是否是用来过滤html元素的
+         */
+        fun isElementFilterRule(filterRule: String): Boolean {
+            val rule = filterRule.trim()
+
+            return rule.startsWith(RuleKeyWord.HAS_CLASS)
+                    || rule.startsWith(RuleKeyWord.HAS_ID)
+                    || rule.startsWith(RuleKeyWord.HAS_LABEL)
+                    || rule.startsWith(RuleKeyWord.NO_LABEL)
+                    || rule.startsWith(RuleKeyWord.NO_CLASS)
+                    || rule.startsWith(RuleKeyWord.NO_ID)
+                    || rule.startsWith(RuleKeyWord.HAS_TEXT)
+                    || rule.startsWith(RuleKeyWord.NO_TEXT)
+        }
+
+        /**
+         * 判断当前规则是否用来过滤字符串
+         */
+        fun isStringFilterRule(filterRule: String): Boolean {
+            val rule = filterRule.trim()
+
+            return rule.startsWith(RuleKeyWord.EQUALS)
+                    || rule.startsWith(RuleKeyWord.NOT_EQUAL)
+        }
     }
 
     /**
      * 检查本规则能否处理上个规则返回的结果，如果可以返回要处理的数据类型
      */
     fun checkAndReturnClassTyepe(lastRuleHandler: AbstractRuleHandler?, preResult: List<Any>): KClass<out Any> {
-        if(lastRuleHandler == null){
-            return
+        if (lastRuleHandler == null) {
+            //如果没有上一个规则，只可能是第一个规则，返回的必然是
+            if (acceptType().size == 1) {
+                //只接收一个类型
+                return typeClass.getValue(acceptType()[0])
+            } else {
+                return preResult[0]::class
+            }
         }
         acceptType().forEach {
             if (it == lastRuleHandler.targetType()) {

@@ -7,26 +7,29 @@ import org.junit.Test
 /**
  * @author jianglei on 3/31/19.
  */
-class ClassHandlerTest {
+class RegexHandlerTest {
 
     @Test
-    fun getClassRuleDesc() {
-        var classHandler = ClassHandler("@class:<name>")
-        var classRule = classHandler.getRuleDesc()
-        Assert.assertEquals("name", classRule.name)
+    fun getRegexRuleDesc() {
 
 
-        classHandler = ClassHandler("@class:<name>[0]")
-        classRule = classHandler.getRuleDesc()
-        Assert.assertEquals("name", classRule.name)
-        Assert.assertEquals(0, classRule.index)
+        var regexHandler= RegexHandler("@regex:<p>")
+        var regexRule = regexHandler.getRuleDesc()
+        Assert.assertEquals("p",regexRule.regx)
+        Assert.assertEquals(null,regexRule.index)
+
+        regexHandler= RegexHandler("@regex:<<!--[\\\\s*]([\\\\d]{10})[\\\\s*]-->>[1]")
+        regexRule = regexHandler.getRuleDesc()
+        Assert.assertEquals("<!--[\\\\s*]([\\\\d]{10})[\\\\s*]-->",regexRule.regx)
 
 
-        classHandler = ClassHandler("@class:regex<name>[0]")
-        classRule = classHandler.getRuleDesc()
-        Assert.assertEquals(null, classRule.name)
-        Assert.assertEquals("name", classRule.regx)
-        Assert.assertEquals(0, classRule.index)
+
+        regexHandler= RegexHandler("@regex:<p>[0]")
+        regexRule = regexHandler.getRuleDesc()
+
+        Assert.assertEquals("p",regexRule.name)
+        Assert.assertEquals("p",regexRule.regx)
+        Assert.assertEquals(0,regexRule.index)
     }
 
 
@@ -51,13 +54,9 @@ class ClassHandlerTest {
                 "</div>\n" +
                 "</body>\n" +
                 "</html>\n"
-        val document = Jsoup.parse(html)
-        val elemens = listOf(document)
-        var classHandler = ClassHandler("@class:regex<free>")
-        var res = classHandler.handle(null,elemens)
+        val regexHandler = RegexHandler("@regex:<<body class=(.*)>>[1]")
+        val res = regexHandler.handle(null, listOf(html))
         Assert.assertEquals(1,res.size)
-        classHandler = ClassHandler("@class:<freemore>")
-        res = classHandler.handle(null,elemens)
-        Assert.assertEquals(1,res.size)
+        Assert.assertEquals("\"face-search\"",res[0])
     }
 }
