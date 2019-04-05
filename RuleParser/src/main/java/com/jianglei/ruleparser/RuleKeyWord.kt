@@ -10,6 +10,7 @@ class RuleKeyWord {
         const val ID = "@id"
         const val LABEL = "@label"
         const val REGX = "@regex"
+        const val REGEX_ALL = "@regexAll"
         const val PROPERTY = "@property"
         const val TEXT = "@text"
 

@@ -57,6 +57,7 @@ class HtmlParser(private val document: Document) {
                     preResult = curHandler.handle(preHandler, preResult) as MutableList<Any>
                     nodeCache[totalRule] = preResult
                 }
+                LogUtil.d("规则${totalRule}解析结果数量：${preResult.size}")
                 preHandler = curHandler
             }
             if (!preHandler!!.isStringRule()) {
