@@ -32,6 +32,9 @@ class CategoryActivity : BaseActivity() {
         rvCategory.setGridLayout(2)
         adapter = CategoryAdapter(this, categories)
         rvCategory.setAdapter(adapter)
+        if(StrategyProvider.getCurStrategy() == null){
+            return
+        }
         if(!StrategyProvider.getCurStrategy()!!.webRule.categoryRule!!.supportPage){
             rvCategory.pushRefreshEnable = false
         }
@@ -130,6 +133,9 @@ class CategoryActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if(StrategyProvider.getCurStrategy() == null){
+            return super.onCreateOptionsMenu(menu)
+        }
         return if (StrategyProvider.getCurStrategy()!!.webRule.supportSearch) {
             menuInflater.inflate(R.menu.search, menu)
             true

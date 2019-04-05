@@ -3,6 +3,7 @@ package com.jianglei.girlshow.data
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.graphics.Bitmap
+import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -99,6 +100,10 @@ class InVisibleWebViewFragment : Fragment() {
         webSettings.builtInZoomControls = true //设置内置的缩放控件。若为false，则该WebView不可缩放
         webSettings.displayZoomControls = false //隐藏原生的缩放控件
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+        }
+
         //其他细节操作
         webSettings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK //关闭webview中缓存
         webSettings.allowFileAccess = true //设置可以访问文件
@@ -107,12 +112,13 @@ class InVisibleWebViewFragment : Fragment() {
         webSettings.defaultTextEncodingName = "utf-8"//设置编码格式
 
         invisibleWebView!!.webViewClient = object : WebViewClient() {
+
             override fun onPageFinished(view: WebView?, url: String?) {
 
                 super.onPageFinished(view, url)
                 loadingFinished = true
                 //延迟500ms回调，如果有重定向现象，500ms后会发现，将不会执行回调
-                handler.postDelayed(notifyRunnable, 500)
+                handler.postDelayed(notifyRunnable, 1000)
 
             }
 
@@ -152,6 +158,10 @@ class InVisibleWebViewFragment : Fragment() {
                 return intercept(url)
             }
 
+            override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                handler?.proceed()
+            }
+
 
         }
         invisibleWebView!!.webChromeClient = object : WebChromeClient() {
@@ -171,7 +181,7 @@ class InVisibleWebViewFragment : Fragment() {
             return null
         }
         val lastIndex = url.lastIndexOf(".")
-        if (lastIndex == 0) {
+        if (lastIndex == 0 || lastIndex == -1) {
             return null
         }
         val suffix = URLDecoder.decode(url.substring(lastIndex), "utf-8")

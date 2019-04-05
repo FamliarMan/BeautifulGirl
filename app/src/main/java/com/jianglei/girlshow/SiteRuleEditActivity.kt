@@ -189,10 +189,14 @@ class SiteRuleEditActivity : BaseActivity() {
                 //从剪贴板导入
                 val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val json = cm.primaryClip?.getItemAt(0)?.text.toString()
-                val newRule = getRuleFromJson(json)
-                if (newRule != null) {
-                    webRule = newRule
-                    bindRule(webRule)
+                try {
+                    val newRule = getRuleFromJson(json)
+                    if (newRule != null) {
+                        webRule = newRule
+                        bindRule(webRule)
+                    }
+                } catch (e: Throwable) {
+                    DialogUtils.showTipDialog(this, e.toString())
                 }
                 true
             }
@@ -506,7 +510,7 @@ class SiteRuleEditActivity : BaseActivity() {
     }
 
     private fun checkSearchInfo(): Boolean {
-        if(!webRule.supportSearch){
+        if (!webRule.supportSearch) {
             return true
         }
         if (webRule.searchRule!!.searchUrl.isBlank()) {

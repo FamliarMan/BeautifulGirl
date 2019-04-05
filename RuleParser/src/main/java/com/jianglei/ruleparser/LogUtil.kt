@@ -20,11 +20,17 @@ class LogUtil {
     companion object {
         private var open: Boolean = false
         private var logHtml: Boolean = false
-        fun isHtmlLogOpen():Boolean{
+        fun isHtmlLogOpen(): Boolean {
             return logHtml
         }
+
         fun openHtmlLog(isOpen: Boolean) {
             logHtml = isOpen
+        }
+
+        fun getDirectory(): String {
+
+            return Environment.getExternalStorageDirectory().toString() + "/BeautifulGirl/"
         }
 
         fun init(logOpen: Boolean, isFile: Boolean) {
@@ -61,7 +67,7 @@ class LogUtil {
                 return
             }
             val intent = Intent(Intent.ACTION_VIEW)
-            val uri = getAvaliableUri(context,dir)
+            val uri = getAvaliableUri(context, dir)
             intent.setDataAndType(uri, "text/plain")
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             context.startActivity(intent)

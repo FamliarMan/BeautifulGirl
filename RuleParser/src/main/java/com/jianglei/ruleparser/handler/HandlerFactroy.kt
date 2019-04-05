@@ -11,7 +11,7 @@ class HandlerFactroy {
             val index = rule.indexOf(":")
             var trimRule:String
             if(index == -1){
-                trimRule = rule
+                trimRule = rule.trim()
             }else{
                 trimRule = rule.substring(0,index).trim()
             }

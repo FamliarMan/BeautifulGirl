@@ -11,7 +11,7 @@ import com.uuzuche.lib_zxing.activity.ZXingLibrary
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.listener.RequestLoggingListener
 import com.facebook.imagepipeline.listener.RequestListener
-
+import com.jianglei.ruleparser.LogUtil
 
 
 /**
@@ -31,6 +31,8 @@ class MyApplication : MultiDexApplication() {
         ExoMediaPlayer.init(this)
         DataStorage.init(this)
         ZXingLibrary.initDisplayOpinion(this)
+        CrashHandler.getInstance().init(this)
+        LogUtil.openHtmlLog(true)
 
         val requestListeners = mutableSetOf<RequestLoggingListener>()
         requestListeners.add(RequestLoggingListener())

@@ -422,7 +422,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_nextUrlRule"
-                            app:dv_content="@{contentPage.nextUrlRule}"
+                            app:dv_content="@={contentPage.nextUrlRule}"
                             app:dev_isRequested="true"
                             android:visibility="@{contentPage.fromHtml?View.VISIBLE:View.GONE}"
                         />
