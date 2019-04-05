@@ -26,7 +26,7 @@ class LabelHandler(singleRule: String) : AbstractRuleHandler(singleRule) {
 
     override fun handle(lastRuleHandler: AbstractRuleHandler?, preResult: List<Any>): List<Any> {
         checkAndReturnClassTyepe(lastRuleHandler, preResult)
-        val res = Elements()
+        val res = mutableListOf<Element>()
         val ruleDesc = getRuleDesc()
         @Suppress("UNCHECKED_CAST")
         for (e in preResult as List<Element>) {

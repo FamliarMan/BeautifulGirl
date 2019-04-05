@@ -1,9 +1,9 @@
 package com.jianglei.ruleparser.handler
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.jianglei.ruleparser.RuleKeyWord
 import com.jianglei.ruleparser.ruledescription.RuleDesc
-import org.json.JSONArray
 import org.jsoup.nodes.Element
 import kotlin.reflect.KClass
 
@@ -20,7 +20,7 @@ abstract class AbstractRuleHandler(var singleRule: String) {
             TYPE_HTML_ELEMENT to Element::class,
             TYPE_STRING to String::class,
             TYPE_JSON_OBJ to JsonObject::class,
-            TYPE_JSON_ARR to JSONArray::class
+            TYPE_JSON_ARR to JsonArray::class
         )
 
         /**
@@ -86,13 +86,13 @@ abstract class AbstractRuleHandler(var singleRule: String) {
         acceptType().forEach {
             if (it == lastRuleHandler.targetType()) {
                 val type = typeClass[it] ?: throw IllegalStateException("没有注册该类型对应的KClass")
+                //检查上一个结果是否符合本规则输入类型
                 preResult.forEach { res ->
-                    if (res::class == type) {
-                        return type
-                    } else {
-                        throw IllegalStateException("上一个规则:$singleRule 返回的结果类型不对")
+                    if (res::class != type) {
+                        throw IllegalStateException("上一个规则返回的类型${res::class.toString()}本规则：${singleRule}无法处理")
                     }
                 }
+                return type
             }
         }
         throw IllegalSyntaxException(singleRule + "不能跟在" + lastRuleHandler.singleRule + "后面")
@@ -149,4 +149,17 @@ abstract class AbstractRuleHandler(var singleRule: String) {
         throw IllegalArgumentException("不合法的规则描述:$rule")
     }
 
+
+    /**
+     * 判断当前规则返回的是否是字符串
+     */
+    fun isStringRule(): Boolean {
+        val rule = singleRule.trim()
+        return rule.startsWith(RuleKeyWord.PROPERTY)
+                || rule.startsWith(RuleKeyWord.TEXT)
+                || rule.startsWith(RuleKeyWord.REGX)
+                || rule.startsWith(RuleKeyWord.JSON_VALUE)
+                || rule.startsWith(RuleKeyWord.EQUALS)
+                || rule.startsWith(RuleKeyWord.NOT_EQUAL)
+    }
 }

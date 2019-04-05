@@ -33,9 +33,10 @@ class ClassHandler(singleRule:String) : AbstractRuleHandler(singleRule) {
         return getRuleDesc(singleRule, classNameRegxPattern, classNamePattern)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun handle(lastRuleHandler: AbstractRuleHandler?, preResult: List<Any>): List<Any> {
         checkAndReturnClassTyepe(lastRuleHandler, preResult)
-        val res = Elements()
+        val res = mutableListOf<Element>()
         val ruleDesc = getRuleDesc()
         for (e in preResult as List<Element>) {
             val elements: Elements

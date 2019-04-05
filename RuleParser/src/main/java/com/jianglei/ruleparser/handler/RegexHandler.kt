@@ -1,6 +1,7 @@
 package com.jianglei.ruleparser.handler
 
 import com.jianglei.ruleparser.ruledescription.RuleDesc
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
@@ -12,7 +13,7 @@ class RegexHandler(singleRule: String) : AbstractRuleHandler(singleRule) {
 
     private val regexPattern = Regex("@regex:<(.*)>(\\[(\\d)])?")
     override fun acceptType(): List<Int> {
-        return listOf(TYPE_HTML_ELEMENT)
+        return listOf(TYPE_HTML_ELEMENT, TYPE_STRING)
     }
 
     override fun targetType(): Int {
@@ -34,8 +35,9 @@ class RegexHandler(singleRule: String) : AbstractRuleHandler(singleRule) {
         throw IllegalSyntaxException("非法的正则规则:$singleRule")
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun handle(lastRuleHandler: AbstractRuleHandler?, preResult: List<Any>): List<Any> {
-        checkAndReturnClassTyepe(lastRuleHandler, preResult)
+        val preClassType = checkAndReturnClassTyepe(lastRuleHandler, preResult)
         val ruleDesc = getRuleDesc()
         if (ruleDesc.regx == null) {
             throw IllegalArgumentException("Wrong regex rule")
@@ -48,7 +50,15 @@ class RegexHandler(singleRule: String) : AbstractRuleHandler(singleRule) {
             e.printStackTrace()
             throw IllegalArgumentException("错误的正则规则：${ruleDesc.regx}")
         }
-        for (e in preResult as List<String>) {
+        var preStrings:List<String>
+        if(preClassType == Element::class || preClassType == Document::class){
+            preStrings = (preResult as List<Element>).map {
+                it.toString()
+            }.toList()
+        }else{
+            preStrings = preResult as List<String>
+        }
+        for (e in preStrings) {
             val m = regex.find(e.toString())
             if (m != null) {
                 if (ruleDesc.index == null) {
