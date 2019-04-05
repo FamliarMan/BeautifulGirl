@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import com.jianglei.beautifulgirl.R
+import com.jianglei.girlshow.R
 import com.jianglei.ruleparser.LogUtil
 
 /**

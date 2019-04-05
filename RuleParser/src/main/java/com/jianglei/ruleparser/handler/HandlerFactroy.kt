@@ -29,6 +29,8 @@ class HandlerFactroy {
                 trimRule.startsWith(RuleKeyWord.JSON_ARR)-> JsonArrHandler(trimRule)
                 trimRule.startsWith(RuleKeyWord.JSON_OBJ)-> JsonObjHandler(trimRule)
                 trimRule.startsWith(RuleKeyWord.JSON_VALUE)-> JsonValueHandler(trimRule)
+                trimRule.startsWith(RuleKeyWord.CONTAIN_TEXT)->ContainTextHandler(trimRule)
+                trimRule.startsWith(RuleKeyWord.NOT_CONTAIN_TEXT) ->NotContainTextHandler(trimRule)
                 else-> throw IllegalSyntaxException("非法规则：$rule")
             }
         }

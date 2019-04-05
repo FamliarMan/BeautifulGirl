@@ -52,7 +52,7 @@
 * @noText:<text1,text2> 上个元素集合中text属性含有这些text任意一个的都不保留
 * @==:<value1,value2,value3>  上个结果字符串等于这些value的任意一个保留
 * @!=:<value1,value2,value3> 上个结果字符串不等于全部这些value的保留
-* @propertyEquals:<name,value> 上个结果中有name属性且值为value的保留
+* @containText:<text1,text2> 上个结果中有文本包含任意一个text的保留
 *
 
 比如：

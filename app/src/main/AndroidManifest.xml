@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.jianglei.beautifulgirl">
+          package="com.jianglei.girlshow">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
@@ -13,7 +13,7 @@
 
 
     <application
-            android:name=".MyApplication"
+            android:name="com.jianglei.girlshow.MyApplication"
             android:allowBackup="true"
             android:icon="@mipmap/ic_logo"
             android:label="@string/app_name"
@@ -26,18 +26,18 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.jianglei.beautifulgirl.appfileprovider"
+            android:authorities="com.jianglei.girlshow.appfileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-        <activity android:name=".RuleHelpActivity">
+        <activity android:name="com.jianglei.girlshow.RuleHelpActivity">
         </activity>
-        <activity android:name=".SiteRuleListActivity">
+        <activity android:name="com.jianglei.girlshow.SiteRuleListActivity">
         </activity>
-        <activity android:name=".SiteRuleEditActivity">
+        <activity android:name="com.jianglei.girlshow.SiteRuleEditActivity">
         </activity>
         <activity android:name=".MainActivity">
 
@@ -48,28 +48,28 @@
             <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".PhotoViewActivity">
+        <activity android:name="com.jianglei.girlshow.PhotoViewActivity">
         </activity>
-        <activity android:name=".PlayContentListActivity">
+        <activity android:name="com.jianglei.girlshow.PlayContentListActivity">
         </activity>
-        <activity android:name=".BaseActivity">
+        <activity android:name="com.jianglei.girlshow.BaseActivity">
         </activity>
-        <activity android:name=".ContentActivity">
+        <activity android:name="com.jianglei.girlshow.ContentActivity">
         </activity>
-        <activity android:name=".PictureDetailListActivity">
+        <activity android:name="com.jianglei.girlshow.PictureDetailListActivity">
         </activity>
-        <activity android:name=".AllWebsiteActivity">
+        <activity android:name="com.jianglei.girlshow.AllWebsiteActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".CategoryActivity">
+        <activity android:name="com.jianglei.girlshow.CategoryActivity">
         </activity>
-        <activity android:name=".SearchActivity">
+        <activity android:name="com.jianglei.girlshow.SearchActivity">
         </activity>
-        <activity android:name=".SearchResultActivity">
+        <activity android:name="com.jianglei.girlshow.SearchResultActivity">
         </activity>
     </application>
 

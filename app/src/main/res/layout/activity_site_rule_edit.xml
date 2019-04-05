@@ -6,27 +6,27 @@
     tools:context=".SiteRuleEditActivity">
     <data>
         <variable name="webRule"
-                  type="com.jianglei.beautifulgirl.rule.WebRule"/>
+                  type="com.jianglei.girlshow.rule.WebRule"/>
         <variable name="categoryRule"
-                  type="com.jianglei.beautifulgirl.rule.CategoryRule"/>
+                  type="com.jianglei.girlshow.rule.CategoryRule"/>
         <variable name="coverRule"
-                  type="com.jianglei.beautifulgirl.rule.CategoryRule"/>
+                  type="com.jianglei.girlshow.rule.CategoryRule"/>
         <variable name="contentRule"
-                  type="com.jianglei.beautifulgirl.rule.CategoryRule"/>
+                  type="com.jianglei.girlshow.rule.CategoryRule"/>
         <variable name="searchRule"
-                  type="com.jianglei.beautifulgirl.rule.SearchRule"/>
+                  type="com.jianglei.girlshow.rule.SearchRule"/>
 
         <!--目录翻页规则-->
         <variable name="categoryPage"
-                  type="com.jianglei.beautifulgirl.rule.PageRule"/>
+                  type="com.jianglei.girlshow.rule.PageRule"/>
         <!--类别下面封面翻页规则-->
         <variable name="coverPage"
-                  type="com.jianglei.beautifulgirl.rule.PageRule"/>
+                  type="com.jianglei.girlshow.rule.PageRule"/>
         <!--具体内容的翻页规则-->
         <variable name="contentPage"
-                  type="com.jianglei.beautifulgirl.rule.PageRule"/>
+                  type="com.jianglei.girlshow.rule.PageRule"/>
         <variable name="searchPage"
-                  type="com.jianglei.beautifulgirl.rule.PageRule"/>
+                  type="com.jianglei.girlshow.rule.PageRule"/>
         <import type="android.view.View"/>
     </data>
     <ScrollView android:layout_width="match_parent"
@@ -58,42 +58,42 @@
                               android:focusable="true"
                               android:focusableInTouchMode="true">
 
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_content="@={webRule.name}"
                         app:dev_isRequested="true"
                         app:dv_title="@string/title_web_name"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_content="@={webRule.homeUrl}"
                         app:dv_title="@string/title_web_home_url"
                         app:dv_help="@string/help_web_home_url"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="@string/title_web_icon_url"
                         app:dv_content="@={webRule.icon}"
                     />
 
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="@string/title_web_url"
                         app:dev_isRequested="true"
                         app:dv_content="@={webRule.url}"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentSelectView
+                    <com.jianglei.girlshow.widget.DocumentSelectView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="网站类型"
                         app:dv_help="@string/help_type"
                         app:dv_content="@={webRule.type}"
                         android:entries="@array/siteType"/>
-                    <com.jianglei.beautifulgirl.widget.DocumentSelectView
+                    <com.jianglei.girlshow.widget.DocumentSelectView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_content="@={webRule.encoding}"
@@ -124,40 +124,40 @@
                               android:orientation="vertical"
                               android:layout_height="wrap_content">
 
-                    <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                    <com.jianglei.girlshow.widget.DocumentSwitchView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="是否采用动态渲染"
                         app:dv_help="@string/help_dynamicRender"
                         app:dv_content="@={categoryRule.dynamicRender}"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dev_isRequested="true"
                         app:dv_content="@={categoryRule.nameRule}"
                         app:dv_title="@string/category_name_rule"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dev_isRequested="true"
                         app:dv_content="@={categoryRule.urlRule}"
                         app:dv_title="@string/category_url_rule"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="@string/category_desc_rule"
                         app:dv_content="@={categoryRule.descRule}"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="@string/category_cover_img_rule"
                         app:dv_content="@={categoryRule.imageUrlRule}"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                    <com.jianglei.girlshow.widget.DocumentSwitchView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_content="@={categoryRule.supportPage}"
@@ -171,14 +171,14 @@
                         android:orientation="vertical"
                     >
                         <!--以下是第一级类别分类规则-->
-                        <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                        <com.jianglei.girlshow.widget.DocumentSwitchView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_fromHtml"
                             app:dv_help="@string/help_fromHtml"
                             app:dv_content="@={categoryPage.fromHtml}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_nextUrlRule"
@@ -186,7 +186,7 @@
                             app:dv_content="@{categoryPage.nextUrlRule}"
                             android:visibility="@{categoryPage.fromHtml?View.VISIBLE:View.GONE}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dev_isRequested="true"
@@ -195,7 +195,7 @@
                             app:dv_content="@={categoryPage.combinedUrl}"
                             app:dv_help="@string/help_combinedUrl"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_paramRule"
@@ -203,7 +203,7 @@
                             android:visibility="@{categoryPage.fromHtml?View.GONE:View.VISIBLE}"
                             app:dv_help="@string/help_paramRule"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentSelectView
+                        <com.jianglei.girlshow.widget.DocumentSelectView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_startPage"
@@ -249,40 +249,40 @@
                               android:orientation="vertical"
                               android:layout_height="wrap_content">
 
-                    <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                    <com.jianglei.girlshow.widget.DocumentSwitchView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="是否采用动态渲染"
                         app:dv_help="@string/help_dynamicRender"
                         app:dv_content="@={coverRule.dynamicRender}"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dev_isRequested="true"
                         app:dv_content="@={coverRule.nameRule}"
                         app:dv_title="@string/category_name_rule"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dev_isRequested="true"
                         app:dv_content="@={coverRule.urlRule}"
                         app:dv_title="@string/category_url_rule"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="@string/category_desc_rule"
                         app:dv_content="@={coverRule.descRule}"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="@string/category_cover_img_rule"
                         app:dv_content="@={coverRule.imageUrlRule}"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                    <com.jianglei.girlshow.widget.DocumentSwitchView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_content="@={coverRule.supportPage}"
@@ -295,14 +295,14 @@
                         android:orientation="vertical"
                     >
                         <!--以下是第一级类别分类规则-->
-                        <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                        <com.jianglei.girlshow.widget.DocumentSwitchView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_fromHtml"
                             app:dv_help="@string/help_fromHtml"
                             app:dv_content="@={coverPage.fromHtml}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_nextUrlRule"
@@ -310,7 +310,7 @@
                             app:dv_content="@={coverPage.nextUrlRule}"
                             android:visibility="@{coverPage.fromHtml?View.VISIBLE:View.GONE}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dev_isRequested="true"
@@ -319,7 +319,7 @@
                             app:dv_content="@={coverPage.combinedUrl}"
                             app:dv_help="@string/help_combinedUrl"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_paramRule"
@@ -327,7 +327,7 @@
                             android:visibility="@{coverPage.fromHtml?View.GONE:View.VISIBLE}"
                             app:dv_help="@string/help_paramRule"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentSelectView
+                        <com.jianglei.girlshow.widget.DocumentSelectView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_startPage"
@@ -373,34 +373,34 @@
                               android:orientation="vertical"
                               android:layout_height="wrap_content">
 
-                    <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                    <com.jianglei.girlshow.widget.DocumentSwitchView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="是否采用动态渲染"
                         app:dv_help="@string/help_dynamicRender"
                         app:dv_content="@={contentRule.dynamicRender}"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="@string/title_realRequestUrl"
                         app:dv_help="@string/help_realRequestUrl"
                         app:dv_content="@={contentRule.realRequestUrlRule}"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_content="@={contentRule.nameRule}"
                         app:dv_title="@string/content_name_rule"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentEditView
+                    <com.jianglei.girlshow.widget.DocumentEditView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dev_isRequested="true"
                         app:dv_content="@={contentRule.urlRule}"
                         app:dv_title="@string/content_url_rule"
                     />
-                    <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                    <com.jianglei.girlshow.widget.DocumentSwitchView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_content="@={contentRule.supportPage}"
@@ -411,14 +411,14 @@
                         android:layout_height="wrap_content"
                         android:visibility="@{contentRule.supportPage?View.VISIBLE:View.GONE}"
                         android:orientation="vertical">
-                        <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                        <com.jianglei.girlshow.widget.DocumentSwitchView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_fromHtml"
                             app:dv_help="@string/help_fromHtml"
                             app:dv_content="@={contentPage.fromHtml}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_nextUrlRule"
@@ -426,7 +426,7 @@
                             app:dev_isRequested="true"
                             android:visibility="@{contentPage.fromHtml?View.VISIBLE:View.GONE}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dev_isRequested="true"
@@ -435,7 +435,7 @@
                             app:dv_content="@={contentPage.combinedUrl}"
                             app:dv_help="@string/help_combinedUrl"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_paramRule"
@@ -443,7 +443,7 @@
                             android:visibility="@{contentPage.fromHtml?View.GONE:View.VISIBLE}"
                             app:dv_help="@string/help_paramRule"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentSelectView
+                        <com.jianglei.girlshow.widget.DocumentSelectView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_startPage"
@@ -487,7 +487,7 @@
                               android:orientation="vertical"
                               android:layout_height="wrap_content">
 
-                    <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                    <com.jianglei.girlshow.widget.DocumentSwitchView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:dv_title="@string/title_supportSearch"
@@ -500,21 +500,21 @@
                         android:visibility="@{webRule.supportSearch?View.VISIBLE:View.GONE}"
                         android:layout_height="wrap_content">
 
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_searchUrl"
                             app:dev_isRequested="true"
                             app:dv_content="@={searchRule.searchUrl}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                        <com.jianglei.girlshow.widget.DocumentSwitchView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_supportSearchSuggest"
                             app:dv_content="@={searchRule.supportSuggest}"
                         />
 
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_searchSuggestUrl"
@@ -523,7 +523,7 @@
                             android:visibility="@{searchRule.supportSuggest?View.VISIBLE:View.GONE}"
                             app:dv_content="@={searchRule.suggestUrl}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_searchSuggestKeyRule"
@@ -531,7 +531,7 @@
                             android:visibility="@{searchRule.supportSuggest?View.VISIBLE:View.GONE}"
                             app:dv_content="@={searchRule.suggestKeyRule}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:visibility="@{searchRule.supportSuggest?View.VISIBLE:View.GONE}"
@@ -539,7 +539,7 @@
                             app:dv_content="@={searchRule.suggestTimeRule}"
                         />
 
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/debugSearchSuggestTxt"
@@ -567,20 +567,20 @@
                                   android:layout_marginBottom="5dp"
 
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                        <com.jianglei.girlshow.widget.DocumentSwitchView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="是否采用动态渲染"
                             app:dv_help="@string/help_dynamicRender"
                             app:dv_content="@={searchRule.resultRule.dynamicRender}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_content="@={searchRule.resultRule.nameRule}"
                             app:dv_title="@string/search_name_rule"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dev_isRequested="true"
@@ -588,19 +588,19 @@
                             app:dv_title="@string/search_url_rule"
                         />
 
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/search_desc_rule"
                             app:dv_content="@={searchRule.resultRule.descRule}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_title="@string/search_imageUrl_rule"
                             app:dv_content="@={searchRule.resultRule.imageUrlRule}"
                         />
-                        <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                        <com.jianglei.girlshow.widget.DocumentSwitchView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:dv_content="@={searchRule.resultRule.supportPage}"
@@ -611,14 +611,14 @@
                             android:layout_height="wrap_content"
                             android:visibility="@{searchRule.resultRule.supportPage?View.VISIBLE:View.GONE}"
                             android:orientation="vertical">
-                            <com.jianglei.beautifulgirl.widget.DocumentSwitchView
+                            <com.jianglei.girlshow.widget.DocumentSwitchView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:dv_title="@string/title_fromHtml"
                                 app:dv_help="@string/help_fromHtml"
                                 app:dv_content="@={searchPage.fromHtml}"
                             />
-                            <com.jianglei.beautifulgirl.widget.DocumentEditView
+                            <com.jianglei.girlshow.widget.DocumentEditView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:dv_title="@string/title_nextUrlRule"
@@ -626,7 +626,7 @@
                                 app:dev_isRequested="true"
                                 android:visibility="@{searchPage.fromHtml?View.VISIBLE:View.GONE}"
                             />
-                            <com.jianglei.beautifulgirl.widget.DocumentEditView
+                            <com.jianglei.girlshow.widget.DocumentEditView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:dev_isRequested="true"
@@ -635,7 +635,7 @@
                                 app:dv_content="@={searchPage.combinedUrl}"
                                 app:dv_help="@string/help_combinedUrl"
                             />
-                            <com.jianglei.beautifulgirl.widget.DocumentEditView
+                            <com.jianglei.girlshow.widget.DocumentEditView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:dv_title="@string/title_paramRule"
@@ -643,7 +643,7 @@
                                 android:visibility="@{searchPage.fromHtml?View.GONE:View.VISIBLE}"
                                 app:dv_help="@string/help_paramRule"
                             />
-                            <com.jianglei.beautifulgirl.widget.DocumentSelectView
+                            <com.jianglei.girlshow.widget.DocumentSelectView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:dv_title="@string/title_startPage"
@@ -654,7 +654,7 @@
                             />
                         </LinearLayout>
 
-                        <com.jianglei.beautifulgirl.widget.DocumentEditView
+                        <com.jianglei.girlshow.widget.DocumentEditView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/debugSearchTxt"
