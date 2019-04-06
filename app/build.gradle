@@ -49,6 +49,7 @@ android {
     defaultConfig {
         applicationId "com.jianglei.girl"
         minSdkVersion 19
+
         targetSdkVersion 28
         versionCode 3
         versionName "3.0"

@@ -55,6 +55,7 @@ class CrashHandler : Thread.UncaughtExceptionHandler {
             // 未经过人为处理,则调用系统默认处理异常,弹出系统强制关闭的对话框
             defaultHandler.uncaughtException(t, e)
         } else {
+            defaultHandler.uncaughtException(t, e)
             // 已经人为处理,系统自己退出
             try {
                 Thread.sleep(1000)
@@ -78,7 +79,7 @@ class CrashHandler : Thread.UncaughtExceptionHandler {
         }
 //        collectErrorMessages()
         saveErrorMessages(e)
-        return false
+        return true
     }
 
     /**

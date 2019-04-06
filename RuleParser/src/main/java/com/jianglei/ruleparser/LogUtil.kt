@@ -45,6 +45,7 @@ class LogUtil {
             if (!file.exists()) {
                 file.mkdirs()
             }
+
             val filePrinter = FilePrinter.Builder(
                 dir
             )

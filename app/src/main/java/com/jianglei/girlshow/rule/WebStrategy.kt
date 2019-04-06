@@ -241,7 +241,9 @@ class WebStrategy(val webRule: WebRule) {
         }
         if (!curRule.imageUrlRule.isNullOrBlank()) {
             LogUtil.d("开始解析二级分类封面url：")
-            coverUrls = parser.getStringsUnit(curRule.imageUrlRule!!)
+            coverUrls = parser.getStringsUnit(curRule.imageUrlRule!!).map{
+                UrlUtils.getFullUrl(webRule.getBaseUrl(), it)
+            }.toList()
         }
         val res = mutableListOf<ContentTitle>()
         for (i in 0 until names.size) {

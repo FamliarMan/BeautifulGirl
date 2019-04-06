@@ -37,19 +37,20 @@ class IdHandler(singleRule: String) : AbstractRuleHandler(singleRule) {
         val ruleDesc = getRuleDesc()
         @Suppress("UNCHECKED_CAST")
         for (e in preResult as List<Element>) {
-            val elements: Elements
+            val elements: MutableList<Element> = mutableListOf()
             if (ruleDesc.regx != null) {
-                elements = e.select("[id~=${ruleDesc.regx}]")
+                elements.addAll(e.select("[id~=${ruleDesc.regx}]"))
             } else {
-                elements = Elements(e.getElementById(ruleDesc.name))
+                val node = e.getElementById(ruleDesc.name)
+                if (node != null) {
+                    res.add(node)
+                }
             }
             if (elements.size == 0) {
                 continue
             }
             if (ruleDesc.index != null) {
                 res.add(elements[ruleDesc.index])
-            } else {
-                res.addAll(elements)
             }
         }
         return res
