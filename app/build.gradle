@@ -11,6 +11,7 @@ allprojects {
     repositories {
 
         maven { url "https://oss.sonatype.org/contentRule/repositories/snapshots" }
+        maven { url 'https://jitpack.io' }
         mavenCentral()
         flatDir {
             dirs 'libs'
@@ -104,8 +105,8 @@ dependencies {
     implementation 'com.classic.adapter:commonadapter:2.0'
     implementation 'com.facebook.fresco:fresco:1.5.0'
     implementation 'com.facebook.fresco:animated-gif:1.5.0'
-    implementation('me.relex:photodraweeview:2.0.0') {
-    }
+//    implementation('me.relex:photodraweeview:2.0.0') {
+//    }
 
     //room
     implementation 'android.arch.persistence.room:runtime:1.1.1'
@@ -116,13 +117,13 @@ dependencies {
     implementation 'com.kaopiz:kprogresshud:1.0.2'
     //二维码
     implementation 'cn.yipianfengye.android:zxing-library:2.2'
-//    文件选择器
-//    implementation 'com.leon:lfilepickerlibrary:1.8.0'
     implementation "org.jetbrains.anko:anko:0.10.8"
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
 //    kapt project(":processor")
 //    implementation project(':annotation')
+    //图片预览
+    implementation 'com.github.OCNYang:PageTransformerHelp:v1.0.1'
     implementation project(':videoplay')
     implementation project(':RuleParser')
     implementation 'com.android.support:multidex:1.0.3'

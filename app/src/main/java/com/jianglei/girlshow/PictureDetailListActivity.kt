@@ -128,7 +128,11 @@ class PictureDetailListActivity : BaseActivity() {
             holder.ivContent.controller = (controller)
             holder.ivContent.setOnClickListener {
                 val intent = Intent(context, PhotoViewActivity::class.java)
-                intent.putExtra("url", urls[position].url)
+                val urlStrins = urls.map{
+                    it.url
+                }
+                intent.putStringArrayListExtra("urls", urlStrins as java.util.ArrayList<String>?)
+                intent.putExtra("pos",position)
                 context.startActivity(intent)
             }
 //            val options = RequestOptions()
