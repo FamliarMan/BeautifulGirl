@@ -622,7 +622,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:dv_title="@string/title_nextUrlRule"
-                                app:dv_content="@{searchPage.nextUrlRule}"
+                                app:dv_content="@={searchPage.nextUrlRule}"
                                 app:dev_isRequested="true"
                                 android:visibility="@{searchPage.fromHtml?View.VISIBLE:View.GONE}"
                             />
