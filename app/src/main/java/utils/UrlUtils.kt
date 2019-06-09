@@ -36,7 +36,11 @@ class UrlUtils {
          */
         fun getFullUrl(baseUrl: String, url: String): String {
             val protocol = getWebProtocol(baseUrl)
-            val host = getWebHost(baseUrl)
+            var host = getWebHost(baseUrl)
+            if(!url.startsWith("/")){
+                //如果不是以/开头，应该直接和当前页面域名拼接
+                host = baseUrl
+            }
             val noSuffixBaseUrl = if (url.endsWith("/")) {
                 baseUrl.removeSuffix("/")
             } else {

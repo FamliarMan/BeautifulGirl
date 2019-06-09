@@ -3,6 +3,7 @@ package com.jianglei.girlshow.data
 import android.content.Context
 import android.os.Environment
 import android.util.Log
+import com.jianglei.girlshow.SSLSocketClient
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -27,6 +28,8 @@ class RetrofitManager {
             val okhttpClient = OkHttpClient.Builder()
                 .cache(Cache(File(getCacheDir(context) + "/beautiful"), 1024 * 1024 * 5))
                 .addInterceptor(logInterceptor)
+                .sslSocketFactory(SSLSocketClient.sslSocketFactory)
+                .hostnameVerifier(SSLSocketClient.hostnameVerifier)
                 .addInterceptor { chain ->
                     val request = chain.request().newBuilder()
                         .addHeader("User-Agent","Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.81 Safari/537.36")
