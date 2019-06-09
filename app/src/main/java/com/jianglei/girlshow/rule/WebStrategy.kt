@@ -201,7 +201,7 @@ class WebStrategy(val webRule: WebRule) {
                         //解析下一页的地址
                         if (curRule.supportPage) {
                             nextCoverUrl = curRule.pageRule!!
-                                .getNextUrl(curParser, webRule.getBaseUrl(), newPage + 1)
+                                .getNextUrl(curParser, nextCoverUrl!!, newPage + 1)
                             LogUtil.d("解析封面下一页请求地址：$nextCoverUrl")
                         } else {
                             nextCoverUrl = ""

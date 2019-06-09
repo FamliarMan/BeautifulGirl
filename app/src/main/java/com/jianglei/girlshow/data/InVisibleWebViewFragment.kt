@@ -91,6 +91,7 @@ class InVisibleWebViewFragment : Fragment() {
         webSettings.useWideViewPort = true //将图片调整到适合webview的大小
         webSettings.loadWithOverviewMode = true // 缩放至屏幕的大小
 
+        webSettings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         //禁止加载图片
         webSettings.blockNetworkImage = true
 
@@ -161,6 +162,7 @@ class InVisibleWebViewFragment : Fragment() {
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
                 handler?.proceed()
             }
+
 
 
         }

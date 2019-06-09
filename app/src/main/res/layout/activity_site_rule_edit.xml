@@ -183,7 +183,7 @@
                             android:layout_height="wrap_content"
                             app:dv_title="@string/title_nextUrlRule"
                             app:dev_isRequested="true"
-                            app:dv_content="@{categoryPage.nextUrlRule}"
+                            app:dv_content="@={categoryPage.nextUrlRule}"
                             android:visibility="@{categoryPage.fromHtml?View.VISIBLE:View.GONE}"
                         />
                         <com.jianglei.girlshow.widget.DocumentEditView
