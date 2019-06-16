@@ -7,13 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".CategoryActivity">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="本页面展示该网站所有分类"
-        android:gravity="center"
-    />
     <com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
         android:id="@+id/rvCategory"
         android:layout_width="match_parent"

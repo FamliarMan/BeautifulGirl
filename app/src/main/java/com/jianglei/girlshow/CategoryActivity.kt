@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
@@ -32,10 +33,10 @@ class CategoryActivity : BaseActivity() {
         rvCategory.setGridLayout(2)
         adapter = CategoryAdapter(this, categories)
         rvCategory.setAdapter(adapter)
-        if(StrategyProvider.getCurStrategy() == null){
+        if (StrategyProvider.getCurStrategy() == null) {
             return
         }
-        if(!StrategyProvider.getCurStrategy()!!.webRule.categoryRule!!.supportPage){
+        if (!StrategyProvider.getCurStrategy()!!.webRule.categoryRule!!.supportPage) {
             rvCategory.pushRefreshEnable = false
         }
         adapter.onItemClickListener = (object : OnItemClickListener<Category> {
@@ -133,7 +134,7 @@ class CategoryActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if(StrategyProvider.getCurStrategy() == null){
+        if (StrategyProvider.getCurStrategy() == null) {
             return super.onCreateOptionsMenu(menu)
         }
         return if (StrategyProvider.getCurStrategy()!!.webRule.supportSearch) {
@@ -163,9 +164,8 @@ class CategoryActivity : BaseActivity() {
             val category = categories[position]
             holder.tvName.text = category.title
             if (category.coverUrl == null) {
-                holder.ivCover.visibility = View.GONE
+                holder.ivCover.setImageURI(null)
             } else {
-                holder.ivCover.visibility = View.VISIBLE
                 holder.ivCover.setImageURI(Uri.parse(category.coverUrl))
             }
             holder.layoutMain.setOnClickListener {
@@ -178,6 +178,6 @@ class CategoryActivity : BaseActivity() {
     class CategoryHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var ivCover: ImageView = itemView.findViewById(R.id.ivCover)
         var tvName: TextView = itemView.findViewById(R.id.tvName)
-        var layoutMain: CardView = itemView.findViewById(R.id.layout_main)
+        var layoutMain = itemView.findViewById(R.id.layout_main) as RelativeLayout
     }
 }
