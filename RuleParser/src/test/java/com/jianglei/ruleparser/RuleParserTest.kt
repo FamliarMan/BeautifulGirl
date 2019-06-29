@@ -13,9 +13,10 @@ import org.junit.Test
 class HtmlParserTest {
 
     @Before
-    fun setUp(){
+    fun setUp() {
         XLog.init()
     }
+
     val commonHtml = "<html lang=\"en\">\n" +
             "<head>\n" +
             "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
@@ -81,8 +82,8 @@ class HtmlParserTest {
      */
     @Test
     fun getString_selectElement_2() {
-        val parser = HtmlParser(commonDocument)
-        val res = parser.getStrings("@label:<a> -> @property:<href>")
+        val parser = HtmlParser()
+        val res = parser.getStrings("@label:<a> -> @property:<href>", commonDocument)
         Assert.assertEquals("//www.txxx.com/", res[1])
 
     }
@@ -90,8 +91,8 @@ class HtmlParserTest {
 
     @Test(expected = java.lang.IllegalArgumentException::class)
     fun getString_selectElement_1() {
-        val parser = HtmlParser(commonDocument)
-        parser.getStrings("@label:<a> -> @property:<href> ->@label:<a>")
+        val parser = HtmlParser()
+        parser.getStrings("@label:<a> -> @property:<href> ->@label:<a>", commonDocument)
     }
 
     /**
@@ -99,8 +100,8 @@ class HtmlParserTest {
      */
     @Test(expected = IllegalArgumentException::class)
     fun getStrings_filterElement_1() {
-        val parser = HtmlParser(commonDocument)
-        parser.getStrings("@hasClass:<body>")
+        val parser = HtmlParser()
+        parser.getStrings("@hasClass:<body>", commonDocument)
     }
 
     /**
@@ -108,8 +109,8 @@ class HtmlParserTest {
      */
     @Test(expected = IllegalArgumentException::class)
     fun getStrings_filterElement_2() {
-        val parser = HtmlParser(commonDocument)
-        parser.getStrings("@label:<a> -> @property:<href> -> @hasClass:<name>")
+        val parser = HtmlParser()
+        parser.getStrings("@label:<a> -> @property:<href> -> @hasClass:<name>", commonDocument)
     }
 
 
@@ -118,9 +119,10 @@ class HtmlParserTest {
      */
     @Test
     fun getStrings_filterElement_3() {
-        val parser = HtmlParser(commonDocument)
+        val parser = HtmlParser()
         val res = parser.getStrings(
             "@label:<div> -> @hasLabel:<li> -> @label:<a> -> @property:<href>"
+            , commonDocument
         )
         Assert.assertEquals("//www.txxx.com/", res[1])
     }
@@ -129,10 +131,11 @@ class HtmlParserTest {
      * @label:<a> ->@property:<href> -> @==:<//www.txxx.com/>
      */
     @Test
-    fun getString_filterString(){
-        val parser = HtmlParser(commonDocument)
-        val res = parser.getStrings("@label:<a> -> @property:<href>-> @==:<//www.txxx.com/>")
-        Assert.assertEquals("//www.txxx.com/",res[0])
+    fun getString_filterString() {
+        val parser = HtmlParser()
+        val res = parser.getStrings("@label:<a> -> @property:<href>-> @==:<//www.txxx.com/>",
+            commonDocument)
+        Assert.assertEquals("//www.txxx.com/", res[0])
 
     }
 
@@ -140,22 +143,23 @@ class HtmlParserTest {
      * @regex:<var arrs = ({(.*)})>[0] -> @jsonArr:<arr>
      */
     @Test(expected = IllegalArgumentException::class)
-    fun getString_json_1(){
-        val parse = HtmlParser(jsonDocument)
-        parse.getStrings("@regex:<var arrs = (\\{(.*)\\})>[1] -> @jsonArr:<arr>")
+    fun getString_json_1() {
+        val parse = HtmlParser()
+        parse.getStrings("@regex:<var arrs = (\\{(.*)\\})>[1] -> @jsonArr:<arr>",jsonDocument)
     }
 
     /**
      * @regex:<var arrs = ({(.*)})>[0] -> @jsonArr:<arr> ->@jsonValue:<gender>
      */
     @Test
-    fun getString_json_2(){
-        val parse = HtmlParser(jsonDocument)
+    fun getString_json_2() {
+        val parse = HtmlParser()
         val res = parse.getStrings(
-            "@regex:<var arrs = (\\{(.*)\\})>[1] -> @jsonArr:<arr> -> @jsonValue:<gender>"
+            "@regex:<var arrs = (\\{(.*)\\})>[1] -> @jsonArr:<arr> -> @jsonValue:<gender>",
+            jsonDocument
         )
-        Assert.assertEquals(2,res.size)
-        Assert.assertEquals("male",res[1])
+        Assert.assertEquals(2, res.size)
+        Assert.assertEquals("male", res[1])
     }
 
 }

@@ -20,3 +20,6 @@ fun getAvaliableUri(context: Context, filePath: String): Uri {
         Uri.fromFile(File(filePath))
     }
 }
+
+
+
