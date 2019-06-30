@@ -1,4 +1,4 @@
-package com.jianglei.girlshow.data
+package com.jianglei.ruleparser.data
 
 import androidx.fragment.app.FragmentActivity
 import okhttp3.ResponseBody

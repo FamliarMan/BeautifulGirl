@@ -5,7 +5,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.classic.adapter.BaseAdapterHelper
 import com.classic.adapter.CommonRecyclerAdapter
-import com.jianglei.girlshow.data.OnDataResultListener
+import com.jianglei.ruleparser.data.OnDataResultListener
 import com.jianglei.girlshow.vo.SearchVideoKeyWord
 import com.jianglei.ruleparser.RuleKeyWord
 import kotlinx.android.synthetic.main.activity_search.*

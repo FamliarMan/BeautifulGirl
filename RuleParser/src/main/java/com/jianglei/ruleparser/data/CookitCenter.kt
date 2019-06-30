@@ -1,4 +1,4 @@
-package com.jianglei.girlshow.data
+package com.jianglei.ruleparser.data
 
 import okhttp3.Cookie
 

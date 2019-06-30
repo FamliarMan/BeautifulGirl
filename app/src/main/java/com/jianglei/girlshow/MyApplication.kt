@@ -2,7 +2,7 @@ package com.jianglei.girlshow
 
 import androidx.multidex.MultiDexApplication
 import com.facebook.drawee.backends.pipeline.Fresco
-import com.jianglei.girlshow.data.RetrofitManager
+import com.jianglei.ruleparser.data.RetrofitManager
 import com.jianglei.girlshow.storage.DataStorage
 import com.kk.taurus.exoplayer.ExoMediaPlayer
 import com.kk.taurus.playerbase.config.PlayerConfig

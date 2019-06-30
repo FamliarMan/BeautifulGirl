@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.view.SimpleDraweeView
-import com.jianglei.girlshow.data.OnDataResultListener
+import com.jianglei.ruleparser.data.OnDataResultListener
 import com.jianglei.girlshow.rule.RuleConstants
 import com.jianglei.girlshow.rule.WebRule
 import com.jianglei.girlshow.rule.WebStrategy

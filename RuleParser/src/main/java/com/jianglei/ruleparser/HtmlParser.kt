@@ -26,7 +26,7 @@ class HtmlParser() {
         val mHandler = Handler(Looper.getMainLooper())
     }
 
-    fun reset(){
+    fun reset() {
         nodeCache.clear()
         jobs.clear()
     }
@@ -54,7 +54,9 @@ class HtmlParser() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                onParserSuccessListener.parserError(e.toString())
+                mHandler.post {
+                    onParserSuccessListener.parserError(e.toString())
+                }
             }
             res
         })
@@ -78,12 +80,25 @@ class HtmlParser() {
     fun getStringsUnit(rule: String, document: Document): List<String> {
         val mainRules = rule.split(" or ")
         var res = mutableListOf<String>()
-        mainRules.forEach {
-            if (res.isEmpty()) {
-                val oneRes = getStrings(it, document)
+        for(i in 0 until mainRules.size){
+            var oneRes = getStrings(mainRules[i], document)
+            if(i == mainRules.size-1){
+                //最后一条规则，无论如何都塞进结果
                 res.addAll(oneRes)
-            }
 
+            }else{
+                //不是最后一条,且当前没有收集到任何数据，我们继续查使用下面一条规则解析
+                if (res.isEmpty()) {
+                    oneRes = oneRes.filter {
+                        !it.isBlank()
+                    }.toList()
+                    if(!oneRes.isEmpty()){
+                        res.addAll(oneRes)
+                        //找到有用数据，无需再继续往后查找了
+                        break
+                    }
+                }
+            }
         }
         return res
     }

@@ -1,4 +1,4 @@
-package com.jianglei.girlshow.data
+package com.jianglei.ruleparser.data
 
 /**
  * @author jianglei on 1/3/19.

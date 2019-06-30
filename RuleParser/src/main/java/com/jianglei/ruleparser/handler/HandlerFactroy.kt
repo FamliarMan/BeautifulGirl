@@ -9,11 +9,11 @@ class HandlerFactroy {
     companion object {
         fun create(rule: String): AbstractRuleHandler {
             val index = rule.indexOf(":")
-            var trimRule:String
-            if(index == -1){
+            var trimRule: String
+            if (index == -1) {
                 trimRule = rule.trim()
-            }else{
-                trimRule = rule.substring(0,index).trim()
+            } else {
+                trimRule = rule.substring(0, index).trim()
             }
             return when {
                 trimRule.equals(RuleKeyWord.CLASS) -> ClassHandler(rule.trim())
@@ -38,6 +38,7 @@ class HandlerFactroy {
                 trimRule.equals(RuleKeyWord.CONTAIN_TEXT) -> ContainTextHandler(rule.trim())
                 trimRule.equals(RuleKeyWord.NOT_CONTAIN_TEXT) -> NotContainTextHandler(rule.trim())
                 trimRule.equals(RuleKeyWord.REGEX_ALL) -> RegexAllHandler(rule.trim())
+                trimRule.equals(RuleKeyWord.HTTP) -> HttpHandler(rule.trim())
                 else -> throw IllegalSyntaxException("非法规则：$rule")
             }
         }

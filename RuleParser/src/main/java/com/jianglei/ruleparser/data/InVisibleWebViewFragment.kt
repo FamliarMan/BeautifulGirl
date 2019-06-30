@@ -1,4 +1,4 @@
-package com.jianglei.girlshow.data
+package com.jianglei.ruleparser.data
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
@@ -14,7 +14,7 @@ import android.view.ViewGroup
 import android.webkit.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import com.jianglei.girlshow.R
+import com.jianglei.ruleparser.R
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.net.URLDecoder

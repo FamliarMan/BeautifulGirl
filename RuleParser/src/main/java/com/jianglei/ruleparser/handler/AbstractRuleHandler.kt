@@ -4,7 +4,9 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.jianglei.ruleparser.RuleKeyWord
 import com.jianglei.ruleparser.ruledescription.RuleDesc
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
 import kotlin.reflect.KClass
 
 /**
@@ -88,6 +90,7 @@ abstract class AbstractRuleHandler(var singleRule: String) {
                 val type = typeClass[it] ?: throw IllegalStateException("没有注册该类型对应的KClass")
                 //检查上一个结果是否符合本规则输入类型
                 preResult.forEach { res ->
+//                    if(!type::class.java.isAssignableFrom(res::class.java)){
                     if (res::class != type) {
                         throw IllegalStateException("上一个规则返回的类型${res::class.toString()}本规则：${singleRule}无法处理")
                     }

@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
-import com.jianglei.girlshow.data.OnDataResultListener
+import com.jianglei.ruleparser.data.OnDataResultListener
 import com.jianglei.videoplay.ContentVo
 import com.wuxiaolong.pullloadmorerecyclerview.PullLoadMoreRecyclerView
 import kotlinx.android.synthetic.main.layout_recyclerview.*

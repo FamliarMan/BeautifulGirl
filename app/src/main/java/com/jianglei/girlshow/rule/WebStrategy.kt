@@ -1,7 +1,7 @@
 package com.jianglei.girlshow.rule
 
 import androidx.fragment.app.FragmentActivity
-import com.jianglei.girlshow.data.*
+import com.jianglei.ruleparser.data.*
 import com.jianglei.girlshow.vo.Category
 import com.jianglei.girlshow.vo.ContentTitle
 import com.jianglei.girlshow.vo.SearchVideoKeyWord
@@ -492,14 +492,14 @@ class WebStrategy(val webRule: WebRule) {
             onParserSuccessListener = object : HtmlParser.OnParserSuccessListener {
                 override fun parserSuccess(res: List<List<String>>) {
                     LogUtil.d("解析具体内容的url")
-                    var urls = curParser.getStringsUnit(webRule.contentRule!!.urlRule, document)
+                    var urls = res[0]
                     urls = urls.map {
                         UrlUtils.getFullUrl(webRule.getBaseUrl(), it)
                     }
                     var names: List<String>? = null
                     if (!webRule.contentRule!!.nameRule.isBlank()) {
                         LogUtil.d("解析具体内容的名称")
-                        names = curParser.getStringsUnit(webRule.contentRule!!.nameRule, document)
+                        names = res[1]
                     }
                     val contents = mutableListOf<ContentVo>()
                     for (i in 0 until urls.size) {
