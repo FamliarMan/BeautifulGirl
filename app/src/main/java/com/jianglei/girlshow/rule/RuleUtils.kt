@@ -1,6 +1,7 @@
 package com.jianglei.girlshow.rule
 
 import com.jianglei.ruleparser.HtmlParser
+import org.jsoup.nodes.Document
 import utils.UrlUtils
 import java.lang.IllegalArgumentException
 
@@ -13,7 +14,7 @@ import java.lang.IllegalArgumentException
  * [parser] 是当前页面的解析器
  * [baseUrl] 是当前页面除掉分页参数外的其他url
  */
-fun PageRule.getNextUrl(parser: HtmlParser, baseUrl: String, nextPage: Int?): String? {
+fun PageRule.getNextUrl(parser: HtmlParser, baseUrl: String, nextPage: Int?, doc: Document): String? {
     if (this.fromHtml) {
         if (nextUrlRule.isNullOrBlank()) {
             throw IllegalArgumentException("当直接从网页抓取下一页的url时，nextUrlRule不能为空")
@@ -26,7 +27,7 @@ fun PageRule.getNextUrl(parser: HtmlParser, baseUrl: String, nextPage: Int?): St
             newUrlRule = nextUrlRule!!.replace("{page}", nextPage.toString())
 
         }
-        val res = parser.getStrings(newUrlRule)
+        val res = parser.getStrings(newUrlRule, doc)
         if (res.isEmpty()) {
             return null
         }
@@ -35,14 +36,14 @@ fun PageRule.getNextUrl(parser: HtmlParser, baseUrl: String, nextPage: Int?): St
             res[0]
         )
     }
-    if (combinedUrl.isNullOrBlank()  || paramRule.isNullOrBlank() ) {
+    if (combinedUrl.isNullOrBlank() || paramRule.isNullOrBlank()) {
         throw IllegalArgumentException("baseUrl 或combinedUrl paramRule 不能为空")
     }
     var combinedUrl = this.combinedUrl!!
     if (!combinedUrl.contains("{baseUrl}") || !combinedUrl.contains("{page}")) {
         throw IllegalArgumentException("combinedUrl 必须包含{baseUrl} 和{page}")
     }
-    val pages = parser.getStrings(this.paramRule!!)
+    val pages = parser.getStrings(this.paramRule!!, doc)
     if (pages.isEmpty()) {
         return null
     }
@@ -52,10 +53,46 @@ fun PageRule.getNextUrl(parser: HtmlParser, baseUrl: String, nextPage: Int?): St
 
 }
 
-fun WebRule.getBaseUrl():String{
-    return if(!this.homeUrl.isBlank()){
+
+/**
+ * 对分页的url规则进行预处理
+ */
+fun PageRule?.preHandlUrlRule(nextPage: Int): String {
+    if (this == null) {
+        return ""
+    }
+    if (nextUrlRule.isNullOrBlank()) {
+        return ""
+    }
+    if (nextUrlRule!!.contains("{page}")) {
+        return nextUrlRule!!.replace("{page}", nextPage.toString())
+    }
+    return nextUrlRule!!
+}
+
+fun PageRule.getCombinedUrl(parser: HtmlParser, baseUrl: String, doc: Document): String {
+
+    if (combinedUrl.isNullOrBlank() || paramRule.isNullOrBlank()) {
+        throw IllegalArgumentException("baseUrl 或combinedUrl paramRule 不能为空")
+    }
+    var combinedUrl = this.combinedUrl!!
+    if (!combinedUrl.contains("{baseUrl}") || !combinedUrl.contains("{page}")) {
+        throw IllegalArgumentException("combinedUrl 必须包含{baseUrl} 和{page}")
+    }
+    val pages = parser.getStrings(this.paramRule!!, doc)
+    if (pages.isEmpty()) {
+        return ""
+    }
+    combinedUrl = combinedUrl.replace("{baseUrl}", baseUrl)
+    combinedUrl = combinedUrl.replace("{page}", pages[0])
+    return combinedUrl
+}
+
+
+fun WebRule.getBaseUrl(): String {
+    return if (!this.homeUrl.isBlank()) {
         homeUrl
-    }else{
+    } else {
         url
     }
 }

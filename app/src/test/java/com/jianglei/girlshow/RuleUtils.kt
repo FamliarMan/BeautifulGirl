@@ -14,4 +14,5 @@ class RuleUtils{
 //        Assert.assertEquals("www.baidu.com&page=2",res)
     }
 
+
 }

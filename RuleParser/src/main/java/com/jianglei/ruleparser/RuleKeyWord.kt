@@ -31,6 +31,8 @@ class RuleKeyWord {
         const val JSON_OBJ = "@jsonObj"
         const val JSON_VALUE = "@jsonValue"
 
+        const val HTTP = "@http"
+
         //代表当前页面
         const val BASE_URL = "{baseUrl}"
         //页码占位

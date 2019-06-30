@@ -1,6 +1,7 @@
 package com.jianglei.girlshow
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import com.facebook.drawee.drawable.ScalingUtils
 import com.facebook.drawee.view.SimpleDraweeView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_photo_view.*
+import me.relex.photodraweeview.PhotoDraweeView
 import java.util.*
 
 
@@ -55,12 +57,12 @@ class PhotoViewActivity : BaseActivity() {
         }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
-            var imageView: SimpleDraweeView? = null
+            var imageView: PhotoDraweeView? = null
             if (recycledViews.size > 0) {
-                imageView = recycledViews.first as SimpleDraweeView
+                imageView = recycledViews.first as PhotoDraweeView
                 recycledViews.remove(imageView)
             } else {
-                imageView = SimpleDraweeView(context)
+                imageView = PhotoDraweeView(context)
             }
             var param = imageView.layoutParams
             if (param == null) {
@@ -74,7 +76,7 @@ class PhotoViewActivity : BaseActivity() {
             }
             container.addView(imageView, param)
             imageView.hierarchy.actualImageScaleType = ScalingUtils.ScaleType.FIT_CENTER
-            imageView.setImageURI(urls!![position])
+            imageView.setPhotoUri(Uri.parse(urls!![position]))
             return imageView
         }
 

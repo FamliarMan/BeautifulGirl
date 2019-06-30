@@ -48,7 +48,7 @@ class UrlUtils {
             }
             return when {
                 url.startsWith("http") -> url
-                url.startsWith("//") -> protocol + url
+                url.startsWith("//") -> "$protocol:$url"
                 url.startsWith("/") -> host+ url
                 url.startsWith("?") -> noSuffixBaseUrl + url
                 else -> "$host/$url"
@@ -58,7 +58,7 @@ class UrlUtils {
         fun getFullUrl(host: String, protocol: String, url: String): String {
             return when {
                 url.startsWith("http") -> url
-                url.startsWith("//") -> protocol + url
+                url.startsWith("//") -> "$protocol:$url"
                 url.startsWith("/") -> host + url
                 else -> "$host/$url"
             }

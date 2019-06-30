@@ -1,4 +1,4 @@
-package com.jianglei.girlshow
+package com.jianglei.ruleparser.data
 
 import javax.net.ssl.*
 import java.security.SecureRandom

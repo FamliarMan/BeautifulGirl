@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.jianglei.girlshow.data.OnDataResultListener
+import com.jianglei.ruleparser.data.OnDataResultListener
 import com.jianglei.girlshow.vo.Category
 import com.jianglei.girlshow.vo.ContentTitle
 import com.jianglei.videoplay.ContentVo
@@ -142,7 +142,7 @@ class ContentCoverListFragment : BaseFragment() {
                             return
                         }
                         showProgress(false)
-                        DialogUtils.showLogTipDialog(activity!!.applicationContext, getString(R.string.get_video_play_url_error))
+                        DialogUtils.showLogTipDialog(activity!!, getString(R.string.get_video_play_url_error))
                     }
                 }
             )

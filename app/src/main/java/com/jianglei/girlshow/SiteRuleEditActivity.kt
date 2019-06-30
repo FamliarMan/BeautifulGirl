@@ -7,7 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
-import com.jianglei.girlshow.data.OnDataResultListener
+import com.jianglei.ruleparser.data.OnDataResultListener
 import com.jianglei.girlshow.databinding.ActivitySiteRuleEditBinding
 import com.jianglei.girlshow.rule.*
 import com.jianglei.girlshow.storage.RuleRecord
